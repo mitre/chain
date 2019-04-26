@@ -1,10 +1,10 @@
 # CALDERA plugin: Chain
 
-The Chain plugin adds a REST API to the CALDERA server, along with a GUI that sits 
-on top of the API. The GUI allows for browser-based configuration of Chain mode
-objects and operations. The API (in general) allows for the programmatic configuration
-of these same objects.
+This plugin includes:
+* A REST API available at https://localhost:8888
+* A GUI, built on top of the API, which is accessible at the same location but in a browser
 
 ## Requirements
 
-To use the web interface included with this plugin, you must also load the "gui" plugin.
+To use the web interface included with this plugin, you must also load the GUI plugin.
+
