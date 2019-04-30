@@ -15,8 +15,6 @@ class ChainApi:
     async def landing(self, request):
         abilities = await self.data_svc.explode_abilities()
         tactics = {a['technique']['tactic'] for a in abilities}
-        for ab in abilities:
-            ab.pop('cleanup')
         groups = await self.data_svc.explode_groups()
         hosts = await self.data_svc.dao.get('core_agent')
         parsers = await self.data_svc.dao.get('core_parser')

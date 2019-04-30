@@ -347,6 +347,7 @@ function createAbility(){
         "id": $(parent).find('#ability-id').val(),
         "name": $(parent).find('#ability-name').val(),
         "description": $(parent).find('#ability-description').val(),
+        "executors": [],
         "tactic": $(parent).find('#ability-tactic').val(),
         "technique": {
           "attack_id": $(parent).find('#ability-technique-id').val(),
