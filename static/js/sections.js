@@ -65,7 +65,12 @@ $(document).ready(function () {
                     "_" : "last_seen"
                 }
             }
-        ]
+        ],
+        select: {
+            style: 'os',
+            selector: 'td:first-child'
+        },
+        order: [[1, 'asc']]
     });
     $('#netTbl tbody').on( 'click', 'tr', function () {
         $(this).toggleClass('selected');
