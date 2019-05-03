@@ -351,3 +351,57 @@ table.dataTable tbody tr.selected {
 .decision-card td {
     color: white;
 }
+/* Conditions Modal configuration*/
+.conditions-button  {
+    min-width: 200px;
+}
+.section-profile button {
+    min-width: 85px;
+}
+.row-entry-button{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: inherit;
+    padding: 10px;
+    width: 75px;
+    color: white;
+    font-size: 11px;
+    border: 1px solid #707070;
+}
+.row-entry-button:hover{
+    background-color: #1f1d1d;
+}
+.row-entry-button:focus {
+    outline: none;
+}
+.row-entry-button img {
+    height: 23px;
+    width: 23px;
+    padding-bottom: 1px;
+    -webkit-filter: invert(1);
+    filter: invert(1);
+    background-color: white;
+    border: 3px solid #6ad7fb;
+}
+.row-entry-item {
+    padding: 0px 25px;
+}
+.row-entry-item p{
+    line-height: 22px;
+    font-size: 18px;
+    color: white;
+}
+.conditions-textarea {
+    min-width: 400px;
+    height: 30px;
+}
+.conditions-drop {
+    height: 32px;
+}
+.conditions-text {
+    width: 100%;
+}
+.conditions-container{
+    margin-top: 200px;
+    padding: 16px;

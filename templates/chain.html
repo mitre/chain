@@ -155,10 +155,21 @@
                                           <tr id="preconditions" style="display:none">
                                               <td><p>Requires:</p></td>
                                               <td><ol id="ability-preconditions"></ol></td>
+                                              <td><button class="row-entry-button" onclick="generatePreconditions()">
+                                                   <span class="icon"><img src="/chain/img/parse.png"></span>
+                                                   <span class="caption">Extract from Command</span>
+                                               </button>
+                                               </td>
+
                                           </tr>
                                           <tr id="postconditions" style="display:none">
                                               <td><p>Unlocks:</p></td>
                                               <td><ol id="ability-postconditions"></ol></td>
+                                              <td><button class="row-entry-button" onclick="document.getElementById('postcon-modal').style.display='block'">
+                                                   <span class="icon"><img src="/chain/img/conditions.png"></span>
+                                                   <span class="caption">Add/Edit Parsers</span>
+                                               </button>
+                                               </td>
                                           </tr>
                                       </table>
                                   </div>
@@ -341,8 +352,51 @@
                                   </div>
                               </div>
                           </div>
-
-                      </center>
+                        <!-- conditions -->
+                        <div id="postcon-modal" class="modal" style="display: none">
+                          <div class="modal-content animate" id="postcon-form" style="background-color: #231313">
+                            <div class="imgcontainer">
+                              <span onclick="document.getElementById('postcon-modal').style.display='none'"
+                                    class="close" title="Close Modal">&times;</span>
+                            </div>
+                            <div class="conditions-container">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <center>
+                                                <select class="conditions-drop" id="postcon-filter" onchange="loadFact({{ parsers }})">
+                                                     <option value="" disabled selected>Clone Existing</option>
+                                                     {% for ability in parsers %}
+                                                            <option name={{ability.property}} value={{ability.property}}>{{ability.property}}</option>
+                                                     {% endfor %}}
+                                                  </select>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr><td><hr></td></tr>
+                                    <tr><td><input class="conditions-text" id="postcon-name" spellcheck="false" placeholder="Enter a name"/></td></tr>
+                                    <tr>
+                                        <td>
+                                            <select class="conditions-drop" id="postcon-type">
+                                                <option value="regex" selected>Regex</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <textarea id="postcon-data" spellcheck="false" class="conditions-textarea"
+                                                      placeholder="Enter regex parse string"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><button class="conditions-button" id="postconAdd"
+                                            onclick="addPostcon({{parsers}});" style="width: 100%">Update</button></td>
+                                    </tr>
+                                </table>
+                            </div>
+                          </div>
+                        </div>
+                     </center>
                   </div>
                 </center>
         </div>

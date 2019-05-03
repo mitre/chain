@@ -307,6 +307,78 @@ function addAbility(exploits){
     filterByPhase();
 }
 
+function addPostcon(core_data){
+    let base = $('#ability-test option:selected');
+    let conditions = $(base).data('parser');
+    if (conditions === undefined) {
+        $(base).data('parser', []);
+        conditions = $(base).data('parser');
+    }
+    if (base.length !== 0) {
+        let existing = conditions.find(function(element) {return element['property'] === $('#postcon-name').val()});
+        if (existing === undefined){
+            // entry does not exist, simple append
+            $(base).data('parser').push({name: $('#postcon-type').val(),property: $('#postcon-name').val(), script: $('#postcon-data').val()});
+        }
+        else {
+            // entry already exists
+            let position = conditions.indexOf(existing);
+            existing['property'] = $('#postcon-name').val();
+            existing['script'] = $('#postcon-data').val();
+            $(base).data('parser')[position] = existing;
+        }
+        generatePostconditions();
+    }
+}
+
+function removePostcon(target){
+    let base = $('#ability-test option:selected');
+    let conditions = $(base).data('parser');
+    if (base.length !== 0) {
+        let element = conditions.indexOf(conditions.find(function(element) {return element['property'] === target}));
+        conditions.splice(element,1);
+        generatePostconditions();
+    }
+}
+
+function loadFact(core_data) {
+    let interfact = $('#postcon-filter option:selected').val();
+    let parent = $('#postcon-modal');
+    let target = core_data.find(function(element) {return element['property'] === interfact});
+    $(parent).find('#postcon-name').val(target['property']);
+    $(parent).find('#postcon-data').val(target['script']);
+}
+
+function cleanElement(target){
+    $(target).each(function () {
+        $(this).val('');
+        $(this).empty();
+    })
+}
+
+function generatePreconditions(){
+    let parent = $('#ability-profile');
+
+    cleanElement('#ability-preconditions');
+
+    let requirements = buildRequirements(btoa($(parent).find('#ability-command').val()));
+    for(let k in requirements) {
+        $(parent).find('#ability-preconditions').append('<li>'+requirements[k]+'</li>');
+    }
+}
+
+function generatePostconditions(){
+    let parent = $('#ability-profile');
+    let chosen = $('#ability-test option:selected');
+
+    cleanElement('#ability-postconditions');
+
+    for(let k in $(chosen).data('parser')) {
+        let value = $(chosen).data('parser')[k].property;
+        $(parent).find('#ability-postconditions').append('<li><a href="javascript:removePostcon(\''+value+'\');" ' + 'style="color:red">'+value+'</a></li>');
+    }
+}
+
 function removeAbility(test_id){
     $('#profile-tests #'+test_id).remove();
     refreshColorCodes();
@@ -391,7 +463,7 @@ function triggerConditions(parsers) {
 
 function populateTacticAbilities(exploits){
     let parent = $('#ability-profile');
-    clearAbilityDossier();
+    cleanElement('#ability-profile .ability-table tr:last td:input,ol');
     $(parent).find('#ability-test').empty().append("<option disabled='disabled' selected>Select ability</option>");
 
     let tactic = $(parent).find('#ability-tactic-filter').find(":selected").data('tactic');
@@ -417,16 +489,9 @@ function appendAbilityToList(tactic, value) {
         .text(value['name'] +' ('+value['executor']+')'));
 }
 
-function clearAbilityDossier(){
-    $('#ability-profile .ability-table tr:last td:input,ol').each(function(){
-        $(this).val('');
-        $(this).empty();
-    });
-}
-
 function loadAbility() {
     let parent = $('#ability-profile');
-    clearAbilityDossier();
+    cleanElement('#ability-profile .ability-table tr:last td:input,ol');
 
     let chosen = $('#ability-test option:selected');
     $(parent).find('#ability-id').val($(chosen).attr('id'));
@@ -438,21 +503,16 @@ function loadAbility() {
     $(parent).find('#ability-description').val($(chosen).data('description'));
     $(parent).find('#ability-command').html(atob($(chosen).data('test')));
 
-    for(let k in $(chosen).data('parser')) {
-        $(parent).find('#ability-postconditions').append('<li>'+$(chosen).data('parser')[k].property+'</li>');
-        $(parent).find('#ability-fact-name').val($(chosen).data('parser')[k].fact);
-        $(parent).find('#ability-fact-regex').val($(chosen).data('parser')[k].regex);
-    }
-    let requirements = buildRequirements($(chosen).data('test'));
-    for(let k in requirements) {
-        $(parent).find('#ability-preconditions').append('<li>'+requirements[k]+'</li>');
-    }
+    generatePostconditions();
+    generatePreconditions();
+
 }
 
 function createAbility(){
     let parent = $('#ability-profile');
+    let base = $('#ability-test option:selected');
     let id = $(parent).find('#ability-id').val();
-    if(id == '') {
+    if(id === '') {
         alert('You must select an existing ability to update!');
         return;
     }
@@ -467,7 +527,8 @@ function createAbility(){
           "attack_id": $(parent).find('#ability-technique-id').val(),
           "name": $(parent).find('#ability-technique-name').val()
         },
-        "test": btoa($(parent).find('#ability-command').val())
+        "test": btoa($(parent).find('#ability-command').val()),
+        "parser": $(base).data('parser')
     };
     restRequest('PUT', postData, createAbilityCallback);
 }
