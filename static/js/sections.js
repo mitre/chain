@@ -1,28 +1,107 @@
 /** GROUPS **/
 
+let agent_interval_time = 30000;
+let agent_interval = null;
+
 $(document).ready(function () {
+    $('#netTbl').DataTable({
+        ajax: {
+            url: '/plugin/chain/rest',
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: function(d) {
+	            return JSON.stringify({"index": "core_agent"});
+			},
+            dataSrc: ''
+        },
+        columnDefs:[
+            {
+                targets: 0,
+                data: null,
+                className: 'select-checkbox',
+                orderable: false,
+                sDefaultContent: ''
+            },
+            {
+                targets: 1,
+                data: null,
+                render: {
+                    "_" : "paw"
+                }
+            },
+            {
+                targets: 2,
+                data: null,
+                render: {
+                    "_" : "checks"
+                }
+            },
+            {
+                targets: 3,
+                data: null,
+                fnCreatedCell: function(td, cellData, rowData, row, col){
+                    $(td).addClass('tag');
+                },
+                render: function(data,type,row,meta){
+                    let g = "";
+                    data['groups'].forEach(function(e){
+                        g += e['name'] + " ";
+                    });
+                    return g;
+                }
+            },
+            {
+                targets: 4,
+                data: null,
+                render: {
+                    "_" : "executor"
+                }
+            },
+            {
+                targets: 5,
+                data: null,
+                render: {
+                    "_" : "last_seen"
+                }
+            }
+        ],
+        select: {
+			style: 'os',
+			selector: 'td:first-child'
+		},
+        order: [[1, 'asc']]
+    });
     $('#netTbl tbody').on( 'click', 'tr', function () {
         $(this).toggleClass('selected');
     });
-    $('#netTbl').DataTable({
-        columnDefs: [{
-            orderable: false,
-            className: 'select-checkbox',
-            targets: 0
-        }],
-        select: {
-            style: 'os',
-            selector: 'td:first-child'
-        },
-        order: [[1, 'asc']]
-    });
+    agent_interval = setInterval(agent_refresh, agent_interval_time);
 });
 
 function createGroup(){
-    let paws = $.map($('#netTbl').DataTable().rows('.selected').data(), function (item) {return item[1];});
+    let paws = $.map($('#netTbl').DataTable().rows('.selected').data(), function (item) {return item['paw'];});
     if(paws.length == 0){ alert("You need to select some hosts!"); return;}
     let groupName = $("#groupNewName").val();
-    restRequest('PUT', {"name":groupName,"paws":paws,"index":"core_group"}, alertCallback);
+    restRequest('PUT', {"name":groupName,"paws":paws,"index":"core_group"}, createGroupCallback);
+}
+
+function createGroupCallback(data){
+    alert(data);
+    agent_refresh();
+    restRequest('POST', {"index":"core_group"}, reloadGroupElements);
+}
+
+function reloadGroupElements(data){
+    let gp_elem = $("#queueGroup");
+    $.each(data, function(index, gp) {
+        if(!gp_elem.find('option[value="'+gp.id+'"]').length > 0){
+            gp_elem.append("<option id='qgroup-" + gp.name + "' value='" + gp.id + "'>" + gp.name + "</option>");
+        }
+    });
+}
+
+function agent_refresh(){
+    $('#netTbl').DataTable().ajax.reload();
 }
 
 /** OPERATIONS **/
@@ -46,7 +125,23 @@ function handleStartAction(){
         "group":document.getElementById("queueGroup").value,
         "adversary":document.getElementById("queueFlow").value
     };
-    restRequest('PUT', queueDetails, alertCallback);
+    restRequest('PUT', queueDetails, handleStartActionCallback);
+    
+}
+
+function handleStartActionCallback(data){
+    $("#togBtnOp").prop("checked", false).change();
+    restRequest('POST', {'index':'core_operation'}, reloadOperationsElements);
+}
+
+function reloadOperationsElements(data){
+    let op_elem = $("#operations");
+    $.each(data, function(index, op) {
+        if(!op_elem.find('option[value="'+op.id+'"]').length > 0){
+            op_elem.append('<option id="chosen-operation" value="' + op.id +'">' + op.name + ' - ' + op.start + '</option>');
+        }
+    });
+    op_elem.prop('selectedIndex', op_elem.find('option').length-1).change();
 }
 
 function refresh() {
@@ -166,7 +261,23 @@ function createAdversary() {
         alert("You need to create some abilities!");
         return;
     }
-    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"core_adversary"}, alertCallback);
+    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"core_adversary"}, createAdversaryCallback);
+}
+
+function createAdversaryCallback(data){
+    $("#togBtnAdv").prop("checked", false).change();
+    restRequest('POST', {'index':'core_adversary'}, reloadAdversaryElements);
+}
+
+function reloadAdversaryElements(data){
+    let adv_elem = $("#profile-existing-name");
+    $.each(data, function(index, adv) {
+        if(!adv_elem.find('option[value="'+adv.id+'"]').length > 0){
+            adv_elem.append('<option id="chosen-operation" value="' + adv.id +'">' + adv.name + '</option>');
+            $("#queueFlow").append("<option id='qflow-" + JSON.stringify(adv) + "' value='" + adv.id + "'>" + adv.name + "</option>");
+        }
+    });
+    adv_elem.prop('selectedIndex', adv_elem.find('option').length-1).change();
 }
 
 function addAbility(exploits){
@@ -355,7 +466,22 @@ function createAbility(){
         },
         "test": btoa($(parent).find('#ability-command').val())
     };
-    restRequest('PUT', postData, alertCallback);
+    restRequest('PUT', postData, createAbilityCallback);
+}
+
+function createAbilityCallback(data){
+    alert(data);
+    restRequest('POST', {"index":"core_ability"}, reloadAbilityElements);
+}
+
+function reloadAbilityElements(data){
+    $("ability-test").empty();
+    $('#ability-tactic-filter').change(function(){
+        populateTacticAbilities(data);
+    });
+    $('#attach-ability-btn').click(function () {
+        addAbility(data);
+	});
 }
 
 function buildRequirements(encodedTest){

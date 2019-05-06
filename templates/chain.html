@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Chain Mode | Dashboard</title>
+        <title>Chain Mode | CALDERA</title>
         <link rel="shortcut icon" type="image/png" href="/gui/img/favicon.png"/>
         <link rel="stylesheet" href="/gui/css/shared.css">
         <link rel="stylesheet" href="/gui/css/navbar.css">
@@ -71,12 +71,12 @@
                                   <div class="column section-border" style="flex:25%;">
                                       <img src="/chain/img/computer.png">
                                       <h4 style="margin-bottom:-5px">Manage groups</h4>
-                                      <p>No hosts? <a style="color: inherit; text-decoration: underline;" href="/plugin/sandcat/gui">Deploy an agent</a></p>
+                                      <p>No hosts? Deploy an agent first.</p>
                                       <input placeholder="Enter name" name="newName" id="groupNewName" required>
                                       <button type="button" class="button-success atomic-button" onclick="createGroup()">Add group</button>
                                   </div>
                                   <div class="column" style="flex:75%">
-                                      <table id="netTbl" class="display">
+                                      <table id="netTbl" class="display" style="width:100%;">
                                         <thead>
                                           <tr>
                                               <th></th>
@@ -87,26 +87,6 @@
                                               <th>Last seen</th>
                                           </tr>
                                         </thead>
-                                        <tbody>
-                                            {% for h in hosts %}
-                                                <tr>
-                                                    <td></td>
-                                                    <td>{{ h.paw }}</td>
-                                                    <td>{{ h.checks }}</td>
-                                                    <td class="tag">
-                                                        {% for g in groups %}
-                                                            {% for ga in g.agents %}
-                                                                {% if ga.agent_id == h.id %}
-                                                                    {{ g.name }}
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                        {% endfor %}
-                                                    </td>
-                                                    <td>{{ h.executor }}</td>
-                                                    <td>{{ h.last_seen }}</td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
                                     </table>
                                   </div>
                               </div>
@@ -204,7 +184,7 @@
                                       <select id="profile-existing-name" onchange="loadAdversary()">
                                              <option value="" disabled selected>Select an existing adversary</option>
                                              {% for adv in adversaries %}
-                                                  <option value="{{adv.name}}">{{ adv.name }}</option>
+                                                  <option value="{{adv.id}}">{{ adv.name }}</option>
                                              {% endfor %}}
                                       </select>
                                       <input id="profile-name" style="opacity:0.5" disabled="true" placeholder="Enter a name"/>
@@ -222,7 +202,7 @@
                                       <br>
                                       <input id="testId" type="text" style="width:95%" placeholder="Enter ability ID"/>
                                       <br><br>
-                                      <button style="background-color:#1e1e1e;color:white;width:75%;height:35px;margin:0" type="button" class="button-success atomic-button" onclick="addAbility({{exploits}})">Attach</button>
+                                      <button id="attach-ability-btn" style="background-color:#1e1e1e;color:white;width:75%;height:35px;margin:0" type="button" class="button-success atomic-button" onclick="addAbility({{exploits}})">Attach</button>
                                       </center>
                                       <br>
                                       <button type="button" class="button-success atomic-button" id="createAdversary" onclick="createAdversary()">Save adversary</button>
