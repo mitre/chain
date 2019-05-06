@@ -88,7 +88,6 @@ function createGroup(){
 function createGroupCallback(data){
     alert(data);
     agent_refresh();
-    restRequest('POST', {"index":"core_group"}, reloadGroupElements);
 }
 
 function reloadGroupElements(data){
@@ -102,6 +101,7 @@ function reloadGroupElements(data){
 
 function agent_refresh(){
     $('#netTbl').DataTable().ajax.reload();
+    restRequest('POST', {"index":"core_group"}, reloadGroupElements);
 }
 
 /** OPERATIONS **/
