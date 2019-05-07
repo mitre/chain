@@ -86,7 +86,6 @@ function createGroup(){
 }
 
 function createGroupCallback(data){
-    alert(data);
     agent_refresh();
 }
 
@@ -110,9 +109,9 @@ let atomic_interval = null;
 
 function toggleOperationView(){
     if($('#togBtnOp').is(':checked')) {
-        showHide('#queueName,#queueGroup,#queueFlow,#opBtn', '#operations');
+        showHide('#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth','#operations');
     } else {
-        showHide('#operations', '#queueName,#queueGroup,#queueFlow,#opBtn');
+        showHide('#operations','#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth,#queueCleanup,#queueStealth');
     }
 }
 
@@ -123,10 +122,11 @@ function handleStartAction(){
         "index":"core_operation",
         "name":name,
         "group":document.getElementById("queueGroup").value,
-        "adversary":document.getElementById("queueFlow").value
+        "adversary":document.getElementById("queueFlow").value,
+        "cleanup":document.getElementById("queueCleanup").value,
+        "stealth":document.getElementById("queueStealth").value,
     };
     restRequest('PUT', queueDetails, handleStartActionCallback);
-    
 }
 
 function handleStartActionCallback(data){
@@ -232,7 +232,7 @@ function toggleAdversaryView(){
 }
 
 function loadAdversary() {
-    restRequest('POST', {'index':'core_adversary', 'name': $('#profile-existing-name').val()}, loadAdversaryCallback);
+    restRequest('POST', {'index':'core_adversary', 'id': $('#profile-existing-name').val()}, loadAdversaryCallback);
 }
 
 function loadAdversaryCallback(data) {

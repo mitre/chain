@@ -249,6 +249,14 @@
                                                 <option id="qgroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
                                             {% endfor %}
                                       </select>
+                                      <select name="cleanup" id="queueCleanup" style="opacity:0.5" disabled="true">
+                                            <option value="1" selected>Clean up artifacts</option>
+                                            <option value="0">Turn off cleanup</option>
+                                      </select>
+                                      <select name="stealth" id="queueStealth" style="opacity:0.5" disabled="true">
+                                            <option value="0" selected>Run normal operation</option>
+                                            <option value="1">Run stealthy operation</option>
+                                      </select>
                                       <button id="opBtn" type="button" style="opacity:0.5" disabled="true" class="button-success atomic-button" onclick="handleStartAction()">Start</button>
                                   </div>
                                   <div class="column" style="flex:75%">
