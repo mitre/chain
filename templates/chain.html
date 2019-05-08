@@ -223,7 +223,7 @@
 
                         <div id="operation-profile" class="section-profile" style="display: none">
                               <div class="row">
-                                  <div class="column section-border" style="flex:25%">
+                                  <div class="column section-border" style="flex:25%; min-height: 480px">
                                       <img src="/chain/img/operation.png">
                                       <h4>Manage operations</h4>
                                       <p>View or add new operations</p>
@@ -234,34 +234,74 @@
                                           </label>
                                       </div>
                                       <br>
-                                      <select id="operations" style="margin-bottom: 15px;" onchange="refresh()">
+                                      <div id="op-data" style="display: none">
+                                          <input id="queueName" style="opacity:0.5" disabled="true" placeholder="Enter a name"/>
+                                          <select name="work" id="queueFlow" style="opacity:0.5" disabled="true">
+                                                <option value="" disabled selected>Select an adversary</option>
+                                                {% for adv in adversaries %}
+                                                    <option id="qflow-{{ adv }}" value="{{ adv.id }}">{{ adv.name }}</option>
+                                                {% endfor %}
+                                          </select>
+                                          <select name="host" id="queueGroup" style="opacity:0.5" disabled="true">
+                                                <option value="" disabled selected>Select a group</option>
+                                                {% for g in groups %}
+                                                    <option id="qgroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
+                                                {% endfor %}
+                                          </select>
+                                          <select name="cleanup" id="queueCleanup" style="opacity:0.5" disabled="true">
+                                                <option value="1" selected>Clean up artifacts</option>
+                                                <option value="0">Turn off cleanup</option>
+                                          </select>
+                                          <select name="stealth" id="queueStealth" style="opacity:0.5" disabled="true">
+                                                <option value="0" selected>Run normal operation</option>
+                                                <option value="1">Run stealthy operation</option>
+                                          </select>
+                                          <button id="opBtn" type="button" style="opacity:0.5" disabled="true" class="button-success atomic-button" onclick="handleStartAction()">Start</button>
+                                        </div>
+                                      <div id="op-control">
+                                          <select id="operations" style="margin-bottom: 15px;" onchange="refresh()">
                                           <option value="" disabled selected>Select an operation</option>
                                             {% for op in operations %}
                                                 <option id="chosen-operation" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
                                             {% endfor %}
                                       </select>
-                                      <input id="queueName" style="opacity:0.5" disabled="true" placeholder="Enter a name"/>
-                                      <select name="work" id="queueFlow" style="opacity:0.5" disabled="true">
-                                            <option value="" disabled selected>Select an adversary</option>
-                                            {% for adv in adversaries %}
-                                                <option id="qflow-{{ adv }}" value="{{ adv.id }}">{{ adv.name }}</option>
-                                            {% endfor %}
-                                      </select>
-                                      <select name="host" id="queueGroup" style="opacity:0.5" disabled="true">
-                                            <option value="" disabled selected>Select a group</option>
-                                            {% for g in groups %}
-                                                <option id="qgroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
-                                            {% endfor %}
-                                      </select>
-                                      <select name="cleanup" id="queueCleanup" style="opacity:0.5" disabled="true">
-                                            <option value="1" selected>Clean up artifacts</option>
-                                            <option value="0">Turn off cleanup</option>
-                                      </select>
-                                      <select name="stealth" id="queueStealth" style="opacity:0.5" disabled="true">
-                                            <option value="0" selected>Run normal operation</option>
-                                            <option value="1">Run stealthy operation</option>
-                                      </select>
-                                      <button id="opBtn" type="button" style="opacity:0.5" disabled="true" class="button-success atomic-button" onclick="handleStartAction()">Start</button>
+                                          <table>
+                                              <tr>
+                                                  <td>
+                                                      <div id="control-box" class="control-box">
+                                                        <h1>Execution Control</h1>
+                                                        <hr>
+                                                        <table>
+                                                        <tr>
+                                                            <td>
+                                                                <button id="control-play" class="control-row-button" onclick="controlOp('run')" style="display: none;">
+                                                                   <span class="icon"><img src="/chain/img/play.png"></span>
+                                                                   <span class="caption">Resume Operation</span>
+                                                               </button>
+                                                                <button id="control-pause" class="control-row-button" onclick="controlOp('pause')">
+                                                                   <span class="icon"><img src="/chain/img/pause.png"></span>
+                                                                   <span class="caption">Pause Operation</span>
+                                                               </button>
+                                                            </td>
+                                                            <td>
+                                                                <button class="control-row-button" onclick="controlOp('cancel')">
+                                                                   <span class="icon"><img src="/chain/img/cancel.png"></span>
+                                                                   <span class="caption">Cancel Operation</span>
+                                                               </button>
+                                                            </td>
+                                                        <td>
+                                                            <div class="vl"></div>
+                                                        </td>
+                                                            <td>
+                                                                <h2 id="control-state"></h2>
+                                                            </td>
+                                                        </tr>
+                                                        </table>
+                                                     </div>
+                                                  </td>
+                                              </tr>
+                                          </table>
+                                      </div>
                                   </div>
                                   <div class="column" style="flex:75%">
                                       <div class="op-dets">
@@ -277,7 +317,7 @@
                                                       <td><img src="/chain/img/f.png"></td>
                                                       <td><p id="dash-finish"></p></td>
                                                   </tr>
-                                              </table>
+                                                    </table>
                                           </center>
                                       </div>
                                     <div id="content">

@@ -11,3 +11,4 @@ async def initialize(app, services):
     services.get('auth_svc').set_authorized_route('GET', '/plugin/chain/gui', chain_api.landing)
     services.get('auth_svc').set_authorized_route('*', '/plugin/chain/rest', chain_api.rest_api)
 
+    services.get('auth_svc').set_authorized_route('POST','/op/control', chain_api.control)

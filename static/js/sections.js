@@ -110,10 +110,13 @@ let atomic_interval = null;
 
 function toggleOperationView(){
     if($('#togBtnOp').is(':checked')) {
-        showHide('#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth','#operations');
+        document.getElementById("op-control").style.display = "none";
+        document.getElementById("op-data").style.display = "";
     } else {
-        showHide('#operations','#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth,#queueCleanup,#queueStealth');
+        document.getElementById("op-control").style.display = "";
+        document.getElementById("op-data").style.display = "none";
     }
+    showHide('#operations');
 }
 
 function handleStartAction(){
@@ -125,7 +128,7 @@ function handleStartAction(){
         "group":document.getElementById("queueGroup").value,
         "adversary":document.getElementById("queueFlow").value,
         "cleanup":document.getElementById("queueCleanup").value,
-        "stealth":document.getElementById("queueStealth").value,
+        "stealth":document.getElementById("queueStealth").value
     };
     restRequest('PUT', queueDetails, handleStartActionCallback);
 }
@@ -149,6 +152,7 @@ function refresh() {
     let selectedOperationId = $('#operations option:selected').attr('value');
     let postData = selectedOperationId ? {'index':'core_operation','id': selectedOperationId} : null;
     restRequest('POST', postData, operationCallback);
+    getOpState();
 }
 
 function operationCallback(data){
@@ -157,11 +161,13 @@ function operationCallback(data){
     if(operation.finish != null) {
         console.log("Turning off refresh interval for page");
         clearInterval(atomic_interval);
+        document.getElementById("control-box").style.display = "none";
     } else {
         if(!atomic_interval) {
             console.log("Setting refresh interval for page");
             atomic_interval = setInterval(refresh, 5000);
         }
+        document.getElementById("control-box").style.display = "";
     }
     $("#dash-start").html(operation.start);
     $("#dash-finish").html(operation.finish);

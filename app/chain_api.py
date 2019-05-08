@@ -47,3 +47,20 @@ class ChainApi:
             self.loop.create_task(self.operation_svc.run(output))
             output = 'Started new operation #%s' % output
         return web.json_response(output)
+
+    async def control(self, request):
+        data = dict(await request.post())
+        target = data['id']
+        mode = data['mode']
+        result = "ok"
+        if mode == 'pause':
+            await self.operation_svc.opcontrol.pause_operation(target)
+        elif mode == 'run':
+            await self.operation_svc.opcontrol.run_operation(target)
+        elif mode == 'cancel':
+            await self.operation_svc.opcontrol.cancel_operation(target)
+        elif mode == 'state':
+            result = await self.operation_svc.opcontrol.get_state(target)
+        else:
+            result = "unknown"
+        return web.json_response(dict(result=result))
