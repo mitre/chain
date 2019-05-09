@@ -410,9 +410,10 @@ function appendAbilityToList(tactic, value) {
         .data("technique", value['technique'])
         .data("name", value['name'])
         .data("description", value['description'])
+        .data("executor", value['executor'])
         .data("test",value['test'])
         .data("parser",value['parser'])
-        .text(value['name']));
+        .text(value['name'] +' ('+value['executor']+')'));
 }
 
 function clearAbilityDossier(){
@@ -429,6 +430,7 @@ function loadAbility() {
     let chosen = $('#ability-test option:selected');
     $(parent).find('#ability-id').val($(chosen).attr('id'));
     $(parent).find('#ability-name').val($(chosen).data('name'));
+    $(parent).find('#ability-executor').val($(chosen).data('executor'));
     $(parent).find('#ability-tactic').val($(chosen).data('technique')['tactic']);
     $(parent).find('#ability-technique-id').val($(chosen).data('technique')['attack_id']);
     $(parent).find('#ability-technique-name').val($(chosen).data('technique')['name']);
@@ -458,7 +460,7 @@ function createAbility(){
         "id": $(parent).find('#ability-id').val(),
         "name": $(parent).find('#ability-name').val(),
         "description": $(parent).find('#ability-description').val(),
-        "executors": [],
+        "executor": $(parent).find('#ability-executor').val(),
         "tactic": $(parent).find('#ability-tactic').val(),
         "technique": {
           "attack_id": $(parent).find('#ability-technique-id').val(),
