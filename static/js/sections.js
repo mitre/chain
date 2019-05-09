@@ -70,7 +70,8 @@ $(document).ready(function () {
 			style: 'os',
 			selector: 'td:first-child'
 		},
-        order: [[1, 'asc']]
+        order: [[1, 'asc']],
+        errMode: 'throw'
     });
     $('#netTbl tbody').on( 'click', 'tr', function () {
         $(this).toggleClass('selected');
