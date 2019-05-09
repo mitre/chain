@@ -241,7 +241,7 @@ function loadAdversaryCallback(data) {
     $('#profile-tests').empty();
     $.each(data[0]['phases'], function(phase, abilities) {
         abilities.forEach(function(a) {
-            $('#profile-tests').append(buildAbility(a.id, a.name, a.technique.tactic, a.test, a.parser, phase));
+            $('#profile-tests').append(buildAbility(a.id, a.name, a.technique.tactic, a.test, a.parser, phase, a.executor));
         });
     });
     refreshColorCodes();
@@ -301,7 +301,7 @@ function addAbility(exploits){
         alert('The adversary already has this ability');
         return;
     }
-    $('#adversary-profile').find('#profile-tests').append(buildAbility(ability.id, ability.name, ability.technique.tactic, ability.test, ability.parser, phase));
+    $('#adversary-profile').find('#profile-tests').append(buildAbility(ability.id, ability.name, ability.technique.tactic, ability.test, ability.parser, phase, ability.executor));
     refreshColorCodes();
     filterByPhase();
 }
@@ -311,7 +311,7 @@ function removeAbility(test_id){
     refreshColorCodes();
 }
 
-function buildAbility(testId, testName, tactic, encodedTest, parser, phase){
+function buildAbility(testId, testName, tactic, encodedTest, parser, phase, executor){
     let requirements = buildRequirements(encodedTest);
     let li = $('<li/>')
         .attr('id', testId)
@@ -325,7 +325,7 @@ function buildAbility(testId, testName, tactic, encodedTest, parser, phase){
     let span = $('<span/>').text(' RM');
     span.click(function() { removeAbility(testId); });
     span.appendTo(legend);
-    let image = $('<p/>').text(testName);
+    let image = $('<p style="font-size:11px"/>').text(testName + ' ('+executor+')');
     image.appendTo(fieldset);
 
     //add to filter
