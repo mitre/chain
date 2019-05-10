@@ -54,13 +54,13 @@ class ChainApi:
         mode = data['mode']
         result = "ok"
         if mode == 'pause':
-            await self.operation_svc.opcontrol.pause_operation(target)
+            await self.operation_svc.pause_operation(target)
         elif mode == 'run':
-            await self.operation_svc.opcontrol.run_operation(target)
+            await self.operation_svc.run_operation(target)
         elif mode == 'cancel':
-            await self.operation_svc.opcontrol.cancel_operation(target)
+            await self.operation_svc.cancel_operation(target)
         elif mode == 'state':
-            result = await self.operation_svc.opcontrol.get_state(target)
+            result = await self.operation_svc.get_state(target)
         else:
             result = "unknown"
         return web.json_response(dict(result=result))

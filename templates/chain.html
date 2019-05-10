@@ -235,28 +235,28 @@
                                       </div>
                                       <br>
                                       <div id="op-data" style="display: none">
-                                          <input id="queueName" style="opacity:0.5" disabled="true" placeholder="Enter a name"/>
-                                          <select name="work" id="queueFlow" style="opacity:0.5" disabled="true">
+                                          <input id="queueName" placeholder="Enter a name"/>
+                                          <select name="work" id="queueFlow">
                                                 <option value="" disabled selected>Select an adversary</option>
                                                 {% for adv in adversaries %}
                                                     <option id="qflow-{{ adv }}" value="{{ adv.id }}">{{ adv.name }}</option>
                                                 {% endfor %}
                                           </select>
-                                          <select name="host" id="queueGroup" style="opacity:0.5" disabled="true">
+                                          <select name="host" id="queueGroup">
                                                 <option value="" disabled selected>Select a group</option>
                                                 {% for g in groups %}
                                                     <option id="qgroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
                                                 {% endfor %}
                                           </select>
-                                          <select name="cleanup" id="queueCleanup" style="opacity:0.5" disabled="true">
+                                          <select name="cleanup" id="queueCleanup">
                                                 <option value="1" selected>Clean up artifacts</option>
                                                 <option value="0">Turn off cleanup</option>
                                           </select>
-                                          <select name="stealth" id="queueStealth" style="opacity:0.5" disabled="true">
+                                          <select name="stealth" id="queueStealth">
                                                 <option value="0" selected>Run normal operation</option>
                                                 <option value="1">Run stealthy operation</option>
                                           </select>
-                                          <button id="opBtn" type="button" style="opacity:0.5" disabled="true" class="button-success atomic-button" onclick="handleStartAction()">Start</button>
+                                          <button id="opBtn" type="button" class="button-success atomic-button" onclick="handleStartAction()">Start</button>
                                         </div>
                                       <div id="op-control">
                                           <select id="operations" style="margin-bottom: 15px;" onchange="refresh()">
