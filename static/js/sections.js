@@ -268,7 +268,7 @@ function createAdversary() {
         alert("You need to create some abilities!");
         return;
     }
-    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"core_adversary"}, createAdversaryCallback);
+    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"core_adversary","locked":0}, createAdversaryCallback);
 }
 
 function createAdversaryCallback(data){
