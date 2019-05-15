@@ -243,7 +243,7 @@ function loadAdversary() {
 }
 
 function loadAdversaryCallback(data) {
-    $('#profile-name').val($('#profile-existing-name').val());
+    $('#profile-name').val(data[0]['name']);
     $('#profile-description').val(data[0]['description']);
     $('#profile-tests').empty();
     $.each(data[0]['phases'], function(phase, abilities) {
