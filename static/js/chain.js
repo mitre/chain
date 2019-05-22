@@ -8,9 +8,9 @@ function clearWorkflow(){
     $('.section-profile').each(function(){ $(this).css('display', 'none'); });
 }
 
-function restRequest(type, data, callback) {
+function restRequest(type, data, callback, endpoint='/plugin/chain/rest') {
     $.ajax({
-       url: '/plugin/chain/rest',
+       url: endpoint,
        type: type,
        contentType: 'application/json',
        data: JSON.stringify(data),
@@ -28,32 +28,22 @@ function showHide(show, hide) {
 
 function controlOp(mode){
     let op = $('#operations option:selected').attr('value');
-    $.ajax({
-            url: `/op/control`,
-            type: 'post',
-            data: {'id': op, 'mode': mode},
-            success: function (data) {
-                getOpState();
-            }
-        });
+    restRequest('POST', {'id': op, 'mode': mode}, getOpState, '/op/control');
 }
 
-function getOpState() {
+function getOpState(data) {
     let op = $('#operations option:selected').attr('value');
-    $.ajax({
-            url: `/op/control`,
-            type: 'post',
-            data: {'id': op, 'mode': 'state'},
-            success: function (data) {
-                if (data['result'] === 'PAUSED'){
-                    $('#control-play').css('display','');
-                    $('#control-pause').css('display','none');
-                }
-                if (data['result'] === 'RUNNING') {
-                    $('#control-play').css('display','none');
-                    $('#control-pause').css('display','');
-                }
-                document.getElementById('control-state').innerHTML = data['result']
-            }
-        });
+    restRequest('POST', {'id': op, 'mode': 'state'}, opStateCallback, '/op/control');
+}
+
+function opStateCallback(data) {
+    if (data['result'] === 'PAUSED'){
+        $('#control-play').css('display','');
+        $('#control-pause').css('display','none');
+    }
+    if (data['result'] === 'RUNNING') {
+        $('#control-play').css('display','none');
+        $('#control-pause').css('display','');
+    }
+    document.getElementById('control-state').innerHTML = data['result']
 }

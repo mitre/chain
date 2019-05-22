@@ -49,7 +49,7 @@ class ChainApi:
         return web.json_response(output)
 
     async def control(self, request):
-        data = dict(await request.post())
+        data = dict(await request.json())
         target = data['id']
         mode = data['mode']
         result = "ok"
