@@ -203,6 +203,12 @@ function refreshUpdatableFields(chain, div){
     if(chain.finish)
         div.find('#link-finish').html(chain.finish.split('.')[0]);
     div.find('#link-status').html(chain.status);
+    if(chain.status == 0) {
+        div.removeClass('red');
+        div.addClass('green');
+    } else {
+        div.addClass('red');
+    }
 }
 
 function rollup(element) {

@@ -61,13 +61,18 @@ a:hover {
   min-width: 9em;
 }
 .timeline .event:after {
-  box-shadow: 0 0 0 0.2em rgb(202, 60, 60);
   left: -3.5em;
   background: #313534;
   border-radius: 50%;
   height: 0.75em;
   width: 0.75em;
   content: "";
+}
+.timeline .red:after {
+  box-shadow: 0 0 0 0.2em rgb(202, 60, 60);
+}
+.timeline .green:after {
+  box-shadow: 0 0 0 0.2em rgb(28, 202, 0);
 }
 .timeline .event .member-location,
 .timeline .event .member-parameters {
