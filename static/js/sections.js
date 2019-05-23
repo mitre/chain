@@ -273,6 +273,7 @@ function createAdversary() {
 
 function createAdversaryCallback(data){
     $("#togBtnAdv").prop("checked", false).change();
+    alert(data);
     restRequest('POST', {'index':'core_adversary'}, reloadAdversaryElements);
 }
 
