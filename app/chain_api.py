@@ -24,7 +24,10 @@ class ChainApi:
                     tactics=tactics, parsers=parsers)
 
     async def rest_api(self, request):
-        data = dict(await request.json())
+        try:
+            data = dict(await request.json())
+        except TypeError:
+            return #Junk Request (happens if malformed, just ignore
         index = data.pop('index')
         options = dict(
             PUT=dict(
@@ -40,6 +43,9 @@ class ChainApi:
                 core_agent=lambda d: self.data_svc.explode_agents(criteria=d),
                 core_group=lambda d: self.data_svc.explode_groups(criteria=d),
                 core_result=lambda d: self.data_svc.explode_results(criteria=d),
+            ),
+            DELETE=dict(
+                core_operation=lambda d: self.data_svc.delete_operations(criteria=d)
             )
         )
         output = await options[request.method][index](data)
@@ -50,8 +56,11 @@ class ChainApi:
 
     async def control(self, request):
         data = dict(await request.json())
-        target = data['id']
-        mode = data['mode']
+        try:
+            target = data['id']
+            mode = data['mode']
+        except KeyError:
+            return # malformed, ignore request
         result = "ok"
         if mode == 'pause':
             await self.operation_svc.pause_operation(target)

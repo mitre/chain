@@ -116,6 +116,7 @@ function toggleOperationView(){
         document.getElementById("op-control").style.display = "";
         document.getElementById("op-data").style.display = "none";
     }
+    document.getElementById("opDel").style.display = "none";
     showHide('#operations');
 }
 
@@ -162,12 +163,14 @@ function operationCallback(data){
         console.log("Turning off refresh interval for page");
         clearInterval(atomic_interval);
         document.getElementById("control-box").style.display = "none";
+        document.getElementById("opDel").style.display = "";
     } else {
         if(!atomic_interval) {
             console.log("Setting refresh interval for page");
             atomic_interval = setInterval(refresh, 5000);
         }
         document.getElementById("control-box").style.display = "";
+        document.getElementById("opDel").style.display = "none";
     }
     $("#dash-start").html(operation.start);
     $("#dash-finish").html(operation.finish);
@@ -232,6 +235,15 @@ function findResults(){
 
 function loadResults(data){
     $('#resultView').html(atob(data[0].output));
+}
+
+function deleteOperation(){
+    restRequest('DELETE', {'index':'core_operation','id':$('#operations option:selected').val()}, deleteOperationCallback);
+}
+
+function deleteOperationCallback(){
+    $('#operations option:selected').remove();
+    refresh();
 }
 
 /** ADVERSARIES **/
