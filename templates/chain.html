@@ -34,29 +34,29 @@
                   <div class="row-toolbar-section" id="section-1">
                       <button class="row-toolbar-button" onclick="viewSection('group-profile');">
                         <span class="icon"><img src="/chain/img/computer.png"></span>
-                        <span class="caption">Manage Groups</span>
+                        <span class="caption">Groups</span>
                       </button>
                   </div>
                   <div class="row-toolbar-section" id="section-2">
                       <button class="row-toolbar-button" onclick="viewSection('ability-profile');triggerConditions({{ parsers }});">
                         <span class="icon"><img src="/chain/img/ability.png"></span>
-                        <span class="caption">Manage Abilities</span>
+                        <span class="caption">Abilities</span>
                       </button>
                   </div>
                   <div class="row-toolbar-section" id="section-3">
                         <button class="row-toolbar-button" onclick="viewSection('adversary-profile')">
                             <span class="icon"><img src="/chain/img/hacker.png"></span>
-                            <span class="caption">Manage Adversaries</span>
+                            <span class="caption">Adversaries</span>
                         </button>
                     </div>
                     <div class="row-toolbar-section" id="section-4">
                       <button class="row-toolbar-button" onclick="viewSection('operation-profile');">
                         <span class="icon"><img src="/chain/img/operation.png"></span>
-                        <span class="caption">Manage Operations</span>
+                        <span class="caption">Operations</span>
                       </button>
                       <button class="row-toolbar-button" onclick="viewSection('result-profile');">
                         <span class="icon"><img src="/chain/img/result.png"></span>
-                        <span class="caption">Show Results</span>
+                        <span class="caption">Results</span>
                       </button>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
                                     </table>
                                   </div>
                               </div>
-                          </div>
+                        </div>
 
                         <!-- ability -->
 
@@ -261,6 +261,11 @@
                                             <option value="0" selected>Run normal operation</option>
                                             <option value="1">Run stealthy operation</option>
                                       </select>
+                                      <div class="upload atomic-button">
+                                          <input id="seedfile" type="file" class="upload" />
+                                          <span>Upload seed</span>
+                                          <div id="queueSeed" hidden>data</div>
+                                      </div>
                                       <button id="opBtn" type="button" style="opacity:0.5" disabled="true" class="button-success atomic-button" onclick="handleStartAction()">Start</button>
                                   </div>
                                   <div class="column" style="flex:75%">

@@ -4,6 +4,19 @@ let agent_interval_time = 30000;
 let agent_interval = null;
 
 $(document).ready(function () {
+    $('#seedfile').on('change', function (evt) {
+        let reader = new FileReader();
+        reader.onload = function (evt) {
+            if(evt.target.error) {
+                alert('Error reading file');
+                return;
+            }
+            let filecontent = evt.target.result;
+            document.getElementById("queueSeed").innerHTML = filecontent;
+        };
+        reader.readAsText(evt.target.files[0]);
+    });
+
     $('#netTbl').DataTable({
         ajax: {
             url: '/plugin/chain/rest',
@@ -126,7 +139,9 @@ function handleStartAction(){
         "adversary":document.getElementById("queueFlow").value,
         "cleanup":document.getElementById("queueCleanup").value,
         "stealth":document.getElementById("queueStealth").value,
+        "seed":document.getElementById("queueSeed").innerHTML
     };
+    console.log(queueDetails);
     restRequest('PUT', queueDetails, handleStartActionCallback);
 }
 

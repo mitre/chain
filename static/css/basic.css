@@ -6,6 +6,7 @@
     padding: 0px 25px;
     display: inherit;
     border-right: 1px solid #1f1d1d;
+    white-space: nowrap;
 }
 .row-toolbar-button{
     display: flex;
@@ -350,4 +351,27 @@ table.dataTable tbody tr.selected {
 }
 .decision-card td {
     color: white;
+}
+
+.upload {
+    position: relative;
+    overflow: hidden;
+    /*margin: 10px;*/
+    background-color:#1e1e1e;
+    color:white;
+    /*width:75%;*/
+    /*height:35px;*/
+    /*margin:0*/
+    /*border-radius: 4px;*/
+}
+.upload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    /*font-size: 20px;*/
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
 }
