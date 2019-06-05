@@ -356,13 +356,8 @@ table.dataTable tbody tr.selected {
 .upload {
     position: relative;
     overflow: hidden;
-    /*margin: 10px;*/
     background-color:#1e1e1e;
     color:white;
-    /*width:75%;*/
-    /*height:35px;*/
-    /*margin:0*/
-    /*border-radius: 4px;*/
 }
 .upload input.upload {
     position: absolute;
@@ -370,7 +365,6 @@ table.dataTable tbody tr.selected {
     right: 0;
     margin: 0;
     padding: 0;
-    /*font-size: 20px;*/
     cursor: pointer;
     opacity: 0;
     filter: alpha(opacity=0);

@@ -141,7 +141,6 @@ function handleStartAction(){
         "stealth":document.getElementById("queueStealth").value,
         "seed":document.getElementById("queueSeed").innerHTML
     };
-    console.log(queueDetails);
     restRequest('PUT', queueDetails, handleStartActionCallback);
 }
 

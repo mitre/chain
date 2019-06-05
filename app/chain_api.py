@@ -25,7 +25,6 @@ class ChainApi:
 
     async def rest_api(self, request):
         data = dict(await request.json())
-        print(data)
         index = data.pop('index')
         options = dict(
             PUT=dict(
