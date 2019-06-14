@@ -55,7 +55,7 @@ $(document).ready(function () {
                 targets: 4,
                 data: null,
                 render: {
-                    "_" : "executor"
+                    "_" : "platform"
                 }
             },
             {
@@ -248,7 +248,7 @@ function loadAdversaryCallback(data) {
     $('#profile-tests').empty();
     $.each(data[0]['phases'], function(phase, abilities) {
         abilities.forEach(function(a) {
-            $('#profile-tests').append(buildAbility(a.id, a.name, a.technique.tactic, a.test, a.parser, phase, a.executor));
+            $('#profile-tests').append(buildAbility(a.id, a.name, a.technique.tactic, a.test, a.parser, phase, a.platform));
         });
     });
     refreshColorCodes();
@@ -309,7 +309,7 @@ function addAbility(exploits){
         alert('The adversary already has this ability');
         return;
     }
-    $('#adversary-profile').find('#profile-tests').append(buildAbility(ability.id, ability.name, ability.technique.tactic, ability.test, ability.parser, phase, ability.executor));
+    $('#adversary-profile').find('#profile-tests').append(buildAbility(ability.id, ability.name, ability.technique.tactic, ability.test, ability.parser, phase, ability.platform));
     refreshColorCodes();
     filterByPhase();
 }
@@ -319,7 +319,7 @@ function removeAbility(test_id){
     refreshColorCodes();
 }
 
-function buildAbility(testId, testName, tactic, encodedTest, parser, phase, executor){
+function buildAbility(testId, testName, tactic, encodedTest, parser, phase, platform){
     let requirements = buildRequirements(encodedTest);
     let li = $('<li/>')
         .attr('id', testId)
@@ -333,7 +333,7 @@ function buildAbility(testId, testName, tactic, encodedTest, parser, phase, exec
     let span = $('<span/>').text(' RM');
     span.click(function() { removeAbility(testId); });
     span.appendTo(legend);
-    let image = $('<p style="font-size:11px"/>').text(testName + ' ('+executor+')');
+    let image = $('<p style="font-size:11px"/>').text(testName + ' ('+platform+')');
     image.appendTo(fieldset);
 
     //add to filter
@@ -418,10 +418,10 @@ function appendAbilityToList(tactic, value) {
         .data("technique", value['technique'])
         .data("name", value['name'])
         .data("description", value['description'])
-        .data("executor", value['executor'])
+        .data("platform", value['platform'])
         .data("test",value['test'])
         .data("parser",value['parser'])
-        .text(value['name'] +' ('+value['executor']+')'));
+        .text(value['name'] +' ('+value['platform']+')'));
 }
 
 function clearAbilityDossier(){
@@ -438,7 +438,7 @@ function loadAbility() {
     let chosen = $('#ability-test option:selected');
     $(parent).find('#ability-id').val($(chosen).attr('id'));
     $(parent).find('#ability-name').val($(chosen).data('name'));
-    $(parent).find('#ability-executor').val($(chosen).data('executor'));
+    $(parent).find('#ability-executor').val($(chosen).data('platform'));
     $(parent).find('#ability-tactic').val($(chosen).data('technique')['tactic']);
     $(parent).find('#ability-technique-id').val($(chosen).data('technique')['attack_id']);
     $(parent).find('#ability-technique-name').val($(chosen).data('technique')['name']);
@@ -468,7 +468,7 @@ function createAbility(){
         "id": $(parent).find('#ability-id').val(),
         "name": $(parent).find('#ability-name').val(),
         "description": $(parent).find('#ability-description').val(),
-        "executor": $(parent).find('#ability-executor').val(),
+        "platform": $(parent).find('#ability-executor').val(),
         "tactic": $(parent).find('#ability-tactic').val(),
         "technique": {
           "attack_id": $(parent).find('#ability-technique-id').val(),
