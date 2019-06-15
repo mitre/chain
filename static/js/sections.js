@@ -225,6 +225,8 @@ function findResults(){
 }
 
 function loadResults(data){
+    $('#resultCollected').html(data[0].link.collect);
+    $('#resultCmd').html('>> ' + atob(data[0].link.command));
     $('#resultView').html(atob(data[0].output));
 }
 
@@ -383,6 +385,10 @@ $(document).ready(function () {
     $('#nextAbility').click(function() {
         $('#ability-test option:selected').next().attr('selected', 'selected');
         loadAbility();
+    });
+    $('#nextResult').click(function() {
+        $('#decisionResult').get(0).value++;
+        findResults();
     });
 });
 
