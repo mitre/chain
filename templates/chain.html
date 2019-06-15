@@ -44,21 +44,23 @@
                       </button>
                   </div>
                   <div class="row-toolbar-section" id="section-3">
-                        <button class="row-toolbar-button" onclick="viewSection('adversary-profile')">
-                            <span class="icon"><img src="/chain/img/hacker.png"></span>
-                            <span class="caption">Adversaries</span>
-                        </button>
-                    </div>
-                    <div class="row-toolbar-section" id="section-4">
-                      <button class="row-toolbar-button" onclick="viewSection('operation-profile');">
+                    <button class="row-toolbar-button" onclick="viewSection('adversary-profile')">
+                        <span class="icon"><img src="/chain/img/hacker.png"></span>
+                        <span class="caption">Adversaries</span>
+                    </button>
+                  </div>
+                  <div class="row-toolbar-section" id="section-4">
+                    <button class="row-toolbar-button" onclick="viewSection('operation-profile')">
                         <span class="icon"><img src="/chain/img/operation.png"></span>
                         <span class="caption">Operations</span>
-                      </button>
-                      <button class="row-toolbar-button" onclick="viewSection('result-profile');">
+                    </button>
+                  </div>
+                  <div class="row-toolbar-section" id="section-5">
+                    <button class="row-toolbar-button" onclick="viewSection('result-profile')">
                         <span class="icon"><img src="/chain/img/result.png"></span>
                         <span class="caption">Results</span>
-                      </button>
-                    </div>
+                    </button>
+                  </div>
                 </div>
 
                 <div id="atomic-blocks" class="row-canvas">
@@ -285,7 +287,7 @@
                                           <li id="time-start">
                                         </ul>
 
-                                        <li id="link-template" class="event" data-date="" style="display: none" onclick="rollup(this)">
+                                        <li id="link-template" class="event" data-date="" style="display: none" ondblclick="rollup(this)">
                                           <div class="member-infos">
                                             <h1 id="time-tactic" class="member-title"></h1>
                                             <div id="inner-contents">
@@ -300,7 +302,7 @@
                                                             <td><p id="link-description" class="member-result"></p></td>
                                                         </tr>
                                                         <tr>
-                                                            <td>Status code:</td>
+                                                            <td>Status:</td>
                                                             <td><p id="link-status" class="member-result"></p></td>
                                                         </tr>
                                                         <tr>
@@ -329,6 +331,9 @@
 
                           <div id="result-profile" class="section-profile" style="display: none">
                               <div class="row">
+                                  <div class="top-tip">
+                                      <button id="nextResult">next &#x02192;</button>
+                                  </div>
                                   <div class="column section-border" style="flex:25%;">
                                       <img src="/chain/img/result.png">
                                       <h4 style="margin-bottom:-5px">View results</h4>
@@ -336,7 +341,9 @@
                                       <input placeholder="Enter a decision ID" id="decisionResult"/>
                                       <button type="button" class="button-success atomic-button" onclick="findResults()">Show results</button>
                                   </div>
-                                  <div class="column" style="flex:75%">
+                                  <div class="column" style="flex:75%;text-align: left">
+                                      <h4 id="resultCollected"></h4>
+                                      <code id="resultCmd"></code>
                                       <pre id="resultView" style="text-align: left"></pre>
                                   </div>
                               </div>
