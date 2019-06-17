@@ -225,7 +225,7 @@ function findResults(){
 }
 
 function loadResults(data){
-    $('#resultCollected').html(data[0].link.collect);
+    $('#resultCollected').html(data[0].link.finish);
     $('#resultCmd').html('>> ' + atob(data[0].link.command));
     $('#resultView').html(atob(data[0].output));
 }

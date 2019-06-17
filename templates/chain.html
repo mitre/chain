@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Chain Mode | Dashboard</title>
+        <title>Chain | Dashboard</title>
         <link rel="shortcut icon" type="image/png" href="/gui/img/favicon.png"/>
         <link rel="stylesheet" href="/gui/css/shared.css">
         <link rel="stylesheet" href="/gui/css/navbar.css">
@@ -16,7 +16,7 @@
         </script>
         <div class="topnav">
           <a href="/">Home</a>
-          <a class="active" href="/plugin/chain/gui">Chain mode</a>
+          <a class="active" href="/plugin/chain/gui">Chain</a>
           <div class="topnav-right">
             <a href="/logout">Logout</a>
           </div>
@@ -73,7 +73,7 @@
                                   <div class="column section-border" style="flex:25%;">
                                       <img src="/chain/img/computer.png">
                                       <h4 style="margin-bottom:-5px">Manage groups</h4>
-                                      <p>No hosts? <a style="color: inherit; text-decoration: underline;" href="/plugin/sandcat/gui">Deploy an agent</a></p>
+                                      <p>No hosts? Deploy an agent</p>
                                       <input placeholder="Enter name" name="newName" id="groupNewName" required>
                                       <button type="button" class="button-success atomic-button" onclick="createGroup()">Add group</button>
                                   </div>
@@ -344,7 +344,7 @@
                                   <div class="column" style="flex:75%;text-align: left">
                                       <h4 id="resultCollected"></h4>
                                       <code id="resultCmd"></code>
-                                      <pre id="resultView" style="text-align: left"></pre>
+                                      <pre id="resultView" style="text-align: left;max-width:800px"></pre>
                                   </div>
                               </div>
                           </div>
