@@ -6,13 +6,15 @@ from aiohttp_jinja2 import template
 
 class ChainApi:
 
-    def __init__(self, data_svc, operation_svc):
-        self.data_svc = data_svc
-        self.operation_svc = operation_svc
+    def __init__(self, services):
+        self.data_svc = services.get('data_svc')
+        self.operation_svc = services.get('operation_svc')
+        self.auth_svc = services.get('auth_svc')
         self.loop = asyncio.get_event_loop()
 
     @template('chain.html')
     async def landing(self, request):
+        await self.auth_svc.check_permissions(request)
         abilities = await self.data_svc.explode_abilities()
         tactics = {a['technique']['tactic'] for a in abilities}
         groups = await self.data_svc.explode_groups()
@@ -24,6 +26,7 @@ class ChainApi:
                     tactics=tactics, parsers=parsers)
 
     async def rest_api(self, request):
+        await self.auth_svc.check_permissions(request)
         data = dict(await request.json())
         index = data.pop('index')
         options = dict(
