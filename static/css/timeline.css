@@ -69,7 +69,7 @@ a:hover {
   content: "";
 }
 .timeline .red:after {
-  box-shadow: 0 0 0 0.2em var(--theme-color);
+  box-shadow: 0 0 0 0.2em red;
 }
 .timeline .green:after {
   box-shadow: 0 0 0 0.2em rgb(28, 202, 0);
