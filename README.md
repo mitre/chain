@@ -1,7 +1,7 @@
 # CALDERA plugin: Chain
 
 This plugin includes:
-* A REST API available at https://localhost:8888
+* A REST API available at http://localhost:8888
 * A GUI, built on top of the API, which is accessible at the same location but in a browser
 
 ## Requirements
