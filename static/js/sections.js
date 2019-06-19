@@ -250,7 +250,7 @@ function loadAdversaryCallback(data) {
     $('#profile-tests').empty();
     $.each(data[0]['phases'], function(phase, abilities) {
         abilities.forEach(function(a) {
-            $('#profile-tests').append(buildAbility(a.id, a.name, a.technique.tactic, a.test, a.parser, phase, a.platform));
+            $('#profile-tests').append(buildAbility(a.ability_id, a.name, a.technique.tactic, a.test, a.parser, phase, a.platform));
         });
     });
     refreshColorCodes();
@@ -298,7 +298,7 @@ function addAbility(exploits){
     }
     let ability = null;
     exploits.forEach(function(a) {
-        if(a.id == $('#testId').val()) {
+        if(a.ability_id == $('#testId').val()) {
             ability = a;
             return true;
         }
@@ -311,7 +311,7 @@ function addAbility(exploits){
         alert('The adversary already has this ability');
         return;
     }
-    $('#adversary-profile').find('#profile-tests').append(buildAbility(ability.id, ability.name, ability.technique.tactic, ability.test, ability.parser, phase, ability.platform));
+    $('#adversary-profile').find('#profile-tests').append(buildAbility(ability.ability_id, ability.name, ability.technique.tactic, ability.test, ability.parser, phase, ability.platform));
     refreshColorCodes();
     filterByPhase();
 }
@@ -419,7 +419,7 @@ function populateTacticAbilities(exploits){
 function appendAbilityToList(tactic, value) {
     $('#ability-profile').find('#ability-test').append($("<option></option>")
         .attr("value",value['name'])
-        .attr("id",value['id'])
+        .attr("ability_id",value['ability_id'])
         .data("tactic", tactic)
         .data("technique", value['technique'])
         .data("name", value['name'])
@@ -442,7 +442,7 @@ function loadAbility() {
     clearAbilityDossier();
 
     let chosen = $('#ability-test option:selected');
-    $(parent).find('#ability-id').val($(chosen).attr('id'));
+    $(parent).find('#ability-id').val($(chosen).attr('ability_id'));
     $(parent).find('#ability-name').val($(chosen).data('name'));
     $(parent).find('#ability-executor').val($(chosen).data('platform'));
     $(parent).find('#ability-tactic').val($(chosen).data('technique')['tactic']);
@@ -471,7 +471,7 @@ function createAbility(){
     }
     let postData = {
         "index": "core_ability",
-        "id": $(parent).find('#ability-id').val(),
+        "ability_id": $(parent).find('#ability-id').val(),
         "name": $(parent).find('#ability-name').val(),
         "description": $(parent).find('#ability-description').val(),
         "platform": $(parent).find('#ability-executor').val(),
