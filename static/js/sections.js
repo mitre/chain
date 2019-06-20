@@ -204,10 +204,13 @@ function refreshUpdatableFields(chain, div){
         div.find('#link-finish').html(chain.finish.split('.')[0]);
     div.find('#link-status').html(chain.status);
     if(chain.status == 0) {
-        div.removeClass('red');
+        div.removeClass('grey');
         div.addClass('green');
-    } else {
+    } else if (chain.status == 1) {
+        div.removeClass('grey');
         div.addClass('red');
+    } else {
+        div.addClass('grey');
     }
 }
 

@@ -68,6 +68,9 @@ a:hover {
   width: 0.75em;
   content: "";
 }
+.timeline .grey:after {
+  box-shadow: 0 0 0 0.2em grey;
+}
 .timeline .red:after {
   box-shadow: 0 0 0 0.2em red;
 }
