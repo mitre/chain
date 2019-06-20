@@ -505,6 +505,7 @@ function buildRequirements(encodedTest){
     if(matchedRequirements) {
         matchedRequirements = matchedRequirements.filter(function(e) { return e !== '#{server}' });
         matchedRequirements = matchedRequirements.filter(function(e) { return e !== '#{group}' });
+        matchedRequirements = matchedRequirements.filter(function(e) { return e !== '#{files}' });
         matchedRequirements = [...new Set(matchedRequirements)];
         return matchedRequirements.map(function(val){
            return val.replace(/[#{}]/g, "");
