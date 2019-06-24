@@ -1,367 +1,391 @@
 <html>
-    <head>
-        <title>Chain | Dashboard</title>
-        <link rel="shortcut icon" type="image/png" href="/gui/img/favicon.png"/>
-        <link rel="stylesheet" href="/gui/css/shared.css">
-        <link rel="stylesheet" href="/gui/css/navbar.css">
-        <link rel="stylesheet" href="/gui/jquery/jquery.dataTables.min.css">
-        <link rel="stylesheet" href="/chain/css/basic.css">
-        <link rel="stylesheet" href="/gui/css/tabs.css">
-        <link rel="stylesheet" href="/chain/css/modal.css">
-        <link rel="stylesheet" href="/chain/css/timeline.css">
-    </head>
-    <body style="margin-bottom: 100px">
-        <script>
-          document.body.className = 'fade';
-        </script>
-        <div class="topnav">
-          <a href="/">Home</a>
-          <a class="active" href="/plugin/chain/gui">Chain</a>
-          <div class="topnav-right">
-            <a href="/logout">Logout</a>
+<head>
+  <title>Chain | Dashboard</title>
+  <link rel="shortcut icon" type="image/png" href="/gui/img/favicon.png"/>
+  <link rel="stylesheet" href="/gui/css/shared.css">
+  <link rel="stylesheet" href="/gui/css/navbar.css">
+  <link rel="stylesheet" href="/gui/jquery/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="/chain/css/basic.css">
+  <link rel="stylesheet" href="/gui/css/tabs.css">
+  <link rel="stylesheet" href="/chain/css/modal.css">
+  <link rel="stylesheet" href="/chain/css/timeline.css">
+</head>
+<body style="margin-bottom: 100px">
+<script>
+  document.body.className = 'fade';
+</script>
+<div class="topnav">
+  <a href="/">Home</a>
+  <a class="active" href="/plugin/chain/gui">Chain</a>
+  <div class="topnav-right">
+    <a href="/logout">Logout</a>
+  </div>
+</div>
+
+<div class="column" style="flex:100%;margin-top:0">
+  <center>
+    <div id="build-workflow-toolbar" class="row-toolbar subnav">
+      <div class="row-toolbar-section" id="section-0">
+        <button class="row-toolbar-button" onclick="clearWorkflow();">
+          <span class="icon"><img src="/chain/img/trash.png"></span>
+          <span class="caption">Clear</span>
+        </button>
+      </div>
+      <div class="row-toolbar-section" id="section-1">
+        <button class="row-toolbar-button" onclick="viewSection('group-profile');">
+          <span class="icon"><img src="/chain/img/computer.png"></span>
+          <span class="caption">Groups</span>
+        </button>
+      </div>
+      <div class="row-toolbar-section" id="section-2">
+        <button class="row-toolbar-button"
+            onclick="viewSection('ability-profile');triggerConditions({{ parsers }});">
+          <span class="icon"><img src="/chain/img/ability.png"></span>
+          <span class="caption">Abilities</span>
+        </button>
+      </div>
+      <div class="row-toolbar-section" id="section-3">
+        <button class="row-toolbar-button" onclick="viewSection('adversary-profile')">
+          <span class="icon"><img src="/chain/img/hacker.png"></span>
+          <span class="caption">Adversaries</span>
+        </button>
+      </div>
+      <div class="row-toolbar-section" id="section-4">
+        <button class="row-toolbar-button" onclick="viewSection('operation-profile')">
+          <span class="icon"><img src="/chain/img/operation.png"></span>
+          <span class="caption">Operations</span>
+        </button>
+      </div>
+      <div class="row-toolbar-section" id="section-5">
+        <button class="row-toolbar-button" onclick="viewSection('result-profile')">
+          <span class="icon"><img src="/chain/img/result.png"></span>
+          <span class="caption">Results</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="atomic-blocks" class="row-canvas">
+      <center>
+
+        <!-- group -->
+
+        <div id="group-profile" class="section-profile" style="display: none">
+          <div class="row">
+            <div class="column section-border" style="flex:25%;">
+              <img src="/chain/img/computer.png">
+              <h4 style="margin-bottom:-5px">Manage groups</h4>
+              <p>No hosts? Deploy an agent</p>
+              <input placeholder="Enter name" name="newName" id="groupNewName" required>
+              <button type="button" class="button-success atomic-button" onclick="createGroup()">Add group</button>
+            </div>
+            <div class="column" style="flex:75%">
+              <table id="netTbl" class="display" style="width:100%;">
+                <thead>
+                <tr>
+                  <th></th>
+                  <th>Host <i style="font-size:11px">paw print</i></th>
+                  <th>Checks</th>
+                  <th>Groups</th>
+                  <th>Platform</th>
+                  <th>Last seen</th>
+                </tr>
+                </thead>
+              </table>
+            </div>
           </div>
         </div>
 
-        <div class="column" style="flex:100%;margin-top:0">
-            <center>
-                <div id="build-workflow-toolbar" class="row-toolbar subnav">
-                    <div class="row-toolbar-section" id="section-0">
-                      <button class="row-toolbar-button" onclick="clearWorkflow();">
-                        <span class="icon"><img src="/chain/img/trash.png"></span>
-                        <span class="caption">Clear</span>
-                      </button>
-                  </div>
-                  <div class="row-toolbar-section" id="section-1">
-                      <button class="row-toolbar-button" onclick="viewSection('group-profile');">
-                        <span class="icon"><img src="/chain/img/computer.png"></span>
-                        <span class="caption">Groups</span>
-                      </button>
-                  </div>
-                  <div class="row-toolbar-section" id="section-2">
-                      <button class="row-toolbar-button" onclick="viewSection('ability-profile');triggerConditions({{ parsers }});">
-                        <span class="icon"><img src="/chain/img/ability.png"></span>
-                        <span class="caption">Abilities</span>
-                      </button>
-                  </div>
-                  <div class="row-toolbar-section" id="section-3">
-                    <button class="row-toolbar-button" onclick="viewSection('adversary-profile')">
-                        <span class="icon"><img src="/chain/img/hacker.png"></span>
-                        <span class="caption">Adversaries</span>
-                    </button>
-                  </div>
-                  <div class="row-toolbar-section" id="section-4">
-                    <button class="row-toolbar-button" onclick="viewSection('operation-profile')">
-                        <span class="icon"><img src="/chain/img/operation.png"></span>
-                        <span class="caption">Operations</span>
-                    </button>
-                  </div>
-                  <div class="row-toolbar-section" id="section-5">
-                    <button class="row-toolbar-button" onclick="viewSection('result-profile')">
-                        <span class="icon"><img src="/chain/img/result.png"></span>
-                        <span class="caption">Results</span>
-                    </button>
-                  </div>
-                </div>
+        <!-- ability -->
 
-                <div id="atomic-blocks" class="row-canvas">
-                    <center>
-
-                        <!-- group -->
-
-                          <div id="group-profile" class="section-profile" style="display: none">
-                              <div class="row">
-                                  <div class="column section-border" style="flex:25%;">
-                                      <img src="/chain/img/computer.png">
-                                      <h4 style="margin-bottom:-5px">Manage groups</h4>
-                                      <p>No hosts? Deploy an agent</p>
-                                      <input placeholder="Enter name" name="newName" id="groupNewName" required>
-                                      <button type="button" class="button-success atomic-button" onclick="createGroup()">Add group</button>
-                                  </div>
-                                  <div class="column" style="flex:75%">
-                                      <table id="netTbl" class="display" style="width:100%;">
-                                        <thead>
-                                          <tr>
-                                              <th></th>
-                                              <th>Host <i style="font-size:11px">paw print</i></th>
-                                              <th>Checks</th>
-                                              <th>Groups</th>
-                                              <th>Platform</th>
-                                              <th>Last seen</th>
-                                          </tr>
-                                        </thead>
-                                    </table>
-                                  </div>
-                              </div>
-                          </div>
-
-                        <!-- ability -->
-
-                        <div id="ability-profile" class="section-profile" style="display: none">
-                              <div class="row">
-                                  <div class="top-tip">
-                                      <button id="nextAbility">next &#x02192;</button>
-                                  </div>
-                                  <div class="column section-border" style="flex:25%;">
-                                      <img src="/chain/img/ability.png">
-                                      <h4>Manage abilities</h4>
-                                      <p>View, add or update techniques</p>
-                                      <center>
-                                      <select id="ability-tactic-filter" onchange="populateTacticAbilities({{ exploits }});">
-                                         <option value="" disabled selected>Select ATT&CK tactic</option>
-                                         {% for tactic in tactics %}
-                                            <option value={{tactic}} data-tactic={{tactic}}>{{ tactic }}</option>
-                                         {% endfor %}}
-                                      </select>
-                                      </center>
-                                      <select id="ability-test" onchange="loadAbility()">
-                                        <option value="" disabled selected>Select ability</option>
-                                      </select>
-                                      <button type="button" class="button-success atomic-button" onclick="createAbility()">Save ability</button>
-                                  </div>
-                                  <div class="column" style="flex:75%;text-align:left">
-                                      <table style="width:100%;border-spacing:20px;border-collapse:collapse;" class="ability-table">
-                                          <tr>
-                                              <td><p>Ability ID:</p></td>
-                                              <td><input id="ability-id" disabled="true"/></td>
-                                          </tr>
-                                          <tr>
-                                              <td><p>ATT&CK Tactic:</p></td>
-                                              <td><input id="ability-tactic" spellcheck="false" placeholder="Enter a tactic (must be an existing one)"/></td>
-                                          </tr>
-                                          <tr>
-                                              <td><p>ATT&CK Technique ID:</p></td>
-                                              <td><input id="ability-technique-id" spellcheck="false"
-                                                         placeholder="Enter ATT&CK technique ID"/></td>
-                                          </tr>
-                                          <tr>
-                                              <td><p>ATT&CK Technique Name:</p></td>
-                                              <td><input id="ability-technique-name" spellcheck="false"
-                                                         placeholder="Enter ATT&CK technique name"/></td>
-                                          </tr>
-                                          <tr>
-                                              <td><p>Name:</p></td>
-                                              <td><input id="ability-name" spellcheck="false" placeholder="Enter a name"/></td>
-                                          </tr>
-                                          <tr>
-                                              <td><p>Description:</p></td>
-                                              <td><input id="ability-description" spellcheck="false" placeholder="Enter a description"/></td>
-                                          </tr>
-                                          <tr>
-                                              <td><p>Platform:</p></td>
-                                              <td><input id="ability-executor" spellcheck="false" placeholder="Enter a command platform"/></td>
-                                          </tr>
-                                          <tr>
-                                              <td><p>Command:</p></td>
-                                              <td><textarea id="ability-command" spellcheck="false" placeholder="Enter a command"></textarea></td>
-                                          </tr>
-                                          <tr id="preconditions" style="display:none">
-                                              <td><p>Requires:</p></td>
-                                              <td><ol id="ability-preconditions"></ol></td>
-                                          </tr>
-                                          <tr id="postconditions" style="display:none">
-                                              <td><p>Unlocks:</p></td>
-                                              <td><ol id="ability-postconditions"></ol></td>
-                                          </tr>
-                                      </table>
-                                  </div>
-                              </div>
-                          </div>
-
-                          <!-- adversary -->
-
-                          <div id="adversary-profile" class="section-profile" style="display: none">
-                              <div class="row">
-                                  <div class="top-tip">
-                                      <select id="phaseFilter" type="text" class="darkSelect" onchange="filterByPhase()">
-                                          <option value="0" selected>All phases</option>
-                                      </select>
-                                  </div>
-                                  <div class="column section-border" style="flex:25%;">
-                                      <img src="/chain/img/hacker.png">
-                                      <h4 style="margin-bottom:-5px">Manage adversaries</h4>
-                                      <p>Add or view adversary profiles</p>
-                                      <br>
-                                      <div class="toggle">
-                                          <label class="switch"><input type="checkbox" id="togBtnAdv" onchange="toggleAdversaryView()">
-                                              <div class="slider round"><span class="on">ADD</span><span class="off">VIEW</span></div>
-                                          </label>
-                                      </div>
-                                      <br>
-                                      <select id="profile-existing-name" onchange="loadAdversary()">
-                                             <option value="" disabled selected>Select an existing adversary</option>
-                                             {% for adv in adversaries %}
-                                                  <option value="{{adv.id}}">{{ adv.name }}</option>
-                                             {% endfor %}}
-                                      </select>
-                                      <input id="profile-name" style="opacity:0.5" disabled="true" placeholder="Enter a name"/>
-                                      <input id="profile-description" placeholder="Enter a description"/>
-                                      <br><br>
-                                      <hr>
-                                      <br>
-                                      <center>
-                                      <select id="profile-phase" style="width: 95%">
-                                            <option value="0" disabled selected>Select phase</option>
-                                            {% for n in range(10) %}
-                                                <option value="{{ n + 1 }}">Phase {{ n + 1}}</option>
-                                            {% endfor %}
-                                      </select>
-                                      <br>
-                                      <input id="testId" type="text" style="width:95%" placeholder="Enter ability ID"/>
-                                      <br><br>
-                                      <button id="attach-ability-btn" style="background-color:#1e1e1e;color:white;width:75%;height:35px;margin:0" type="button" class="button-success atomic-button" onclick="addAbility({{exploits}})">Attach</button>
-                                      </center>
-                                      <br>
-                                      <button type="button" class="button-success atomic-button" id="createAdversary" onclick="createAdversary()">Save adversary</button>
-                                  </div>
-                                  <div class="column profile-tests" style="flex:75%">
-                                      <center>
-                                        <ul id="profile-tests"></ul>
-                                      </center>
-                                  </div>
-                              </div>
-                          </div>
-
-                        <!-- operation -->
-
-                        <div id="operation-profile" class="section-profile" style="display: none">
-                              <div class="row">
-                                  <div class="column section-border" style="flex:25%">
-                                      <img src="/chain/img/operation.png">
-                                      <h4>Manage operations</h4>
-                                      <p>View or add new operations</p>
-                                      <br>
-                                      <div class="toggle">
-                                          <label class="switch"><input type="checkbox" id="togBtnOp" onchange="toggleOperationView()">
-                                              <div class="slider round"><span class="on">ADD</span><span class="off">VIEW</span></div>
-                                          </label>
-                                      </div>
-                                      <br>
-                                      <select id="operations" style="margin-bottom: 15px;" onchange="refresh()">
-                                          <option value="" disabled selected>Select an operation</option>
-                                            {% for op in operations %}
-                                                <option id="chosen-operation" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
-                                            {% endfor %}
-                                      </select>
-                                      <input id="queueName" style="opacity:0.5" disabled="true" placeholder="Enter a name"/>
-                                      <select name="work" id="queueFlow" style="opacity:0.5" disabled="true">
-                                            <option value="" disabled selected>Select an adversary</option>
-                                            {% for adv in adversaries %}
-                                                <option id="qflow-{{ adv }}" value="{{ adv.id }}">{{ adv.name }}</option>
-                                            {% endfor %}
-                                      </select>
-                                      <select name="host" id="queueGroup" style="opacity:0.5" disabled="true">
-                                            <option value="" disabled selected>Select a group</option>
-                                            {% for g in groups %}
-                                                <option id="qgroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
-                                            {% endfor %}
-                                      </select>
-                                      <select name="cleanup" id="queueCleanup" style="opacity:0.5" disabled="true">
-                                            <option value="1" selected>Clean up artifacts</option>
-                                            <option value="0">Turn off cleanup</option>
-                                      </select>
-                                      <select name="stealth" id="queueStealth" style="opacity:0.5" disabled="true">
-                                            <option value="0" selected>Run normal operation</option>
-                                            <option value="1">Run stealthy operation</option>
-                                      </select>
-                                      <button id="opBtn" type="button" style="opacity:0.5" disabled="true" class="button-success atomic-button" onclick="handleStartAction()">Start</button>
-                                  </div>
-                                  <div class="column" style="flex:75%">
-                                      <div class="op-dets">
-                                          <center>
-                                              <table style="border-spacing:15px">
-                                                  <tr>
-                                                      <td><img src="/chain/img/computer.png"></td>
-                                                      <td><p id="dash-group"></p></td>
-                                                      <td><img src="/chain/img/hacker.png"></td>
-                                                      <td><p id="dash-flow"></p></td>
-                                                      <td><img src="/chain/img/s.png"></td>
-                                                      <td><p id="dash-start"></p></td>
-                                                      <td><img src="/chain/img/f.png"></td>
-                                                      <td><p id="dash-finish"></p></td>
-                                                  </tr>
-                                              </table>
-                                          </center>
-                                      </div>
-                                    <div id="content">
-                                        <ul id="timeline" class="timeline">
-                                          <li id="time-start">
-                                        </ul>
-
-                                        <li id="link-template" class="event" data-date="" style="display: none" ondblclick="rollup(this)">
-                                          <div class="member-infos">
-                                            <h1 id="time-tactic" class="member-title"></h1>
-                                            <div id="inner-contents">
-                                                <div class="decision-card">
-                                                    <table style="border-spacing:15px;">
-                                                        <tr>
-                                                            <td>Decision ID:</td>
-                                                            <td><p id="link-id" class="member-result"></p></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Description:</td>
-                                                            <td><p id="link-description" class="member-result"></p></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Status:</td>
-                                                            <td><p id="link-status" class="member-result"></p></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Collected:</td>
-                                                            <td><p id="link-collect" class="member-result"></p></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Finished:</td>
-                                                            <td><p id="link-finish" class="member-result"></p></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Command:</td>
-                                                            <td><p id="time-action" class="member-result"></p></td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                          </div>
-                                        </li>
-                                        </div>
-                                  </div>
-                              </div>
-                          </div>
-
-                        <!-- results -->
-
-                          <div id="result-profile" class="section-profile" style="display: none">
-                              <div class="row">
-                                  <div class="top-tip">
-                                      <button id="nextResult">next &#x02192;</button>
-                                  </div>
-                                  <div class="column section-border" style="flex:25%;">
-                                      <img src="/chain/img/result.png">
-                                      <h4 style="margin-bottom:-5px">View results</h4>
-                                      <p>Raw shell output from decisions</p>
-                                      <input placeholder="Enter a decision ID" id="decisionResult"/>
-                                      <button type="button" class="button-success atomic-button" onclick="findResults()">Show results</button>
-                                  </div>
-                                  <div class="column" style="flex:75%;text-align: left">
-                                      <h4 id="resultCollected"></h4>
-                                      <code id="resultCmd"></code>
-                                      <pre id="resultView" style="text-align: left;max-width:800px"></pre>
-                                  </div>
-                              </div>
-                          </div>
-
-                      </center>
-                  </div>
-                </center>
+        <div id="ability-profile" class="section-profile" style="display: none">
+          <div class="row">
+            <div class="top-tip">
+              <button id="nextAbility">next &#x02192;</button>
+            </div>
+            <div class="column section-border" style="flex:25%;">
+              <img src="/chain/img/ability.png">
+              <h4>Manage abilities</h4>
+              <p>View, add or update techniques</p>
+              <center>
+                <select id="ability-tactic-filter" onchange="populateTacticAbilities({{ exploits }});">
+                  <option value="" disabled selected>Select ATT&CK tactic</option>
+                  {% for tactic in tactics %}
+                    <option value={{ tactic }} data-tactic={{ tactic }}>{{ tactic }}</option>
+                  {% endfor %}}
+                </select>
+              </center>
+              <select id="ability-test" onchange="loadAbility()">
+                <option value="" disabled selected>Select ability</option>
+              </select>
+              <button type="button" class="button-success atomic-button" onclick="createAbility()">Save
+                ability
+              </button>
+            </div>
+            <div class="column" style="flex:75%;text-align:left">
+              <table style="width:100%;border-spacing:20px;border-collapse:collapse;"
+                   class="ability-table">
+                <tr>
+                  <td><p>Ability ID:</p></td>
+                  <td><input id="ability-id" disabled="true"/></td>
+                </tr>
+                <tr>
+                  <td><p>ATT&CK Tactic:</p></td>
+                  <td><input id="ability-tactic" spellcheck="false"
+                         placeholder="Enter a tactic (must be an existing one)"/></td>
+                </tr>
+                <tr>
+                  <td><p>ATT&CK Technique ID:</p></td>
+                  <td><input id="ability-technique-id" spellcheck="false"
+                         placeholder="Enter ATT&CK technique ID"/></td>
+                </tr>
+                <tr>
+                  <td><p>ATT&CK Technique Name:</p></td>
+                  <td><input id="ability-technique-name" spellcheck="false"
+                         placeholder="Enter ATT&CK technique name"/></td>
+                </tr>
+                <tr>
+                  <td><p>Name:</p></td>
+                  <td><input id="ability-name" spellcheck="false"
+                         placeholder="Enter a name"/></td>
+                </tr>
+                <tr>
+                  <td><p>Description:</p></td>
+                  <td><input id="ability-description" spellcheck="false"
+                         placeholder="Enter a description"/></td>
+                </tr>
+                <tr>
+                  <td><p>Platform:</p></td>
+                  <td><input id="ability-executor" spellcheck="false"
+                         placeholder="Enter a command platform"/></td>
+                </tr>
+                <tr>
+                  <td><p>Command:</p></td>
+                  <td><textarea id="ability-command" spellcheck="false"
+                          placeholder="Enter a command"></textarea></td>
+                </tr>
+                <tr id="preconditions" style="display:none">
+                  <td><p>Requires:</p></td>
+                  <td>
+                    <ol id="ability-preconditions"></ol>
+                  </td>
+                </tr>
+                <tr id="postconditions" style="display:none">
+                  <td><p>Unlocks:</p></td>
+                  <td>
+                    <ol id="ability-postconditions"></ol>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
         </div>
-    </body>
-    <script>
-      document.addEventListener("DOMContentLoaded", function(e) {
-        document.body.className = '';
-      });
-    </script>
-    <script src="/gui/jquery/jquery.js"></script>
-    <script src="/gui/jquery/jquery-ui.js"></script>
-    <script src="/gui/jquery/jquery.dataTables.min.js"></script>
-    <script src="/chain/js/chain.js"></script>
-    <script src="/chain/js/sections.js"></script>
+
+        <!-- adversary -->
+
+        <div id="adversary-profile" class="section-profile" style="display: none">
+          <div class="row">
+            <div class="top-tip">
+              <select id="phaseFilter" type="text" class="darkSelect" onchange="filterByPhase()">
+                <option value="0" selected>All phases</option>
+              </select>
+            </div>
+            <div class="column section-border" style="flex:25%;">
+              <img src="/chain/img/hacker.png">
+              <h4 style="margin-bottom:-5px">Manage adversaries</h4>
+              <p>Add or view adversary profiles</p>
+              <br>
+              <div class="toggle">
+                <label class="switch"><input type="checkbox" id="togBtnAdv" onchange="toggleAdversaryView()">
+                  <div class="slider round"><span class="on">ADD</span><span class="off">VIEW</span>
+                  </div>
+                </label>
+              </div>
+              <br>
+              <select id="profile-existing-name" onchange="loadAdversary()">
+                <option value="" disabled selected>Select an existing adversary</option>
+                {% for adv in adversaries %}
+                  <option value="{{ adv.id }}">{{ adv.name }}</option>
+                {% endfor %}}
+              </select>
+              <input id="profile-name" style="opacity:0.5" disabled="true" placeholder="Enter a name"/>
+              <input id="profile-description" placeholder="Enter a description"/>
+              <br><br>
+              <hr>
+              <br>
+              <center>
+                <select id="profile-phase" style="width: 95%">
+                  <option value="0" disabled selected>Select phase</option>
+                  {% for n in range(10) %}
+                    <option value="{{ n + 1 }}">Phase {{ n + 1 }}</option>
+                  {% endfor %}
+                </select>
+                <br>
+                <input id="testId" type="text" style="width:95%" placeholder="Enter ability ID"/>
+                <br><br>
+                <button id="attach-ability-btn"
+                    style="background-color:#1e1e1e;color:white;width:75%;height:35px;margin:0"
+                    type="button" class="button-success atomic-button"
+                    onclick="addAbility({{ exploits }})">Attach
+                </button>
+              </center>
+              <br>
+              <button type="button" class="button-success atomic-button" id="createAdversary"
+                  onclick="createAdversary()">Save adversary
+              </button>
+            </div>
+            <div class="column profile-tests" style="flex:75%">
+              <center>
+                <ul id="profile-tests"></ul>
+              </center>
+            </div>
+          </div>
+        </div>
+
+        <!-- operation -->
+
+        <div id="operation-profile" class="section-profile" style="display: none">
+          <div class="row">
+            <div class="column section-border" style="flex:25%">
+              <img src="/chain/img/operation.png">
+              <h4>Manage operations</h4>
+              <p>View or add new operations</p>
+              <br>
+              <div class="toggle">
+                <label class="switch"><input type="checkbox" id="togBtnOp" onchange="toggleOperationView()">
+                  <div class="slider round"><span class="on">ADD</span><span class="off">VIEW</span></div>
+                </label>
+              </div>
+              <br>
+              <select id="operations" style="margin-bottom: 15px;" onchange="refresh()">
+                <option value="" disabled selected>Select an operation</option>
+                {% for op in operations %}
+                  <option id="chosen-operation" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
+                {% endfor %}
+              </select>
+              <input id="queueName" style="opacity:0.5" disabled="true" placeholder="Enter a name"/>
+              <select name="work" id="queueFlow" style="opacity:0.5" disabled="true">
+                <option value="" disabled selected>Select an adversary</option>
+                {% for adv in adversaries %}
+                  <option id="qflow-{{ adv }}" value="{{ adv.id }}">{{ adv.name }}</option>
+                {% endfor %}
+              </select>
+              <select name="host" id="queueGroup" style="opacity:0.5" disabled="true">
+                <option value="" disabled selected>Select a group</option>
+                {% for g in groups %}
+                  <option id="qgroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
+                {% endfor %}
+              </select>
+              <select name="cleanup" id="queueCleanup" style="opacity:0.5" disabled="true">
+                <option value="1" selected>Clean up artifacts</option>
+                <option value="0">Turn off cleanup</option>
+              </select>
+              <select name="stealth" id="queueStealth" style="opacity:0.5" disabled="true">
+                <option value="0" selected>Run normal operation</option>
+                <option value="1">Run stealthy operation</option>
+              </select>
+              <button id="opBtn" type="button" style="opacity:0.5" disabled="true"
+                  class="button-success atomic-button" onclick="handleStartAction()">Start
+              </button>
+            </div>
+            <div class="column" style="flex:75%">
+              <div class="op-dets">
+                <center>
+                  <table style="border-spacing:15px">
+                    <tr>
+                      <td><img src="/chain/img/computer.png"></td>
+                      <td><p id="dash-group"></p></td>
+                      <td><img src="/chain/img/hacker.png"></td>
+                      <td><p id="dash-flow"></p></td>
+                      <td><img src="/chain/img/s.png"></td>
+                      <td><p id="dash-start"></p></td>
+                      <td><img src="/chain/img/f.png"></td>
+                      <td><p id="dash-finish"></p></td>
+                    </tr>
+                  </table>
+                </center>
+              </div>
+              <div id="content">
+                <ul id="timeline" class="timeline">
+                  <li id="time-start">
+                </ul>
+
+                <li id="link-template" class="event" data-date="" style="display: none"
+                  ondblclick="rollup(this)">
+                  <div class="member-infos">
+                    <h1 id="time-tactic" class="member-title"></h1>
+                    <div id="inner-contents">
+                      <div class="decision-card">
+                        <table style="border-spacing:15px;">
+                          <tr>
+                            <td>Decision ID:</td>
+                            <td><p id="link-id" class="member-result"></p></td>
+                          </tr>
+                          <tr>
+                            <td>Description:</td>
+                            <td><p id="link-description" class="member-result"></p></td>
+                          </tr>
+                          <tr>
+                            <td>Status:</td>
+                            <td><p id="link-status" class="member-result"></p></td>
+                          </tr>
+                          <tr>
+                            <td>Collected:</td>
+                            <td><p id="link-collect" class="member-result"></p></td>
+                          </tr>
+                          <tr>
+                            <td>Finished:</td>
+                            <td><p id="link-finish" class="member-result"></p></td>
+                          </tr>
+                          <tr>
+                            <td>Command:</td>
+                            <td><p id="time-action" class="member-result"></p></td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- results -->
+
+        <div id="result-profile" class="section-profile" style="display: none">
+          <div class="row">
+            <div class="top-tip">
+              <button id="nextResult">next &#x02192;</button>
+            </div>
+            <div class="column section-border" style="flex:25%;">
+              <img src="/chain/img/result.png">
+              <h4 style="margin-bottom:-5px">View results</h4>
+              <p>Raw shell output from decisions</p>
+              <input placeholder="Enter a decision ID" id="decisionResult"/>
+              <button type="button" class="button-success atomic-button" onclick="findResults()">Show
+                results
+              </button>
+            </div>
+            <div class="column" style="flex:75%;text-align: left">
+              <h4 id="resultCollected"></h4>
+              <code id="resultCmd"></code>
+              <pre id="resultView" style="text-align: left;max-width:800px"></pre>
+            </div>
+          </div>
+        </div>
+      </center>
+    </div>
+  </center>
+</div>
+</body>
+<script>
+  document.addEventListener("DOMContentLoaded", function (e) {
+    document.body.className = '';
+  });
+</script>
+<script src="/gui/jquery/jquery.js"></script>
+<script src="/gui/jquery/jquery-ui.js"></script>
+<script src="/gui/jquery/jquery.dataTables.min.js"></script>
+<script src="/chain/js/chain.js"></script>
+<script src="/chain/js/sections.js"></script>
 </html>
