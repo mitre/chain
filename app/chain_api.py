@@ -49,7 +49,6 @@ class ChainApi:
             ),
         )
         output = await options[request.method][index](data)
-        print(request.method, index, data, output)
         if request.method == 'PUT' and index == 'core_operation':
             self.loop.create_task(self.operation_svc.run(output))
         return web.json_response(output)
