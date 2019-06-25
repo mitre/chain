@@ -81,21 +81,43 @@ $(document).ready(function () {
 
 function createGroup(){
     let paws = $.map($('#netTbl').DataTable().rows('.selected').data(), function (item) {return item['paw'];});
-    if(paws.length == 0){ alert("You need to select some hosts!"); return;}
+    if(paws.length === 0){ alert("You need to select some hosts!"); return;}
     let groupName = $("#groupNewName").val();
-    restRequest('PUT', {"name":groupName,"paws":paws,"index":"core_group"}, createGroupCallback);
+    restRequest('PUT', {"name":groupName,"paws":paws,"index":"core_group"}, refreshGroupCallback);
 }
 
-function createGroupCallback(data){
+function deleteGroup(){
+    let groupId = $("#groupNames option:selected").attr("value");
+    restRequest('DELETE', {"group_id":groupId, "index":"core_group"}, refreshGroupCallback);
+    $(".groupDefault").prop('selected', true);
+}
+
+function refreshGroupCallback(data){
     agent_refresh();
 }
 
 function reloadGroupElements(data){
-    let gp_elem = $("#queueGroup");
+    removeGroupElements("qgroup-");
+    addGroupElements(data, "#queueGroup", "qgroup-")
+    removeGroupElements("ggroup-");
+    addGroupElements(data, "#groupNames", "ggroup-");
+
+}
+
+function addGroupElements(data, groupElementId, optionIdPrefix){
+    let group_elem = $(groupElementId);
     $.each(data, function(index, gp) {
-        if(!gp_elem.find('option[value="'+gp.id+'"]').length > 0){
-            gp_elem.append("<option id='qgroup-" + gp.name + "' value='" + gp.id + "'>" + gp.name + "</option>");
+        console.log(index);
+        if(!group_elem.find('option[value="'+gp.id+'"]').length > 0){
+            group_elem.append("<option id='" + optionIdPrefix + gp.name + "' value='" + gp.id + "'>" + gp.name + "</option>");
         }
+    });
+}
+
+function removeGroupElements(optionIdPrefix){
+    let options = document.querySelectorAll('*[id^="' + optionIdPrefix + '"]');
+    Array.prototype.forEach.call( options, function( node ) {
+        node.parentNode.removeChild( node );
     });
 }
 
@@ -170,12 +192,12 @@ function operationCallback(data){
 
     $('.event').each(function() {
         let opId = $(this).attr('operation');
-        if(opId && opId != selectedOperationId) {
+        if(opId && opId !== selectedOperationId) {
             $(this).remove();
         }
     });
     for(let i=0;i<operation.chain.length;i++){
-        if($("#" + operation.chain[i].id).length == 0) {
+        if($("#" + operation.chain[i].id).length === 0) {
             let template = $("#link-template").clone();
             template.find('#link-description').html(operation.chain[i].abilityDescription);
             template.attr("id", operation.chain[i].id);
@@ -203,10 +225,10 @@ function refreshUpdatableFields(chain, div){
     if(chain.finish)
         div.find('#link-finish').html(chain.finish.split('.')[0]);
     div.find('#link-status').html(chain.status);
-    if(chain.status == 0) {
+    if(chain.status === 0) {
         div.removeClass('grey');
         div.addClass('green');
-    } else if (chain.status == 1) {
+    } else if (chain.status === 1) {
         div.removeClass('grey');
         div.addClass('red');
     } else {
@@ -216,7 +238,7 @@ function refreshUpdatableFields(chain, div){
 
 function rollup(element) {
     let inner = $("#"+element.id).find("#inner-contents");
-    if ($("#"+element.id).find("#inner-contents").is(":visible")) {
+    if (inner.is(":visible")) {
         $(inner).slideUp();
     } else {
         $(inner).slideDown();
