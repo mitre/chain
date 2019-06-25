@@ -5,9 +5,9 @@
   <link rel="stylesheet" href="/gui/css/shared.css">
   <link rel="stylesheet" href="/gui/css/navbar.css">
   <link rel="stylesheet" href="/gui/jquery/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="/chain/css/basic.css">
   <link rel="stylesheet" href="/gui/css/tabs.css">
   <link rel="stylesheet" href="/chain/css/modal.css">
+  <link rel="stylesheet" href="/chain/css/basic.css">
   <link rel="stylesheet" href="/chain/css/timeline.css">
 </head>
 <body style="margin-bottom: 100px">
@@ -261,27 +261,28 @@
                   <option id="chosen-operation" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
                 {% endfor %}
               </select>
-              <input id="queueName" style="opacity:0.5" disabled="true" placeholder="Operation name"/>
-              <select name="work" id="queueFlow" style="opacity:0.5" disabled="true">
+              <input id="queueName" class="queueOption" style="opacity:0.5" disabled="true" placeholder="Operation name"/>
+              <select name="work" id="queueFlow" class="queueOption" style="opacity:0.5" disabled="true">
                 <option value="" disabled selected>Adversary</option>
                 {% for adv in adversaries %}
                   <option id="qflow-{{ adv }}" value="{{ adv.id }}">{{ adv.name }}</option>
                 {% endfor %}
               </select>
-              <select name="host" id="queueGroup" style="opacity:0.5" disabled="true">
+              <select name="host" id="queueGroup" class="queueOption" style="opacity:0.5" disabled="true">
                 <option value="" disabled selected>Group</option>
                 {% for g in groups %}
                   <option id="qgroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
                 {% endfor %}
               </select>
-              <select name="cleanup" id="queueCleanup" style="opacity:0.5" disabled="true">
+              <select name="cleanup" id="queueCleanup" class="queueOption" style="opacity:0.5" disabled="true">
                 <option value="1" selected>Clean up artifacts</option>
                 <option value="0">Leave Artifacts</option>
               </select>
-              <select name="stealth" id="queueStealth" style="opacity:0.5" disabled="true">
+              <select name="stealth" id="queueStealth" class="queueOption" style="opacity:0.5" disabled="true">
                 <option value="0" selected>Run normal operation</option>
                 <option value="1">Run stealth operation</option>
               </select>
+              <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max)" style="opacity:0.5;" disabled="true"/>
               <button id="opBtn" type="button" style="opacity:0.5" disabled="true"
                   class="button-success atomic-button" onclick="handleStartAction()">Start
               </button>

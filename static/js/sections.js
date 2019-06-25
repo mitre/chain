@@ -110,15 +110,16 @@ let atomic_interval = null;
 
 function toggleOperationView(){
     if($('#togBtnOp').is(':checked')) {
-        showHide('#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth','#operations');
+        showHide('.queueOption,#opBtn','#operations');
     } else {
-        showHide('#operations','#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth,#queueCleanup,#queueStealth');
+        showHide('#operations,#opBtn','.queueOption');
     }
 }
 
 function handleStartAction(){
     let name = document.getElementById("queueName").value;
     if(!name){alert('Please enter an operation name!'); return; }
+
     let queueDetails = {
         "index":"core_operation",
         "name":name,
@@ -126,6 +127,7 @@ function handleStartAction(){
         "adversary":document.getElementById("queueFlow").value,
         "cleanup":document.getElementById("queueCleanup").value,
         "stealth":document.getElementById("queueStealth").value,
+        "jitter":document.getElementById("queueJitter").value
     };
     restRequest('PUT', queueDetails, handleStartActionCallback);
 }
