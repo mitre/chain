@@ -44,11 +44,11 @@ $(document).ready(function () {
                     $(td).addClass('tag');
                 },
                 render: function(data,type,row,meta){
-                    let g = "";
+                    let g = [];
                     data['groups'].forEach(function(e){
-                        g += e['name'] + " ";
+                        g.push(e['name']);
                     });
-                    return g;
+                    return g.join(", ");
                 }
             },
             {
