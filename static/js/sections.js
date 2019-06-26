@@ -396,6 +396,16 @@ $(document).ready(function () {
     });
 });
 
+function triggerConditions(parsers) {
+    parsers.forEach(function(element){
+        if (element.script.length > 0){
+            $('#preconditions').show();
+            $('#postconditions').show();
+            return true;
+        }
+    })
+}
+
 function populateTacticAbilities(exploits){
     let parent = $('#ability-profile');
     clearAbilityDossier();
