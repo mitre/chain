@@ -282,7 +282,10 @@
                 <option value="0" selected>Run normal operation</option>
                 <option value="1">Run stealth operation</option>
               </select>
-              <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max)" style="opacity:0.5;" disabled="true"/>
+              <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max)" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo"/>
+              <div id="jitterInfo" style="display:none;margin:0 25;">
+                <p>Jitter determines the min and the max time range (in seconds) that agents will check-in for new instructions during an operation</p>
+              </div>
               <button id="opBtn" type="button" style="opacity:0.5" disabled="true"
                   class="button-success atomic-button" onclick="handleStartAction()">Start
               </button>

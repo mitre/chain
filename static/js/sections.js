@@ -235,6 +235,10 @@ function loadResults(data){
     $('#resultView').html(atob(data[0].output));
 }
 
+$('#queueJitter').on('focusin focusout', function() {
+        $('#jitterInfo').toggle();
+    });
+
 /** ADVERSARIES **/
 
 function toggleAdversaryView(){
