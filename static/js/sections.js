@@ -44,11 +44,11 @@ $(document).ready(function () {
                     $(td).addClass('tag');
                 },
                 render: function(data,type,row,meta){
-                    let g = "";
+                    let g = [];
                     data['groups'].forEach(function(e){
-                        g += e['name'] + " ";
+                        g.push(e['name']);
                     });
-                    return g;
+                    return g.join(", ");
                 }
             },
             {
@@ -223,13 +223,14 @@ function refreshUpdatableFields(chain, div){
         div.find('#link-collect').html(chain.collect.split('.')[0]);
     if(chain.finish)
         div.find('#link-finish').html(chain.finish.split('.')[0]);
-    div.find('#link-status').html(chain.status);
     if(chain.status === 0) {
         div.removeClass('grey');
         div.addClass('green');
+        div.find('#link-status').html("Success");
     } else if (chain.status === 1) {
         div.removeClass('grey');
         div.addClass('red');
+        div.find('#link-status').html("Error");
     } else {
         div.addClass('grey');
     }
