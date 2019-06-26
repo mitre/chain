@@ -118,7 +118,21 @@ function toggleOperationView(){
 
 function handleStartAction(){
     let name = document.getElementById("queueName").value;
-    if(!name){alert('Please enter an operation name!'); return; }
+    if(!name){alert('Please enter an operation name'); return; }
+
+    let jitter = document.getElementById("queueJitter").value
+    try {
+        let [jitterMin, jitterMax] = jitter.split("/");
+        jitterMin = parseInt(jitterMin);
+        jitterMax = parseInt(jitterMax);
+        if(!jitterMin || !jitterMax || jitterMin >= jitterMax){
+            throw "jitter min greater than jitter max";
+        }
+    }
+    catch (e) {
+        alert('Jitter must be of the form "min/max" (e.x. 4/8)');
+        return;
+    }
 
     let queueDetails = {
         "index":"core_operation",
@@ -127,7 +141,7 @@ function handleStartAction(){
         "adversary":document.getElementById("queueFlow").value,
         "cleanup":document.getElementById("queueCleanup").value,
         "stealth":document.getElementById("queueStealth").value,
-        "jitter":document.getElementById("queueJitter").value
+        "jitter":jitter
     };
     restRequest('PUT', queueDetails, handleStartActionCallback);
 }
@@ -177,7 +191,7 @@ function operationCallback(data){
         }
     });
     for(let i=0;i<operation.chain.length;i++){
-        if($("#" + operation.chain[i].id).length == 0) {
+        if($("#" + operation.chain[i].id).length === 0) {
             let template = $("#link-template").clone();
             template.find('#link-description').html(operation.chain[i].abilityDescription);
             template.attr("id", operation.chain[i].id);
@@ -235,9 +249,10 @@ function loadResults(data){
     $('#resultView').html(atob(data[0].output));
 }
 
-$('#queueJitter').on('focusin focusout', function() {
-        $('#jitterInfo').toggle();
-    });
+$('#queueJitter').on({
+    'mouseenter':function(){$('#jitterInfo').fadeIn();},
+    'mouseleave':function(){$('#jitterInfo').fadeOut();}
+});
 
 /** ADVERSARIES **/
 
