@@ -43,7 +43,10 @@ class ChainApi:
                 core_agent=lambda d: self.data_svc.explode_agents(criteria=d),
                 core_group=lambda d: self.data_svc.explode_groups(criteria=d),
                 core_result=lambda d: self.data_svc.explode_results(criteria=d),
-            )
+            ),
+            DELETE=dict(
+                core_group=lambda d: self.data_svc.deactivate_group(**d),
+            ),
         )
         output = await options[request.method][index](data)
         if request.method == 'PUT' and index == 'core_operation':

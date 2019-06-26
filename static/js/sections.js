@@ -81,21 +81,41 @@ $(document).ready(function () {
 
 function createGroup(){
     let paws = $.map($('#netTbl').DataTable().rows('.selected').data(), function (item) {return item['paw'];});
-    if(paws.length == 0){ alert("You need to select some hosts!"); return;}
+    if(paws.length === 0){ alert("You need to select some hosts!"); return;}
     let groupName = $("#groupNewName").val();
-    restRequest('PUT', {"name":groupName,"paws":paws,"index":"core_group"}, createGroupCallback);
+    restRequest('PUT', {"name":groupName,"paws":paws,"index":"core_group"}, refreshGroupCallback);
 }
 
-function createGroupCallback(data){
+function deleteGroup(){
+     let groupId = $("#groupNames option:selected").attr("value");
+     restRequest('DELETE', {"group_id":groupId, "index":"core_group"}, refreshGroupCallback);
+     $(".groupDefault").prop('selected', true);
+ }
+
+function refreshGroupCallback(data){
     agent_refresh();
 }
 
 function reloadGroupElements(data){
-    let gp_elem = $("#queueGroup");
+    removeGroupElements("qgroup-");
+    addGroupElements(data, "#queueGroup", "qgroup-");
+    removeGroupElements("ggroup-");
+    addGroupElements(data, "#groupNames", "ggroup-");
+}
+
+function addGroupElements(data, groupElementId, optionIdPrefix){
+    let group_elem = $(groupElementId);
     $.each(data, function(index, gp) {
-        if(!gp_elem.find('option[value="'+gp.id+'"]').length > 0){
-            gp_elem.append("<option id='qgroup-" + gp.name + "' value='" + gp.id + "'>" + gp.name + "</option>");
+        if(!group_elem.find('option[value="'+gp.id+'"]').length > 0){
+            group_elem.append("<option id='" + optionIdPrefix + gp.name + "' value='" + gp.id + "'>" + gp.name + "</option>");
         }
+    });
+}
+
+function removeGroupElements(optionIdPrefix) {
+    let options = document.querySelectorAll('*[id^="' + optionIdPrefix + '"]');
+    Array.prototype.forEach.call(options, function (node) {
+        node.parentNode.removeChild(node);
     });
 }
 
