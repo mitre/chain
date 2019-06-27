@@ -351,3 +351,6 @@ table.dataTable tbody tr.selected {
 .decision-card td {
     color: white;
 }
+.highlight {
+  background-color: yellow;
+}

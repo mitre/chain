@@ -264,9 +264,9 @@
               <table id="factTbl" class="display" style="width:100%;">
                 <thead>
                 <tr>
-                  <th>Source</th>
                   <th>Property</th>
                   <th>Value</th>
+                  <th>Source</th>
                   <th>Score</th>
                   <th>Blacklist</th>
                 </tr>
@@ -275,9 +275,9 @@
                     {% for s in sources %}
                         {% for f in s.facts %}
                         <tr>
-                            <td>{{ s.name }}</td>
                             <td>{{ f.property }}</td>
                             <td>{{ f.value }}</td>
+                            <td><p class="tag" style="margin:0px">{{ s.name }}</p></td>
                             <td>{{ f.score }}</td>
                             <td>{{ f.blacklist }}</td>
                         </tr>
