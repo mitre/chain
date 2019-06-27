@@ -44,11 +44,11 @@ $(document).ready(function () {
                     $(td).addClass('tag');
                 },
                 render: function(data,type,row,meta){
-                    let g = "";
+                    let g = [];
                     data['groups'].forEach(function(e){
-                        g += e['name'] + " ";
+                        g.push(e['name']);
                     });
-                    return g;
+                    return g.join(", ");
                 }
             },
             {
@@ -104,6 +104,12 @@ function agent_refresh(){
     restRequest('POST', {"index":"core_group"}, reloadGroupElements);
 }
 
+/** FACTS **/
+
+$(document).ready(function () {
+    $('#factTbl').DataTable({})
+});
+
 /** OPERATIONS **/
 
 let atomic_interval = null;
@@ -113,7 +119,7 @@ function toggleOperationView(){
         showHide('.queueOption,#opBtn','#operations');
     } else {
         showHide('#operations,#opBtn','.queueOption');
-    }
+    } 
 }
 
 function handleStartAction(){
@@ -140,7 +146,8 @@ function handleStartAction(){
         "adversary":document.getElementById("queueFlow").value,
         "cleanup":document.getElementById("queueCleanup").value,
         "stealth":document.getElementById("queueStealth").value,
-        "jitter":jitter
+        "jitter":jitter,
+        "sources":[document.getElementById("queueSource").value]
     };
     restRequest('PUT', queueDetails, handleStartActionCallback);
 }
@@ -217,11 +224,10 @@ function refreshUpdatableFields(chain, div){
         div.find('#link-collect').html(chain.collect.split('.')[0]);
     if(chain.finish)
         div.find('#link-finish').html(chain.finish.split('.')[0]);
-    div.find('#link-status').html(chain.status);
-    if(chain.status == 0) {
+    if(chain.status === 0) {
         div.removeClass('grey');
         div.addClass('green');
-    } else if (chain.status == 1) {
+    } else if (chain.status === 1) {
         div.removeClass('grey');
         div.addClass('red');
     } else {
@@ -414,16 +420,6 @@ $(document).ready(function () {
         findResults();
     });
 });
-
-function triggerConditions(parsers) {
-    parsers.forEach(function(element){
-        if (element.script.length > 0){
-            $('#preconditions').show();
-            $('#postconditions').show();
-            return true;
-        }
-    })
-}
 
 function populateTacticAbilities(exploits){
     let parent = $('#ability-profile');

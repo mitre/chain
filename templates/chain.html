@@ -33,7 +33,7 @@
       </div>
       <div class="row-toolbar-section" id="section-1">
         <button class="row-toolbar-button" onclick="viewSection('group-profile');">
-          <span class="icon"><img src="/chain/img/computer.png"></span>
+          <span class="icon"><img src="/chain/img/group.png"></span>
           <span class="caption">Groups</span>
         </button>
       </div>
@@ -51,12 +51,18 @@
         </button>
       </div>
       <div class="row-toolbar-section" id="section-4">
+        <button class="row-toolbar-button" onclick="viewSection('fact-profile')">
+          <span class="icon"><img src="/chain/img/facts.png"></span>
+          <span class="caption">Facts</span>
+        </button>
+      </div>
+      <div class="row-toolbar-section" id="section-5">
         <button class="row-toolbar-button" onclick="viewSection('operation-profile')">
           <span class="icon"><img src="/chain/img/operation.png"></span>
           <span class="caption">Operations</span>
         </button>
       </div>
-      <div class="row-toolbar-section" id="section-5">
+      <div class="row-toolbar-section" id="section-6">
         <button class="row-toolbar-button" onclick="viewSection('result-profile')">
           <span class="icon"><img src="/chain/img/result.png"></span>
           <span class="caption">Results</span>
@@ -72,7 +78,7 @@
         <div id="group-profile" class="section-profile" style="display: none">
           <div class="row">
             <div class="column section-border" style="flex:25%;">
-              <img src="/chain/img/computer.png">
+              <img src="/chain/img/group.png">
               <h4 style="margin-bottom:-5px">Manage groups</h4>
               <p>No hosts? Deploy an agent</p>
               <input placeholder="Enter name" name="newName" id="groupNewName" required>
@@ -241,6 +247,48 @@
           </div>
         </div>
 
+        <!-- fact sources -->
+
+        <div id="fact-profile" class="section-profile" style="display: none">
+          <div class="row">
+              <div class="column section-border" style="flex:25%;">
+              <img src="/chain/img/facts.png">
+              <h4 style="margin-bottom:-5px">Manage facts</h4>
+              <p style="margin:25px;">
+                  Facts represent identifiable characteristics of a computer network. A fact source is a collection of facts,
+                  which can be attached to an operation to seed it with information. Facts have relative scores,
+                  either positive (higher priority) or negative (lower priority).
+              </p>
+            </div>
+            <div class="column" style="flex:75%">
+              <table id="factTbl" class="display" style="width:100%;">
+                <thead>
+                <tr>
+                  <th>Source</th>
+                  <th>Property</th>
+                  <th>Value</th>
+                  <th>Score</th>
+                  <th>Blacklist</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for s in sources %}
+                        {% for f in s.facts %}
+                        <tr>
+                            <td>{{ s.name }}</td>
+                            <td>{{ f.property }}</td>
+                            <td>{{ f.value }}</td>
+                            <td>{{ f.score }}</td>
+                            <td>{{ f.blacklist }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         <!-- operation -->
 
         <div id="operation-profile" class="section-profile" style="display: none">
@@ -274,6 +322,12 @@
                   <option id="qgroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
                 {% endfor %}
               </select>
+              <select name="source" id="queueSource" class="queueOption" style="opacity:0.5" disabled="true">
+                <option value="" disabled selected>No fact source</option>
+                    {% for s in sources %}
+                        <option value="{{ s.id }}">{{ s.name }}</option>
+                    {% endfor %}
+              </select>
               <select name="cleanup" id="queueCleanup" class="queueOption" style="opacity:0.5" disabled="true">
                 <option value="1" selected>Clean up artifacts</option>
                 <option value="0">Leave Artifacts</option>
@@ -295,7 +349,7 @@
                 <center>
                   <table style="border-spacing:15px">
                     <tr>
-                      <td><img src="/chain/img/computer.png"></td>
+                      <td><img src="/chain/img/group.png"></td>
                       <td><p id="dash-group"></p></td>
                       <td><img src="/chain/img/hacker.png"></td>
                       <td><p id="dash-flow"></p></td>
@@ -326,10 +380,6 @@
                           <tr>
                             <td>Description:</td>
                             <td><p id="link-description" class="member-result"></p></td>
-                          </tr>
-                          <tr>
-                            <td>Status:</td>
-                            <td><p id="link-status" class="member-result"></p></td>
                           </tr>
                           <tr>
                             <td>Collected:</td>
@@ -364,7 +414,7 @@
               <img src="/chain/img/result.png">
               <h4 style="margin-bottom:-5px">View results</h4>
               <p>Raw shell output from decisions</p>
-              <input placeholder="Enter a decision ID" id="decisionResult"/>
+              <input placeholder="Enter a Decision ID" id="decisionResult"/>
               <button type="button" class="button-success atomic-button" onclick="findResults()">Show
                 results
               </button>
