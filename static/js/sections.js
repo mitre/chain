@@ -126,13 +126,18 @@ function handleStartAction(){
     let name = document.getElementById("queueName").value;
     if(!name){alert('Please enter an operation name'); return; }
 
-    let jitter = document.getElementById("queueJitter").value
+    let jitter = document.getElementById("queueJitter").value || "4/8";
+    console.log(jitter);
     try {
         let [jitterMin, jitterMax] = jitter.split("/");
         jitterMin = parseInt(jitterMin);
         jitterMax = parseInt(jitterMax);
-        if(!jitterMin || !jitterMax || jitterMin >= jitterMax){
-            throw "jitter min greater than jitter max";
+        if(!jitterMin || !jitterMax){
+            throw true;
+        }
+        if(jitterMin >= jitterMax){
+            alert('Jitter MIN must be less than the jitter MAX.');
+            return;
         }
     } catch (e) {
         alert('Jitter must be of the form "min/max" (e.x. 4/8)');
