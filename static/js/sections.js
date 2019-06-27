@@ -132,21 +132,46 @@ function agent_refresh(){
     restRequest('POST', {"index":"core_group"}, reloadGroupElements);
 }
 
+/** FACTS **/
+
+$(document).ready(function () {
+    $('#factTbl').DataTable({})
+});
+
 /** OPERATIONS **/
 
 let atomic_interval = null;
 
 function toggleOperationView(){
     if($('#togBtnOp').is(':checked')) {
-        enableDisable('#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth','#operations');
+        showHide('.queueOption,#opBtn','#operations');
     } else {
-        enableDisable('#operations','#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth,#queueCleanup,#queueStealth');
-    }
+        showHide('#operations,#opBtn','.queueOption');
+    } 
 }
 
 function handleStartAction(){
     let name = document.getElementById("queueName").value;
-    if(!name){alert('Please enter an operation name!'); return; }
+    if(!name){alert('Please enter an operation name'); return; }
+
+    let jitter = document.getElementById("queueJitter").value || "4/8";
+    console.log(jitter);
+    try {
+        let [jitterMin, jitterMax] = jitter.split("/");
+        jitterMin = parseInt(jitterMin);
+        jitterMax = parseInt(jitterMax);
+        if(!jitterMin || !jitterMax){
+            throw true;
+        }
+        if(jitterMin >= jitterMax){
+            alert('Jitter MIN must be less than the jitter MAX.');
+            return;
+        }
+    } catch (e) {
+        alert('Jitter must be of the form "min/max" (e.x. 4/8)');
+        return;
+    }
+
     let queueDetails = {
         "index":"core_operation",
         "name":name,
@@ -154,6 +179,8 @@ function handleStartAction(){
         "adversary":document.getElementById("queueFlow").value,
         "cleanup":document.getElementById("queueCleanup").value,
         "stealth":document.getElementById("queueStealth").value,
+        "jitter":jitter,
+        "sources":[document.getElementById("queueSource").value]
     };
     restRequest('PUT', queueDetails, handleStartActionCallback);
 }
@@ -203,7 +230,7 @@ function operationCallback(data){
         }
     });
     for(let i=0;i<operation.chain.length;i++){
-        if($("#" + operation.chain[i].id).length == 0) {
+        if($("#" + operation.chain[i].id).length === 0) {
             let template = $("#link-template").clone();
             template.find('#link-description').html(operation.chain[i].abilityDescription);
             template.attr("id", operation.chain[i].id);
@@ -233,11 +260,9 @@ function refreshUpdatableFields(chain, div){
     if(chain.status === 0) {
         div.removeClass('grey');
         div.addClass('green');
-        div.find('#link-status').html("Success");
     } else if (chain.status === 1) {
         div.removeClass('grey');
         div.addClass('red');
-        div.find('#link-status').html("Error");
     } else {
         div.addClass('grey');
     }
@@ -259,8 +284,19 @@ function findResults(){
 function loadResults(data){
     $('#resultCollected').html(data[0].link.finish);
     $('#resultCmd').html('>> ' + atob(data[0].link.command));
-    $('#resultView').html(atob(data[0].output));
+
+    let res = atob(data[0].output);
+    $.each(data[0].link.facts, function(k, v) {
+        let regex = new RegExp(v.value, "g");
+        res = res.replace(regex, "<span class='highlight'>"+v.value+"</span>");
+    });
+    $('#resultView').html(res);
 }
+
+$('#queueJitter').on({
+    'mouseenter':function(){$('#jitterInfo').fadeIn();},
+    'mouseleave':function(){$('#jitterInfo').fadeOut();}
+});
 
 /** ADVERSARIES **/
 

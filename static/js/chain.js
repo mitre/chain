@@ -14,7 +14,7 @@ function restRequest(type, data, callback) {
        type: type,
        contentType: 'application/json',
        data: JSON.stringify(data),
-       success:function(data) { callback(data); },
+       success: function(data) { callback(data); },
        error: function (xhr, ajaxOptions, thrownError) { console.log(thrownError); }
     });
 }
@@ -25,6 +25,6 @@ function enableDisable(enable, disable) {
 }
 
 function showHide(show, hide) {
-    $(show).each(function(){ $(this).toggle() });
-    $(hide).each(function(){ $(this).toggle() });
+    $(show).each(function(){$(this).prop('disabled', false).css('opacity', 1.0)});
+    $(hide).each(function(){$(this).prop('disabled', true).css('opacity', 0.5)});
 }

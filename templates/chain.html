@@ -5,9 +5,9 @@
   <link rel="stylesheet" href="/gui/css/shared.css">
   <link rel="stylesheet" href="/gui/css/navbar.css">
   <link rel="stylesheet" href="/gui/jquery/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="/chain/css/basic.css">
   <link rel="stylesheet" href="/gui/css/tabs.css">
   <link rel="stylesheet" href="/chain/css/modal.css">
+  <link rel="stylesheet" href="/chain/css/basic.css">
   <link rel="stylesheet" href="/chain/css/timeline.css">
 </head>
 <body style="margin-bottom: 100px">
@@ -51,12 +51,18 @@
         </button>
       </div>
       <div class="row-toolbar-section" id="section-4">
+        <button class="row-toolbar-button" onclick="viewSection('fact-profile')">
+          <span class="icon"><img src="/chain/img/facts.png"></span>
+          <span class="caption">Facts</span>
+        </button>
+      </div>
+      <div class="row-toolbar-section" id="section-5">
         <button class="row-toolbar-button" onclick="viewSection('operation-profile')">
           <span class="icon"><img src="/chain/img/operation.png"></span>
           <span class="caption">Operations</span>
         </button>
       </div>
-      <div class="row-toolbar-section" id="section-5">
+      <div class="row-toolbar-section" id="section-6">
         <button class="row-toolbar-button" onclick="viewSection('result-profile')">
           <span class="icon"><img src="/chain/img/result.png"></span>
           <span class="caption">Results</span>
@@ -260,14 +266,55 @@
           </div>
         </div>
 
+        <!-- fact sources -->
+
+        <div id="fact-profile" class="section-profile" style="display: none">
+          <div class="row">
+              <div class="column section-border" style="flex:25%;">
+              <img src="/chain/img/facts.png">
+              <h4 style="margin-bottom:-5px">Manage facts</h4>
+              <p style="margin:25px;">
+                  Facts represent identifiable characteristics of a computer network. A fact source is a collection of facts,
+                  which can be attached to an operation to seed it with information. Facts have relative scores,
+                  either positive (higher priority) or negative (lower priority).
+              </p>
+            </div>
+            <div class="column" style="flex:75%">
+              <table id="factTbl" class="display" style="width:100%;">
+                <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Value</th>
+                  <th>Source</th>
+                  <th>Score</th>
+                  <th>Blacklist</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for s in sources %}
+                        {% for f in s.facts %}
+                        <tr>
+                            <td>{{ f.property }}</td>
+                            <td>{{ f.value }}</td>
+                            <td><p class="tag" style="margin:0px">{{ s.name }}</p></td>
+                            <td>{{ f.score }}</td>
+                            <td>{{ f.blacklist }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         <!-- operation -->
 
         <div id="operation-profile" class="section-profile" style="display: none">
           <div class="row">
             <div class="column section-border" style="flex:25%">
               <img src="/chain/img/operation.png">
-              <h4>Manage operations</h4>
-              <p>View or add new operations</p>
+              <h4>Operations</h4>
               <br>
               <div class="toggle">
                 <label class="switch"><input type="checkbox" id="togBtnOp" onchange="toggleOperationView()">
@@ -276,32 +323,42 @@
               </div>
               <br>
               <select id="operations" style="margin-bottom: 15px;" onchange="refresh()">
-                <option value="" disabled selected>Select an operation</option>
+                <option value="" disabled selected>Operations</option>
                 {% for op in operations %}
                   <option id="chosen-operation" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
                 {% endfor %}
               </select>
-              <input id="queueName" style="opacity:0.5" disabled="true" placeholder="Enter a name"/>
-              <select name="work" id="queueFlow" style="opacity:0.5" disabled="true">
-                <option value="" disabled selected>Select an adversary</option>
+              <input id="queueName" class="queueOption" style="opacity:0.5" disabled="true" placeholder="Operation name"/>
+              <select name="work" id="queueFlow" class="queueOption" style="opacity:0.5" disabled="true">
+                <option value="" disabled selected>Adversary</option>
                 {% for adv in adversaries %}
                   <option id="qflow-{{ adv }}" value="{{ adv.id }}">{{ adv.name }}</option>
                 {% endfor %}
               </select>
-              <select name="host" id="queueGroup" style="opacity:0.5" disabled="true">
-                <option class="groupDefault" value="" disabled selected>Select a group</option>
+              <select name="host" id="queueGroup" class="queueOption" style="opacity:0.5" disabled="true">
+                <option class="groupDefault" value="" disabled selected>Group</option>
                 {% for g in groups %}
                   <option id="qgroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
                 {% endfor %}
               </select>
-              <select name="cleanup" id="queueCleanup" style="opacity:0.5" disabled="true">
+              <select name="source" id="queueSource" class="queueOption" style="opacity:0.5" disabled="true">
+                <option value="" disabled selected>No fact source</option>
+                    {% for s in sources %}
+                        <option value="{{ s.id }}">{{ s.name }}</option>
+                    {% endfor %}
+              </select>
+              <select name="cleanup" id="queueCleanup" class="queueOption" style="opacity:0.5" disabled="true">
                 <option value="1" selected>Clean up artifacts</option>
-                <option value="0">Turn off cleanup</option>
+                <option value="0">Leave Artifacts</option>
               </select>
-              <select name="stealth" id="queueStealth" style="opacity:0.5" disabled="true">
+              <select name="stealth" id="queueStealth" class="queueOption" style="opacity:0.5" disabled="true">
                 <option value="0" selected>Run normal operation</option>
-                <option value="1">Run stealthy operation</option>
+                <option value="1">Run stealth operation</option>
               </select>
+              <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max)" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo"/>
+              <div id="jitterInfo" style="display:none;margin:0 25;">
+                <p>Jitter determines the min and the max time range (in seconds) that agents will check-in for new instructions during an operation. Default is '2/8'</p>
+              </div>
               <button id="opBtn" type="button" style="opacity:0.5" disabled="true"
                   class="button-success atomic-button" onclick="handleStartAction()">Start
               </button>
@@ -344,10 +401,6 @@
                             <td><p id="link-description" class="member-result"></p></td>
                           </tr>
                           <tr>
-                            <td>Status:</td>
-                            <td><p id="link-status" class="member-result"></p></td>
-                          </tr>
-                          <tr>
                             <td>Collected:</td>
                             <td><p id="link-collect" class="member-result"></p></td>
                           </tr>
@@ -380,7 +433,7 @@
               <img src="/chain/img/result.png">
               <h4 style="margin-bottom:-5px">View results</h4>
               <p>Raw shell output from decisions</p>
-              <input placeholder="Enter a decision ID" id="decisionResult"/>
+              <input placeholder="Enter a Decision ID" id="decisionResult"/>
               <button type="button" class="button-success atomic-button" onclick="findResults()">Show
                 results
               </button>
