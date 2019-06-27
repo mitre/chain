@@ -104,15 +104,21 @@ function agent_refresh(){
     restRequest('POST', {"index":"core_group"}, reloadGroupElements);
 }
 
+/** FACTS **/
+
+$(document).ready(function () {
+    $('#factTbl').DataTable({})
+});
+
 /** OPERATIONS **/
 
 let atomic_interval = null;
 
 function toggleOperationView(){
     if($('#togBtnOp').is(':checked')) {
-        showHide('#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth','#operations');
+        showHide('#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth,#queueSource','#operations');
     } else {
-        showHide('#operations','#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth,#queueCleanup,#queueStealth');
+        showHide('#operations','#queueSource,#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth,#queueCleanup,#queueStealth');
     }
 }
 
@@ -126,6 +132,7 @@ function handleStartAction(){
         "adversary":document.getElementById("queueFlow").value,
         "cleanup":document.getElementById("queueCleanup").value,
         "stealth":document.getElementById("queueStealth").value,
+        "sources":[document.getElementById("queueSource").value],
     };
     restRequest('PUT', queueDetails, handleStartActionCallback);
 }
@@ -205,11 +212,9 @@ function refreshUpdatableFields(chain, div){
     if(chain.status === 0) {
         div.removeClass('grey');
         div.addClass('green');
-        div.find('#link-status').html("Success");
     } else if (chain.status === 1) {
         div.removeClass('grey');
         div.addClass('red');
-        div.find('#link-status').html("Error");
     } else {
         div.addClass('grey');
     }
