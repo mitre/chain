@@ -236,7 +236,13 @@ function findResults(){
 function loadResults(data){
     $('#resultCollected').html(data[0].link.finish);
     $('#resultCmd').html('>> ' + atob(data[0].link.command));
-    $('#resultView').html(atob(data[0].output));
+
+    let res = atob(data[0].output);
+    $.each(data[0].link.facts, function(k, v) {
+        let regex = new RegExp(v.value, "g");
+        res = res.replace(regex, "<span class='highlight'>"+v.value+"</span>");
+    });
+    $('#resultView').html(res);
 }
 
 /** ADVERSARIES **/
