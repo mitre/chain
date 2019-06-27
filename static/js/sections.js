@@ -128,8 +128,7 @@ function handleStartAction(){
         if(!jitterMin || !jitterMax || jitterMin >= jitterMax){
             throw "jitter min greater than jitter max";
         }
-    }
-    catch (e) {
+    } catch (e) {
         alert('Jitter must be of the form "min/max" (e.x. 4/8)');
         return;
     }
