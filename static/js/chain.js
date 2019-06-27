@@ -19,7 +19,12 @@ function restRequest(type, data, callback) {
     });
 }
 
+function enableDisable(enable, disable) {
+    $(enable).each(function(){ $(this).prop('disabled', false).css('opacity', 1.0) });
+    $(disable).each(function(){ $(this).prop('disabled', true).css('opacity', 0.5) });
+}
+
 function showHide(show, hide) {
-    $(show).each(function(){ $(this).prop('disabled', false).css('opacity', 1.0) });
-    $(hide).each(function(){ $(this).prop('disabled', true).css('opacity', 0.5) });
+    $(show).each(function(){ $(this).toggle() });
+    $(hide).each(function(){ $(this).toggle() });
 }

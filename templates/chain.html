@@ -75,15 +75,27 @@
               <img src="/chain/img/group.png">
               <h4 style="margin-bottom:-5px">Manage groups</h4>
               <p>No hosts? Deploy an agent</p>
+
+              <div class="toggle">
+                <label class="switch"><input type="checkbox" id="togBtnGrp" onchange="toggleGroupView()" checked>
+                  <div class="slider round"><span class="on">ADD</span><span class="off">DELETE</span>
+                  </div>
+                </label>
+              </div>
+              <br>
+              <div id="addGroupSection">
               <input placeholder="Enter name" name="newName" id="groupNewName" required>
               <button type="button" class="button-success atomic-button" onclick="createGroup()">Add Group</button>
+              </div>
+              <div id="deleteGroupSection" style="display: none;">
                 <select name="group" id="groupNames">
                   <option class="groupDefault" value="" disabled selected>Select Group</option>
                     {% for g in groups %}
                       <option id="ggroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
                     {% endfor %}
                 </select>
-               <button type="button" class="button-success atomic-button" onclick="deleteGroup()">Delete Group</button>
+                <button type="button" class="button-success atomic-button" onclick="deleteGroup()">Delete Group</button>
+              </div>
             </div>
             <div class="column" style="flex:75%">
               <table id="netTbl" class="display" style="width:100%;">

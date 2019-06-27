@@ -79,6 +79,14 @@ $(document).ready(function () {
     agent_interval = setInterval(agent_refresh, agent_interval_time);
 });
 
+function toggleGroupView(){
+    if($('#togBtnGrp').is(':checked')) {
+        showHide('#addGroupSection', '#deleteGroupSection');
+    } else {
+        showHide('#deleteGroupSection', '#addGroupSection');
+    }
+}
+
 function createGroup(){
     let paws = $.map($('#netTbl').DataTable().rows('.selected').data(), function (item) {return item['paw'];});
     if(paws.length === 0){ alert("You need to select some hosts!"); return;}
@@ -130,9 +138,9 @@ let atomic_interval = null;
 
 function toggleOperationView(){
     if($('#togBtnOp').is(':checked')) {
-        showHide('#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth','#operations');
+        enableDisable('#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth','#operations');
     } else {
-        showHide('#operations','#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth,#queueCleanup,#queueStealth');
+        enableDisable('#operations','#queueName,#queueGroup,#queueFlow,#opBtn,#queueCleanup,#queueStealth,#queueCleanup,#queueStealth');
     }
 }
 
@@ -258,9 +266,9 @@ function loadResults(data){
 
 function toggleAdversaryView(){
     if($('#togBtnAdv').is(':checked')) {
-        showHide('#profile-name', '#profile-existing-name');
+        enableDisable('#profile-name', '#profile-existing-name');
     } else {
-        showHide('#profile-existing-name', '#profile-name');
+        enableDisable('#profile-existing-name', '#profile-name');
     }
 }
 
