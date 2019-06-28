@@ -228,7 +228,7 @@ function operationCallback(data){
             template.attr("operation", operation.chain[i].op_id);
             template.attr("data-date", operation.chain[i].decide.split('.')[0]);
             template.find('#time-tactic').html('<p style="font-size: 13px;font-weight:100">Host #'
-                + operation.chain[i].host_id +'... "'+operation.chain[i].abilityName +'"</p>');
+                + operation.chain[i].host_id +'... '+operation.chain[i].abilityName +' <b style="font-size:14px;float:right" onclick="findResults('+operation.chain[i].id+')">&#9733;</b></p>');
             template.find('#time-action').html(atob(operation.chain[i].command));
             refreshUpdatableFields(operation.chain[i], template);
             template.find('#link-id').html(operation.chain[i].id);
@@ -268,19 +268,18 @@ function rollup(element) {
     }
 }
 
-function findResults(){
-    restRequest('POST', {'index':'core_result','link_id':$('#decisionResult').val()}, loadResults);
+function findResults(link_id){
+    document.getElementById('more-modal').style.display='block';
+    restRequest('POST', {'index':'core_result','link_id':link_id}, loadResults);
 }
 
 function loadResults(data){
-    $('#resultCollected').html(data[0].link.finish);
-    $('#resultCmd').html('>> ' + atob(data[0].link.command));
-
     let res = atob(data[0].output);
     $.each(data[0].link.facts, function(k, v) {
         let regex = new RegExp(v.value, "g");
         res = res.replace(regex, "<span class='highlight'>"+v.value+"</span>");
     });
+    $('#resultCmd').html(atob(data[0].link.command));
     $('#resultView').html(res);
 }
 

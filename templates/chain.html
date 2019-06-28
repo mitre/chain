@@ -62,12 +62,6 @@
           <span class="caption">Operations</span>
         </button>
       </div>
-      <div class="row-toolbar-section" id="section-6">
-        <button class="row-toolbar-button" onclick="viewSection('result-profile')">
-          <span class="icon"><img src="/chain/img/result.png"></span>
-          <span class="caption">Results</span>
-        </button>
-      </div>
     </div>
 
     <div id="atomic-blocks" class="row-canvas">
@@ -385,12 +379,11 @@
                   <li id="time-start">
                 </ul>
 
-                <li id="link-template" class="event" data-date="" style="display: none"
-                  ondblclick="rollup(this)">
+                <li id="link-template" class="event" data-date="" style="display: none" ondblclick="rollup(this)">
                   <div class="member-infos">
                     <h1 id="time-tactic" class="member-title"></h1>
                     <div id="inner-contents">
-                      <div class="decision-card">
+                      <div id="decision-card" class="decision-card">
                         <table style="border-spacing:15px;">
                           <tr>
                             <td>Decision ID:</td>
@@ -422,29 +415,23 @@
           </div>
         </div>
 
-        <!-- results -->
+        <!-- START MODALS -->
 
-        <div id="result-profile" class="section-profile" style="display: none">
-          <div class="row">
-            <div class="top-tip">
-              <button id="nextResult">next &#x02192;</button>
-            </div>
-            <div class="column section-border" style="flex:25%;">
-              <img src="/chain/img/result.png">
-              <h4 style="margin-bottom:-5px">View results</h4>
-              <p>Raw shell output from decisions</p>
-              <input placeholder="Enter a Decision ID" id="decisionResult"/>
-              <button type="button" class="button-success atomic-button" onclick="findResults()">Show
-                results
-              </button>
-            </div>
-            <div class="column" style="flex:75%;text-align: left">
-              <h4 id="resultCollected"></h4>
-              <code id="resultCmd"></code>
-              <pre id="resultView" style="text-align: left;max-width:800px"></pre>
-            </div>
-          </div>
+        <div id="more-modal" class="modal">
+            <form class="modal-content">
+                <div class="imgcontainer">
+                  <span onclick="document.getElementById('more-modal').style.display='none'" class="close" title="Close Modal">&times;</span>
+                </div>
+                <div class="container">
+                    <code id="resultCmd" style="color:black"></code>
+                    <hr>
+                    <pre id="resultView" style="text-align: left;max-width:800px;color:black"></pre>
+                </div>
+             </form>
         </div>
+
+        <!-- END MODALS -->
+
       </center>
     </div>
   </center>
