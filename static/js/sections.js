@@ -4,7 +4,7 @@ let agent_interval_time = 30000;
 let agent_interval = null;
 
 $(document).ready(function () {
-    $('#netTbl').DataTable({
+    let table = $('#netTbl').DataTable({
         ajax: {
             url: '/plugin/chain/rest',
             type: 'POST',
@@ -64,6 +64,11 @@ $(document).ready(function () {
                 render: {
                     "_" : "last_seen"
                 }
+            },
+            {
+                targets: -1,
+                data: null,
+                defaultContent: "<button type='button' class=\"button-fail atomic-button\">X</button>"
             }
         ],
         select: {
@@ -71,13 +76,24 @@ $(document).ready(function () {
 			selector: 'td:first-child'
 		},
         order: [[1, 'asc']],
-        errMode: 'throw'
+        errMode: 'throw',
     });
     $('#netTbl tbody').on( 'click', 'tr', function () {
         $(this).toggleClass('selected');
     });
+    $('#netTbl tbody').on( 'click', 'button', function () {
+        let data = table.row( $(this).parents('tr') ).data();
+        deleteAgent(data);
+    } );
     agent_interval = setInterval(agent_refresh, agent_interval_time);
 });
+
+function deleteAgent(data){
+    console.log(data);
+    console.log(data['id']);
+    restRequest('DELETE', {'index': 'core_agent', 'id': data['id']}, createGroupCallback);
+
+}
 
 function createGroup(){
     let paws = $.map($('#netTbl').DataTable().rows('.selected').data(), function (item) {return item['paw'];});
