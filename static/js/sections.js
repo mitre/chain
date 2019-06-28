@@ -110,6 +110,25 @@ $(document).ready(function () {
     $('#factTbl').DataTable({})
 });
 
+function handleFactAdd(){
+    let property = document.getElementById("factProperty").value;
+    if(!property){alert('Please enter a property'); return; }
+    let value = document.getElementById("factValue").value;
+    if(!value){alert('Please enter a value'); return; }
+    let source = document.getElementById("factSource").value;
+    if(!source){alert('Please enter a source'); return; }
+
+    let facts = {
+        "index":"core_fact",
+        "property":property,
+        "value":value,
+        "source_id":source,
+        "blacklist":document.getElementById("factBlacklist").value,
+        "score":document.getElementById("factScore").value
+    };
+    restRequest('PUT', facts, alertCallback);
+}
+
 /** OPERATIONS **/
 
 let atomic_interval = null;

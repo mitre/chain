@@ -354,3 +354,7 @@ table.dataTable tbody tr.selected {
 .highlight {
   background-color: yellow;
 }
+.red-x {
+    color: red;
+    font-style: italic;
+}
