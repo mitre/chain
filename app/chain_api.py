@@ -35,7 +35,8 @@ class ChainApi:
                 core_group=lambda d: self.data_svc.create_group(**d),
                 core_adversary=lambda d: self.data_svc.create_adversary(**d),
                 core_ability=lambda d: self.data_svc.create_ability(**d),
-                core_operation=lambda d: self.data_svc.create_operation(**d)
+                core_operation=lambda d: self.data_svc.create_operation(**d),
+                core_fact=lambda d: self.data_svc.create_fact(**d)
             ),
             POST=dict(
                 core_adversary=lambda d: self.data_svc.explode_adversaries(criteria=d),
@@ -44,6 +45,9 @@ class ChainApi:
                 core_agent=lambda d: self.data_svc.explode_agents(criteria=d),
                 core_group=lambda d: self.data_svc.explode_groups(criteria=d),
                 core_result=lambda d: self.data_svc.explode_results(criteria=d),
+            ),
+            DELETE=dict(
+                core_fact=lambda d: self.data_svc.delete(index, **d)
             )
         )
         output = await options[request.method][index](data)
