@@ -231,7 +231,6 @@ function operationCallback(data){
                 + operation.chain[i].host_id +'... '+operation.chain[i].abilityName +' <b style="font-size:14px;float:right" onclick="findResults('+operation.chain[i].id+')">&#9733;</b></p>');
             template.find('#time-action').html(atob(operation.chain[i].command));
             refreshUpdatableFields(operation.chain[i], template);
-            template.find('#link-id').html(operation.chain[i].id);
 
             template.insertBefore("#time-start");
             $(template.find("#inner-contents")).slideUp();
