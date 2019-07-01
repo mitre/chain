@@ -353,22 +353,24 @@ function addAbility(exploits){
         alert('No phase chosen!');
         return
     }
-    let ability = null;
+    let abilities = [];
     exploits.forEach(function(a) {
-        if(a.ability_id == $('#testId').val()) {
-            ability = a;
+        if(a.ability_id === $('#testId').val()) {
+            abilities.push(a);
             return true;
         }
     });
-    if(ability == null) {
+    if(abilities.length === 0) {
         alert('No ability found!');
         return;
     }
-    if($('#profile-tests #' + ability.id).length) {
+    if($('#profile-tests #' + abilities[0].ability_id).length) {
         alert('The adversary already has this ability');
         return;
     }
-    $('#adversary-profile').find('#profile-tests').append(buildAbility(ability.ability_id, ability.name, ability.technique.tactic, ability.test, ability.parser, phase, ability.platform));
+    abilities.forEach(function (ability) {
+        $('#adversary-profile').find('#profile-tests').append(buildAbility(ability.ability_id, ability.name, ability.technique.tactic, ability.test, ability.parser, phase, ability.platform));
+    });
     refreshColorCodes();
     filterByPhase();
 }
@@ -406,6 +408,9 @@ function buildAbility(testId, testName, tactic, encodedTest, parser, phase, plat
 }
 
 function refreshColorCodes(){
+    $('#adv-reqs').css('display', 'none');
+    let missingReqs = [];
+    $("#missingAdvReqs").empty();
     $('.ability-box').each(function() {
         let parser = [];
         $('.ability-box').each(function() {
@@ -416,10 +421,34 @@ function refreshColorCodes(){
         let difference = $(this).data('requirements').filter(x => !parser.includes(x));
         if(difference.length) {
             $(this).css('border', '2px solid red');
+            missingReqs.push({'ability_id': $(this).parent('li').attr('id'), 'name': $(this).children('p').text(), 'facts': difference});
         } else {
             $(this).css('border', '2px solid green');
         }
     });
+    if(missingReqs.length)
+        updateAdversaryMissingRequirements(missingReqs);
+}
+
+function updateAdversaryMissingRequirements(missingReqs){
+    $('#adv-reqs').css('display', 'block');
+    missingReqs.forEach(function (r) {
+        r['facts'].forEach(function(f) {
+            let fact = f.split('.').join('');
+            if(!$('ul#missingAdvReqs > li#'+fact).length) {
+                $('#missingAdvReqs').append('<li id="' + fact + '"><h4>Missing: ' + f +
+                    '</h4><ul class="missing-facts-sublist" id="missing-' + fact + '">' +
+                    '<li>&#8627; ' + r['name'] + '</li>' +
+                    '</ul></li>');
+            }else{
+                $('#missing-'+fact).append('<li>&#8627; ' + r['name'] + '</li>');
+            }
+        });
+    });
+}
+
+function updateAdversaryRecommendedAbilities(){
+
 }
 
 function filterByPhase(){
