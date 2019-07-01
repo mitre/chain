@@ -228,7 +228,7 @@ function operationCallback(data){
             template.attr("operation", operation.chain[i].op_id);
             template.attr("data-date", operation.chain[i].decide.split('.')[0]);
             template.find('#time-tactic').html('<p style="font-size: 13px;font-weight:100">Host #'
-                + operation.chain[i].host_id +'... '+operation.chain[i].abilityName +' <b style="font-size:14px;float:right" onclick="findResults('+operation.chain[i].id+')">&#9733;</b></p>');
+                + operation.chain[i].host_id +'... '+operation.chain[i].abilityName +' <span style="font-size:18px;float:right" onclick="rollup('+operation.chain[i].id+')">&#x2913;</span><span style="font-size:14px;float:right" onclick="findResults('+operation.chain[i].id+')">&#9733;</span></p>');
             template.find('#time-action').html(atob(operation.chain[i].command));
             refreshUpdatableFields(operation.chain[i], template);
 
@@ -258,9 +258,9 @@ function refreshUpdatableFields(chain, div){
     }
 }
 
-function rollup(element) {
-    let inner = $("#"+element.id).find("#inner-contents");
-    if ($("#"+element.id).find("#inner-contents").is(":visible")) {
+function rollup(id) {
+    let inner = $("#"+id).find("#inner-contents");
+    if ($("#"+id).find("#inner-contents").is(":visible")) {
         $(inner).slideUp();
     } else {
         $(inner).slideDown();
