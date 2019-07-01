@@ -8,9 +8,9 @@ function clearWorkflow(){
     $('.section-profile').each(function(){ $(this).css('display', 'none'); });
 }
 
-function restRequest(type, data, callback) {
+function restRequest(type, data, callback, endpoint='/plugin/chain/rest') {
     $.ajax({
-       url: '/plugin/chain/rest',
+       url: endpoint,
        type: type,
        contentType: 'application/json',
        data: JSON.stringify(data),

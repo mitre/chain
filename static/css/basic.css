@@ -211,6 +211,9 @@
 .op-dets p {
     text-transform: uppercase;
 }
+#profile-tests{
+    float: left;
+}
 .profile-tests li {
    font-size: 18px;
    color: var(--font-color);
@@ -291,3 +294,39 @@ table.dataTable tr.selected td.select-checkbox:after {
     color: red;
     font-style: italic;
 }
+
+.adv-reqs {
+    border-top:1px solid var(--font-color);
+    float: left;
+    width: 100%;
+}
+
+.adv-reqs h4 {
+    margin-bottom:-5px;
+    font-weight: 700;
+    font-size: 16px;
+    color: red;
+}
+.missing-facts-sublist{
+    padding: 0 40px;
+    float: left;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+.missing-facts-sublist > li {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+}
+#missingAdvReqs {
+    padding-left: 0;
+}
+#missingAdvReqs > li {
+    float: left;
+    display: block;
+    width: 100%;
+    margin: 0;
+
+}
+
