@@ -135,7 +135,7 @@
                 <tr>
                   <td><p>ATT&CK Technique ID:</p></td>
                   <td><input id="ability-technique-id" spellcheck="false"
-                         placeholder="Enter ATT&CK technique ID"/></td>
+                         placeholder="Enter ATT&CK technique ID"/><span class="external-link" id="attack-link"></span>
                 </tr>
                 <tr>
                   <td><p>ATT&CK Technique Name:</p></td>
@@ -442,4 +442,5 @@
 <script src="/gui/jquery/jquery.dataTables.min.js"></script>
 <script src="/chain/js/chain.js"></script>
 <script src="/chain/js/sections.js"></script>
+<script type="text/javascript">setAttackUrl("{{ attack_url }}");</script>
 </html>

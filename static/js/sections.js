@@ -2,6 +2,12 @@
 
 let agent_interval_time = 30000;
 let agent_interval = null;
+let attackUrl = "https://attack.mitre.org";
+
+function setAttackUrl(newAttackUrl) {
+    attackUrl = newAttackUrl;
+
+}
 
 $(document).ready(function () {
     $('#netTbl').DataTable({
@@ -469,6 +475,7 @@ function appendAbilityToList(tactic, value) {
         .attr("ability_id",value['ability_id'])
         .data("tactic", tactic)
         .data("technique", value['technique'])
+        // .data("technique", `${value['technique']}<a href="${attackUrl}/techniques/${value['technique']}/">${value['technique']}</a>`)
         .data("name", value['name'])
         .data("description", value['description'])
         .data("platform", value['platform'])
@@ -489,14 +496,16 @@ function loadAbility() {
     clearAbilityDossier();
 
     let chosen = $('#ability-test option:selected');
+    let attackId = $(chosen).data('technique')['attack_id'];
     $(parent).find('#ability-id').val($(chosen).attr('ability_id'));
     $(parent).find('#ability-name').val($(chosen).data('name'));
     $(parent).find('#ability-executor').val($(chosen).data('platform'));
     $(parent).find('#ability-tactic').val($(chosen).data('technique')['tactic']);
-    $(parent).find('#ability-technique-id').val($(chosen).data('technique')['attack_id']);
+    $(parent).find('#ability-technique-id').val(attackId);
     $(parent).find('#ability-technique-name').val($(chosen).data('technique')['name']);
     $(parent).find('#ability-description').val($(chosen).data('description'));
     $(parent).find('#ability-command').html(atob($(chosen).data('test')));
+    $(parent).find('#attack-link').html(`<a target="_blank" href="${attackUrl}/techniques/${attackId}">ATT&CK LINK</a>`);
 
     for(let k in $(chosen).data('parser')) {
         $(parent).find('#ability-postconditions').append('<li>'+$(chosen).data('parser')[k].property+'</li>');
@@ -560,3 +569,4 @@ function buildRequirements(encodedTest){
     }
     return [];
 }
+

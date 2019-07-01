@@ -7,10 +7,20 @@ from aiohttp_jinja2 import template
 class ChainApi:
 
     def __init__(self, services):
+        self.services = services
+        self.caldera_config = self.services.get('utility_svc').get_config()
         self.data_svc = services.get('data_svc')
         self.operation_svc = services.get('operation_svc')
         self.auth_svc = services.get('auth_svc')
         self.loop = asyncio.get_event_loop()
+
+    def get_attack_url(self, request=None):
+        if 'attack_svc' in self.services:
+            return self.services.get('attack_svc').get_attack_url(request=request)
+        elif 'attack_url' in self.caldera_config:
+            return self.caldera_config['attack_url']
+        else:
+            return 'https://attack.mitre.org'
 
     @template('chain.html')
     async def landing(self, request):
@@ -24,7 +34,7 @@ class ChainApi:
         operations = await self.data_svc.dao.get('core_operation')
         sources = await self.data_svc.explode_sources()
         return dict(exploits=abilities, groups=groups, adversaries=adversaries, hosts=hosts, operations=operations,
-                    tactics=tactics, parsers=parsers, sources=sources)
+                    tactics=tactics, parsers=parsers, sources=sources, attack_url=self.get_attack_url())
 
     async def rest_api(self, request):
         await self.auth_svc.check_permissions(request)
