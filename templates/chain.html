@@ -122,11 +122,10 @@
               </button>
             </div>
             <div class="column" style="flex:75%;text-align:left">
-              <table style="width:100%;border-spacing:20px;border-collapse:collapse;"
-                   class="ability-table">
+              <table style="width:100%;border-spacing:20px;border-collapse:collapse;" class="ability-table">
                 <tr>
                   <td><p>Ability ID:</p></td>
-                  <td><input id="ability-id" disabled="true"/></td>
+                  <td><input id="ability-id" disabled/></td>
                 </tr>
                 <tr>
                   <td><p>ATT&CK Tactic:</p></td>
@@ -163,13 +162,13 @@
                   <td><textarea id="ability-command" spellcheck="false"
                           placeholder="Enter a command"></textarea></td>
                 </tr>
-                <tr id="preconditions" style="display:none">
+                <tr id="preconditions">
                   <td><p>Requires:</p></td>
                   <td>
                     <ol id="ability-preconditions"></ol>
                   </td>
                 </tr>
-                <tr id="postconditions" style="display:none">
+                <tr id="postconditions">
                   <td><p>Unlocks:</p></td>
                   <td>
                     <ol id="ability-postconditions"></ol>
