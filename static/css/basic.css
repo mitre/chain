@@ -115,7 +115,7 @@
     position: absolute;
     top: 18px;
     right: 18px;
-    width: 160px;
+    width: 100px;
     height: 25px;
     color: var(--font-color);
 }
@@ -123,7 +123,7 @@
     background-color: inherit;
     color: var(--font-color);
     border:none;
-    font-size:16px;
+    font-size:24px;
 }
 .darkSelect {
     width:200px;
