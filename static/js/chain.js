@@ -1,7 +1,8 @@
 function viewSection(identifier){
     let parent = $('#'+identifier);
-    $(parent).insertAfter($('#atomic-blocks'));
+    $(parent).insertBefore($('#atomic-blocks-end'));
     $(parent).css('display', 'block');
+    window.location.hash='#'+identifier;
 }
 
 function clearWorkflow(){
