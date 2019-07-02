@@ -137,7 +137,7 @@ function toggleOperationView(){
     if($('#togBtnOp').is(':checked')) {
         showHide('.queueOption,#opBtn','#operations');
     } else {
-        showHide('#operations,#opBtn','.queueOption');
+        showHide('#operations','.queueOption,#opBtn');
     } 
 }
 
@@ -291,9 +291,9 @@ $('#queueJitter').on({
 
 function toggleAdversaryView(){
     if($('#togBtnAdv').is(':checked')) {
-        showHide('#profile-name', '#profile-existing-name');
+        showHide('#profile-name,#profile-description,#profile-phase,#testId,#attach-ability-btn,#createAdversary', '#profile-existing-name');
     } else {
-        showHide('#profile-existing-name', '#profile-name');
+        showHide('#profile-existing-name', '#profile-name,#profile-description,#profile-phase,#testId,#attach-ability-btn,#createAdversary');
     }
 }
 
@@ -588,4 +588,29 @@ function buildRequirements(encodedTest){
         });
     }
     return [];
+}
+
+function checkGpsFormValid(){
+    validateFormState(($('#groupNewName').val()), '#addGroupBtn');
+}
+
+function checkAdvFormValid(){
+    validateFormState(($('#profile-name').val() && $('#profile-description').val() && ($('#profile-tests li').length>0)),
+        '#createAdversary');
+}
+
+function checkFactFormValid() {
+    validateFormState(($('#factProperty').val() && $('#factValue').val()),
+        '#factBtn');
+}
+
+function checkOpformValid(){
+    validateFormState(($('#queueName').val()) && ($('#queueFlow').prop('selectedIndex') !== 0) && ($('#queueGroup').prop('selectedIndex') !== 0),
+        '#opBtn');
+}
+
+function validateFormState(conditions, selector){
+    (conditions) ?
+        updateButtonState(selector, 'valid') :
+        updateButtonState(selector, 'invalid');
 }
