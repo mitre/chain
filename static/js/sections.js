@@ -1,6 +1,6 @@
 /** GROUPS **/
 
-let agent_interval_time = 30000;
+let agent_interval_time = 10000;
 let agent_interval = null;
 
 $(document).ready(function () {
@@ -16,7 +16,6 @@ $(document).ready(function () {
 			},
             dataSrc: ''
         },
-        rowId: 'paw',
         columnDefs:[
             {
                 targets: 0,
@@ -78,15 +77,12 @@ $(document).ready(function () {
                 defaultContent: "X"
             }
         ],
+        rowId: "paw",
         select: {
-			style: 'os',
-			selector: 'td:first-child'
-		},
+            style: 'multi'
+        },
         order: [[1, 'asc']],
         errMode: 'throw'
-    });
-    $('#netTbl tbody').on( 'click', 'tr', function () {
-        $(this).toggleClass('selected');
     });
     table.on('click', 'td.delete-agent', function (e) {
         restRequest('DELETE', {"index": "core_agent", "id": $(this).attr('id')}, createGroupCallback);
@@ -102,6 +98,7 @@ function createGroup(){
 }
 
 function createGroupCallback(data){
+    $('#netTbl').DataTable().rows().deselect();
     agent_refresh();
 }
 
