@@ -1,6 +1,6 @@
 /** GROUPS **/
 
-let agent_interval_time = 10000;
+let agent_interval_time = 30000;
 let agent_interval = null;
 
 $(document).ready(function () {
