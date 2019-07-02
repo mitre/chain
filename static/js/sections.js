@@ -1,6 +1,6 @@
 /** GROUPS **/
 
-let agent_interval_time = 30000;
+let agent_interval_time = 10000;
 let agent_interval = null;
 
 $(document).ready(function () {
@@ -66,15 +66,12 @@ $(document).ready(function () {
                 }
             }
         ],
+        rowId: "paw",
         select: {
-			style: 'os',
-			selector: 'td:first-child'
-		},
+            style: 'multi'
+        },
         order: [[1, 'asc']],
         errMode: 'throw'
-    });
-    $('#netTbl tbody').on( 'click', 'tr', function () {
-        $(this).toggleClass('selected');
     });
     agent_interval = setInterval(agent_refresh, agent_interval_time);
 });
@@ -87,6 +84,7 @@ function createGroup(){
 }
 
 function createGroupCallback(data){
+    $('#netTbl').DataTable().rows().deselect();
     agent_refresh();
 }
 
