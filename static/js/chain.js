@@ -25,12 +25,12 @@ function showHide(show, hide) {
     $(hide).each(function(){$(this).prop('disabled', true).css('opacity', 0.5)});
 }
 
-function alertCallback(data) {
-    alert("Success (you may need to refresh)!");
+function refreshCallback(data) {
+    location.reload();
 }
 
 function deleteObject(table, identifier) {
-    restRequest('DELETE', {"index": table, "id": identifier}, alertCallback);
+    restRequest('DELETE', {"index": table, "id": identifier}, refreshCallback);
 }
 
 function updateButtonState(selector, state) {
