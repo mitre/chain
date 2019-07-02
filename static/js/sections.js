@@ -145,7 +145,8 @@ function deleteGroup(){
 /** FACTS **/
 
 $(document).ready(function () {
-    $('#factTbl').DataTable({})
+    $('#factTbl').DataTable({
+    })
 });
 
 function handleFactAdd(){
