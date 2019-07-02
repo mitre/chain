@@ -90,18 +90,18 @@
               <br>
 
               <div id="createGroupSection">
-                <input placeholder="Enter name" name="newName" id="groupNewName" required onchange="checkGpsFormValid()">
+                <input placeholder="Enter name" name="newName" id="groupNewName" required onchange="checkGpsAddFormValid()">
                 <button id="addGroupBtn" type="button" class="button-notready atomic-button" onclick="createGroup()">Add group</button>
               </div>
 
               <div id="deleteGroupSection" style="display: none;">
-                <select name="group" id="groupName">
+                <select name="group" id="groupName" onchange="checkGpsDeleteFormValid()">
                   <option class="groupDefault" value="" disabled selected>Select Group</option>
                     {% for g in groups %}
                       <option id="ggroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
                     {% endfor %}
                 </select>
-                <button type="button" class="button-success atomic-button" onclick="deleteGroup()">Delete Group</button>
+                <button id="deleteGroupBtn" type="button" class="button-notready atomic-button" onclick="deleteGroup()">Delete Group</button>
               </div>
 =======
               <input placeholder="Enter name" name="newName" id="groupNewName" required onchange="checkGpsFormValid()">

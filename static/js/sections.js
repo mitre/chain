@@ -630,7 +630,11 @@ function buildRequirements(encodedTest){
     return [];
 }
 
-function checkGpsFormValid(){
+function checkGpsDeleteFormValid() {
+    validateFormState(($('#groupName').prop('selectedIndex') !== 0), '#deleteGroupBtn');
+}
+
+function checkGpsAddFormValid(){
     validateFormState(($('#groupNewName').val()), '#addGroupBtn');
 }
 
