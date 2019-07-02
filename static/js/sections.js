@@ -225,7 +225,8 @@ function reloadOperationsElements(data){
     let op_elem = $("#operations");
     $.each(data, function(index, op) {
         if(!op_elem.find('option[value="'+op.id+'"]').length > 0){
-            op_elem.append('<option id="chosen-operation" value="' + op.id +'">' + op.name + ' - ' + op.start + '</option>');
+            op_elem.append('<option id="' + op.id + '" class="operationOption" ' +
+                'value="' + op.id +'" >' + op.name + ' - ' + op.start + '</option>');
         }
     });
     op_elem.prop('selectedIndex', op_elem.find('option').length-1).change();
@@ -237,9 +238,37 @@ function refresh() {
     restRequest('POST', postData, operationCallback);
 }
 
+function deleteOperationCallback(){
+    removeOperationElements();
+    clearTimeline();
+    restRequest('POST', {'index':'core_operation'}, reloadOperationsElements);
+    $("#operationDefault").prop('selected', true);
+}
+
+function clearTimeline() {
+    let selectedOperationId = $('#operations option:selected').attr('value');
+    $('.event').each(function() {
+        let opId = $(this).attr('operation');
+        if(opId && opId !== selectedOperationId) {
+            $(this).remove();
+        }
+    });
+}
+
+function deleteOperation() {
+    let op_id = document.getElementById("operations").value;
+    restRequest('DELETE', {"index": "core_operation", "id": op_id}, deleteOperationCallback);
+}
+
+function removeOperationElements() {
+     let options = document.querySelectorAll('.operationOption');
+     Array.prototype.forEach.call(options, function (node) {
+         node.parentNode.removeChild(node);
+     });
+ }
+
 function operationCallback(data){
     let operation = data[0];
-    let selectedOperationId = $('#operations option:selected').attr('value');
     if(operation.finish != null) {
         console.log("Turning off refresh interval for page");
         clearInterval(atomic_interval);
@@ -254,12 +283,7 @@ function operationCallback(data){
     $("#dash-group").html(operation.host_group.name);
     $("#dash-flow").html(operation.adversary.name);
 
-    $('.event').each(function() {
-        let opId = $(this).attr('operation');
-        if(opId && opId != selectedOperationId) {
-            $(this).remove();
-        }
-    });
+    clearTimeline();
     for(let i=0;i<operation.chain.length;i++){
         if($("#" + operation.chain[i].id).length === 0) {
             let template = $("#link-template").clone();
