@@ -76,7 +76,6 @@
               <img src="/chain/img/group.png">
               <h4 style="margin-bottom:-5px">Manage groups</h4>
               <p>No hosts? Deploy an agent</p>
-
               <div class="toggle">
                 <label class="switch"><input type="checkbox" id="togBtnGrp" onchange="toggleGroupView()" checked>
                   <div class="slider round"><span class="on">ADD</span><span class="off">DELETE</span>
@@ -86,22 +85,22 @@
               <br>
 
               <div id="createGroupSection">
-                <input placeholder="Enter name" name="newName" id="groupNewName" required>
-                <button type="button" class="button-success atomic-button" onclick="createGroup()">Add Group</button>
+                <input placeholder="Enter name" name="newName" id="groupNewName" required onchange="checkGpsAddFormValid()">
+                <button id="addGroupBtn" type="button" class="button-notready atomic-button" onclick="createGroup()">Add group</button>
               </div>
 
               <div id="deleteGroupSection" style="display: none;">
-                <select name="group" id="groupName">
+                <select name="group" id="groupName" onchange="checkGpsDeleteFormValid()">
                   <option class="groupDefault" value="" disabled selected>Select Group</option>
                     {% for g in groups %}
                       <option id="ggroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
                     {% endfor %}
                 </select>
-                <button type="button" class="button-success atomic-button" onclick="deleteGroup()">Delete Group</button>
+                <button id="deleteGroupBtn" type="button" class="button-notready atomic-button" onclick="deleteGroup()">Delete Group</button>
               </div>
             </div>
             <div class="column" style="flex:75%">
-              <table id="netTbl" class="display" style="width:100%;">
+              <table id="netTbl" class="display" style="width:100%;" >
                 <thead>
                 <tr>
                   <th></th>
@@ -137,10 +136,10 @@
                   {% endfor %}}
                 </select>
               </center>
-              <select id="ability-test" onchange="loadAbility()">
+              <select id="ability-test" onchange="loadAbility();updateButtonState('#saveAbility','valid');">
                 <option value="" disabled selected>Select ability</option>
               </select>
-              <button type="button" class="button-success atomic-button" onclick="createAbility()">Save
+              <button id="saveAbility" type="button" class="button-notready atomic-button" onclick="createAbility()">Save
                 ability
               </button>
             </div>
@@ -217,7 +216,7 @@
               <p>Add or view adversary profiles</p>
               <br>
               <div class="toggle">
-                <label class="switch"><input type="checkbox" id="togBtnAdv" onchange="toggleAdversaryView()">
+                <label class="switch"><input type="checkbox" id="togBtnAdv" onchange="checkAdvFormValid();toggleAdversaryView();">
                   <div class="slider round"><span class="on">ADD</span><span class="off">VIEW</span>
                   </div>
                 </label>
@@ -229,29 +228,29 @@
                   <option value="{{ adv.id }}">{{ adv.name }}</option>
                 {% endfor %}}
               </select>
-              <input id="profile-name" style="opacity:0.5" disabled="true" placeholder="Enter a name"/>
-              <input id="profile-description" placeholder="Enter a description"/>
+              <input id="profile-name" style="opacity:0.5" disabled="true" placeholder="Enter a name" onchange="checkAdvFormValid()"/>
+              <input id="profile-description" style="opacity:0.5" disabled="true" placeholder="Enter a description" onchange="checkAdvFormValid()"/>
               <br><br>
               <hr>
               <br>
               <center>
-                <select id="profile-phase" style="width: 95%">
+                <select id="profile-phase" style="width: 95%; opacity: .5;" disabled>
                   <option value="0" disabled selected>Select phase</option>
                   {% for n in range(10) %}
                       <option value="{{ n + 1 }}">Phase {{ n + 1 }}</option>
                   {% endfor %}
                 </select>
                 <br>
-                <input id="testId" type="text" style="width:95%" placeholder="Enter ability ID"/>
+                <input id="testId" type="text" style="width:95%;opacity: .5;" disabled placeholder="Enter ability ID" />
                 <br><br>
                 <button id="attach-ability-btn"
-                    style="background-color:#1e1e1e;color:white;width:75%;height:35px;margin:0"
-                    type="button" class="button-success atomic-button"
-                    onclick="addAbility({{ exploits }})">Attach
+                    style="background-color:#1e1e1e;color:white;width:75%;height:35px;margin:0; opacity: .5;"
+                    type="button" class="atomic-button" disabled
+                    onclick="addAbility({{ exploits }});checkAdvFormValid();">Attach
                 </button>
               </center>
               <br>
-              <button type="button" class="button-success atomic-button" id="createAdversary"
+              <button type="button" class="button-notready atomic-button" id="createAdversary"
                   onclick="createAdversary()">Save adversary
               </button>
             </div>
@@ -274,23 +273,23 @@
               <img src="/chain/img/facts.png">
               <h4>Manage facts</h4>
               <p>Update existing fact sources</p>
-              <input id="factProperty" class="factOption" placeholder="Property"/>
-              <input id="factValue" class="factOption" placeholder="Value"/>
-              <select id="factSource" class="factOption">
+              <input id="factProperty" class="factOption" placeholder="Property" onchange="checkFactFormValid()"/>
+              <input id="factValue" class="factOption" placeholder="Value" onchange="checkFactFormValid()"/>
+              <select id="factSource" class="factOption" onchange="checkFactFormValid()">
                   {% for s in sources %}
                       <option value={{ s.id }} >{{ s.name }}</option>
                   {% endfor %}
               </select>
-              <select id="factScore" class="factOption">
+              <select id="factScore" class="factOption" onchange="checkFactFormValid()">
                   {% for n in range(10) %}
                       <option value={{ n + 1 }} >Score = {{ n + 1 }}</option>
                   {% endfor %}
               </select>
-              <select id="factBlacklist" class="factOption">
+              <select id="factBlacklist" class="factOption" onchange="checkFactFormValid()">
                 <option value="0" selected>Do not blacklist</option>
                 <option value="1">Blacklist</option>
               </select>
-              <button id="opBtn" type="button" class="button-success atomic-button" onclick="handleFactAdd()">Add</button>
+              <button id="factBtn" type="button" class="button-notready atomic-button" onclick="handleFactAdd()">Add</button>
             </div>
             <div class="column" style="flex:75%">
               <table id="factTbl" class="display" style="width:100%;">
@@ -341,7 +340,6 @@
                 </label>
               </div>
               <br>
-
               <div id="viewOperation">
                 <select id="operations" style="margin-bottom: 15px;" onchange="refresh()">
                   <option value="" disabled selected>Operations</option>
@@ -352,40 +350,40 @@
               </div>
 
               <div id="addOperation" style="display: none;">
-                <input id="queueName" class="queueOption" style="opacity:0.5" disabled="true" placeholder="Operation name"/>
-                <select name="work" id="queueFlow" class="queueOption" style="opacity:0.5" disabled="true">
-                  <option value="" disabled selected>Adversary</option>
-                  {% for adv in adversaries %}
-                    <option id="qflow-{{ adv }}" value="{{ adv.id }}">{{ adv.name }}</option>
-                  {% endfor %}
-                </select>
-                <select name="host" id="queueGroup" class="queueOption" style="opacity:0.5" disabled="true">
-                  <option value="" disabled selected>Group</option>
-                  {% for g in groups %}
-                    <option id="qgroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
-                  {% endfor %}
-                </select>
-                <select name="source" id="queueSource" class="queueOption" style="opacity:0.5" disabled="true">
-                  <option value="" disabled selected>No fact source</option>
-                      {% for s in sources %}
-                          <option value="{{ s.id }}">{{ s.name }}</option>
-                      {% endfor %}
-                </select>
-                <select name="cleanup" id="queueCleanup" class="queueOption" style="opacity:0.5" disabled="true">
-                  <option value="1" selected>Clean up artifacts</option>
-                  <option value="0">Leave Artifacts</option>
-                </select>
-                <select name="stealth" id="queueStealth" class="queueOption" style="opacity:0.5" disabled="true">
-                  <option value="0" selected>Run normal operation</option>
-                  <option value="1">Run stealth operation</option>
-                </select>
-                <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max)" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo"/>
-                <div id="jitterInfo" style="display:none;margin:0 25;">
-                  <p>Jitter determines the min and the max time range (in seconds) that agents will check-in for new instructions during an operation. Default is '2/8'</p>
-                </div>
-                <button id="opBtn" type="button" style="opacity:0.5" disabled="true"
-                    class="button-success atomic-button" onclick="handleStartAction()">Start
-                </button>
+                    <input id="queueName" class="queueOption" style="opacity:0.5" disabled="true" placeholder="Operation name" onchange="checkOpformValid()"/>
+                  <select name="work" id="queueFlow" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
+                    <option value="" disabled selected>Adversary</option>
+                    {% for adv in adversaries %}
+                      <option id="qflow-{{ adv }}" value="{{ adv.id }}">{{ adv.name }}</option>
+                    {% endfor %}
+                  </select>
+                  <select name="host" id="queueGroup" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
+                    <option value="" disabled selected>Group</option>
+                    {% for g in groups %}
+                      <option id="qgroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
+                    {% endfor %}
+                  </select>
+                  <select name="source" id="queueSource" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
+                    <option value="" disabled selected>No fact source</option>
+                        {% for s in sources %}
+                            <option value="{{ s.id }}">{{ s.name }}</option>
+                        {% endfor %}
+                  </select>
+                  <select name="cleanup" id="queueCleanup" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
+                    <option value="1" selected>Clean up artifacts</option>
+                    <option value="0">Leave Artifacts</option>
+                  </select>
+                  <select name="stealth" id="queueStealth" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
+                    <option value="0" selected>Run normal operation</option>
+                    <option value="1">Run stealth operation</option>
+                  </select>
+                  <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max)" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo" onchange="checkOpformValid()"/>
+                  <div id="jitterInfo" style="display:none;margin:0 25;">
+                    <p>Jitter determines the min and the max time range (in seconds) that agents will check-in for new instructions during an operation. Default is '2/8'</p>
+                  </div>
+                  <button id="opBtn" type="button" style="opacity:0.5" disabled="true"
+                      class="button-notready atomic-button" onclick="handleStartAction()">Start
+                  </button>
               </div>
             </div>
             <div class="column" style="flex:75%">
