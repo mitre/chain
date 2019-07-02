@@ -530,7 +530,11 @@ $(document).ready(function () {
         $(this).siblings('[value="'+ val +'"]').remove();
     });
     $('#nextAbility').click(function() {
-        $('#ability-test option:selected').next().attr('selected', 'selected');
+        $('#ability-test option:selected').next().prop("selected", true);
+        loadAbility();
+    });
+    $('#previousAbility').click(function() {
+        $('#ability-test option:selected').prev().prop("selected", true);
         loadAbility();
     });
     $('#nextResult').click(function() {
