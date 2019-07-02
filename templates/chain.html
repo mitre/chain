@@ -77,7 +77,10 @@
               <h4 style="margin-bottom:-5px">Manage groups</h4>
               <p>No hosts? Deploy an agent</p>
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> rebased to master
               <div class="toggle">
                 <label class="switch"><input type="checkbox" id="togBtnGrp" onchange="toggleGroupView()" checked>
                   <div class="slider round"><span class="on">ADD</span><span class="off">DELETE</span>
@@ -87,8 +90,8 @@
               <br>
 
               <div id="createGroupSection">
-                <input placeholder="Enter name" name="newName" id="groupNewName" required>
-                <button type="button" class="button-success atomic-button" onclick="createGroup()">Add Group</button>
+                <input placeholder="Enter name" name="newName" id="groupNewName" required onchange="checkGpsFormValid()">
+                <button id="addGroupBtn" type="button" class="button-notready atomic-button" onclick="createGroup()">Add group</button>
               </div>
 
               <div id="deleteGroupSection" style="display: none;">
