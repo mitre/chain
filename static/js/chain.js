@@ -32,3 +32,9 @@ function alertCallback(data) {
 function deleteObject(table, identifier) {
     restRequest('DELETE', {"index": table, "id": identifier}, alertCallback);
 }
+
+function updateButtonState(selector, state) {
+    (state === 'valid') ?
+        $(selector).attr('class','button-success atomic-button') :
+        $(selector).attr('class','button-notready atomic-button');
+}
