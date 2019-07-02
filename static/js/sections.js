@@ -97,7 +97,7 @@ function createGroup(){
     restRequest('PUT', {"name":groupName,"paws":paws,"index":"core_group"}, refreshGroupCallback);
 }
 
-function createGroupCallback(data){
+function refreshGroupCallback(data){
     $('#netTbl').DataTable().rows().deselect();
     agent_refresh();
 }
