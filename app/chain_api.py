@@ -30,6 +30,10 @@ class ChainApi:
         await self.auth_svc.check_permissions(request)
         data = dict(await request.json())
         index = data.pop('index')
+        if request.method == 'DELETE':
+            output = await self.data_svc.delete(index, **data)
+            return web.json_response(output)
+        
         options = dict(
             PUT=dict(
                 core_group=lambda d: self.data_svc.create_group(**d),
@@ -46,12 +50,6 @@ class ChainApi:
                 core_group=lambda d: self.data_svc.explode_groups(criteria=d),
                 core_result=lambda d: self.data_svc.explode_results(criteria=d),
             ),
-            DELETE=dict(
-                core_agent=lambda d: self.data_svc.delete(index, **d),
-                core_fact=lambda d: self.data_svc.delete(index, **d),
-                core_group=lambda d: self.data_svc.delete(index, **d),
-                core_operation=lambda d: self.data_svc.delete(index, **d),
-            )
         )
         output = await options[request.method][index](data)
         if request.method == 'PUT' and index == 'core_operation':
