@@ -79,14 +79,10 @@ $(document).ready(function () {
             }
         ],
         select: {
-			style: 'os',
-			selector: 'td:first-child'
+			style: 'multi'
 		},
         order: [[1, 'asc']],
         errMode: 'throw'
-    });
-    $('#netTbl tbody').on( 'click', 'tr', function () {
-        $(this).toggleClass('selected');
     });
     table.on('click', 'td.delete-agent', function (e) {
         restRequest('DELETE', {"index": "core_agent", "id": $(this).attr('id')}, refreshGroupCallback);
@@ -101,7 +97,8 @@ function createGroup(){
     restRequest('PUT', {"name":groupName,"paws":paws,"index":"core_group"}, refreshGroupCallback);
 }
 
-function refreshGroupCallback(data){
+function createGroupCallback(data){
+    $('#netTbl').DataTable().rows().deselect();
     agent_refresh();
 }
 
@@ -187,7 +184,6 @@ function handleStartAction(){
     if(!name){alert('Please enter an operation name'); return; }
 
     let jitter = document.getElementById("queueJitter").value || "4/8";
-    console.log(jitter);
     try {
         let [jitterMin, jitterMax] = jitter.split("/");
         jitterMin = parseInt(jitterMin);
