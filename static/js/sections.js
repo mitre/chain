@@ -161,7 +161,6 @@ function handleStartAction(){
     if(!name){alert('Please enter an operation name'); return; }
 
     let jitter = document.getElementById("queueJitter").value || "4/8";
-    console.log(jitter);
     try {
         let [jitterMin, jitterMax] = jitter.split("/");
         jitterMin = parseInt(jitterMin);
