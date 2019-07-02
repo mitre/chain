@@ -165,7 +165,7 @@ function handleFactAdd(){
         "blacklist":document.getElementById("factBlacklist").value,
         "score":document.getElementById("factScore").value
     };
-    restRequest('PUT', facts, alertCallback);
+    restRequest('PUT', facts, refreshCallback);
 }
 
 /** OPERATIONS **/
