@@ -269,7 +269,7 @@
 
         <div id="fact-profile" class="section-profile" style="display: none">
           <div class="row">
-              <div class="column section-border" style="flex:25%;">
+              <div class="column section-border" style="flex:25%">
               <img src="/chain/img/facts.png">
               <h4>Manage facts</h4>
               <p>Update existing fact sources</p>
@@ -291,7 +291,7 @@
               </select>
               <button id="factBtn" type="button" class="button-notready atomic-button" onclick="handleFactAdd()">Add</button>
             </div>
-            <div class="column" style="flex:75%">
+            <div class="column" style="flex:75%;overflow:scroll;">
               <table id="factTbl" class="display" style="width:100%;">
                 <thead>
                 <tr>
@@ -308,7 +308,7 @@
                         {% for f in s.facts %}
                         <tr>
                             <td>{{ f.property }}</td>
-                            <td>{{ f.value }}</td>
+                            <td style="width:50px">{{ f.value }}</td>
                             <td><p class="tag" style="margin:0px">{{ s.name }}</p></td>
                             <td>{{ f.score }}</td>
                             {% if f.blacklist == 1 %}

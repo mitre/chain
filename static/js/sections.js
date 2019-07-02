@@ -488,10 +488,6 @@ function updateAdversaryMissingRequirements(missingReqs){
     });
 }
 
-function updateAdversaryRecommendedAbilities(){
-
-}
-
 function filterByPhase(){
     let filter = $('#phaseFilter').val();
     for (let li of $("#profile-tests li")) {
