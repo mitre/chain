@@ -171,12 +171,15 @@ function handleFactAdd(){
 
 let atomic_interval = null;
 
-function toggleOperationView(){
-    if($('#togBtnOp').is(':checked')) {
-        showHide('.queueOption,#opBtn','#operations');
+function toggleOperationView() {
+    $('#viewOperation').toggle();
+    $('#addOperation').toggle();
+
+    if ($('#togBtnOp').is(':checked')) {
+        showHide('.queueOption,#opBtn', '#operations');
     } else {
-        showHide('#operations,#opBtn','.queueOption');
-    } 
+        showHide('#operations', '.queueOption,#opBtn');
+    }
 }
 
 function handleStartAction(){
