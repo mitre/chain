@@ -342,11 +342,12 @@
               <br>
               <div id="viewOperation">
                 <select id="operations" style="margin-bottom: 15px;" onchange="refresh()">
-                  <option value="" disabled selected>Operations</option>
+                  <option id="operationDefault" value="" disabled selected>Operations</option>
                   {% for op in operations %}
-                    <option id="chosen-operation" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
+                    <option class="operationOption" id="{{ op}}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
                   {% endfor %}
                 </select>
+                <button type="button" class="button-success atomic-button" onclick="deleteOperation()">Delete Operation</button>
               </div>
 
               <div id="addOperation" style="display: none;">
