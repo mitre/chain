@@ -13,7 +13,7 @@ a:hover {
 .member-title {
   font-family: 'Raleway', sans-serif;
   letter-spacing: 1.5px;
-  color: #999;
+  color: var(--font-color);
   font-weight: 100;
   font-size: 2.4em;
   margin: 0;
@@ -25,7 +25,7 @@ a:hover {
   text-align: center;
 }
 .timeline {
-  border-left: 0.25em solid rgb(202, 60, 60);
+  border-left: 0.25em solid var(--theme-color);
   background: rgba(255, 255, 255, 0.1);
   margin: 2em auto;
   line-height: 1.4em;
@@ -53,7 +53,7 @@ a:hover {
 }
 .timeline .event:before {
   left: -15em;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--font-color);
   content: attr(data-date);
   text-align: right;
   font-weight: 100;
@@ -62,14 +62,17 @@ a:hover {
 }
 .timeline .event:after {
   left: -3.5em;
-  background: #313534;
+  background: var(--primary-background);
   border-radius: 50%;
   height: 0.75em;
   width: 0.75em;
   content: "";
 }
+.timeline .grey:after {
+  box-shadow: 0 0 0 0.2em grey;
+}
 .timeline .red:after {
-  box-shadow: 0 0 0 0.2em rgb(202, 60, 60);
+  box-shadow: 0 0 0 0.2em red;
 }
 .timeline .green:after {
   box-shadow: 0 0 0 0.2em rgb(28, 202, 0);
@@ -98,6 +101,6 @@ a:hover {
   text-indent: 2px;
 }
 .member-result {
-    color: white;
+    color: var(--font-color);
     font-size: 13px;
 }

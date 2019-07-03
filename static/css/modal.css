@@ -53,18 +53,20 @@ span.psw {
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 100; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    padding-top: 10px;
+    padding-top: 70px;
+    overflow-y: scroll;
+    max-height: 100%;
 }
 .modal-content {
     background-color: #fefefe;
     margin: 5% auto 15% auto;
-    width: 40%;
+    width: 80%;
 }
 .modal p {
     color: #333;
@@ -83,36 +85,3 @@ span.psw {
     color: #7a1f1f;
     cursor: pointer;
 }
-
-.planner-settings-btn-group {
-    padding:0;
-    width: 100%;
-}
-
-.planner-settings-btn-group label {
-    background-color: var(--theme-color);
-    color: white;
-    padding: 14px 0px;
-    margin: 8px 0;
-    border: none;
-    display: inline-block;
-    width: 49%;
-    opacity: .5;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.planner-settings-btn-group input[type="radio"]{
-    display:none;
-}
-
-.planner-settings-btn-group input[type="radio"]:checked+label {
-    opacity:1.0;
-}
-
-.planner-settings-btn-group .btn-primary:hover {
-    opacity: .8;
-}
-
