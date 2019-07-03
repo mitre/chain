@@ -598,6 +598,7 @@ function loadAbility() {
     $(parent).find('#ability-technique-name').val($(chosen).data('technique')['name']);
     $(parent).find('#ability-description').val($(chosen).data('description'));
     $(parent).find('#ability-command').html(atob($(chosen).data('test')));
+    $(parent).find('#ability-cleanup').html(atob($(chosen).data('cleanup')));
 
     for(let k in $(chosen).data('parser')) {
         $(parent).find('#ability-postconditions').append('<li>'+$(chosen).data('parser')[k].property+'</li>');
@@ -608,44 +609,6 @@ function loadAbility() {
     for(let k in requirements) {
         $(parent).find('#ability-preconditions').append('<li>'+requirements[k]+'</li>');
     }
-}
-
-function createAbility(){
-    let parent = $('#ability-profile');
-    let id = $(parent).find('#ability-id').val();
-    if(id == '') {
-        alert('You must select an existing ability to update!');
-        return;
-    }
-    let postData = {
-        "index": "core_ability",
-        "ability_id": $(parent).find('#ability-id').val(),
-        "name": $(parent).find('#ability-name').val(),
-        "description": $(parent).find('#ability-description').val(),
-        "platform": $(parent).find('#ability-executor').val(),
-        "tactic": $(parent).find('#ability-tactic').val(),
-        "technique": {
-          "attack_id": $(parent).find('#ability-technique-id').val(),
-          "name": $(parent).find('#ability-technique-name').val()
-        },
-        "test": btoa($(parent).find('#ability-command').val())
-    };
-    restRequest('PUT', postData, createAbilityCallback);
-}
-
-function createAbilityCallback(data){
-    alert(data);
-    restRequest('POST', {"index":"core_ability"}, reloadAbilityElements);
-}
-
-function reloadAbilityElements(data){
-    $("ability-test").empty();
-    $('#ability-tactic-filter').change(function(){
-        populateTacticAbilities(data);
-    });
-    $('#attach-ability-btn').click(function () {
-        addAbility(data);
-	});
 }
 
 function buildRequirements(encodedTest){
