@@ -43,14 +43,15 @@ $(document).ready(function () {
                 targets: 3,
                 data: null,
                 fnCreatedCell: function(td, cellData, rowData, row, col){
-                    $(td).addClass('tag');
+                    $(td).addClass('agent-groups');
                 },
                 render: function(data,type,row,meta){
-                    let g = [];
+                    let groups = [];
                     data['groups'].forEach(function(e){
-                        g.push(e['name']);
+                        let group = "<div class='tag' id='" + e['map_id'] + "'>" + e['name'] + "</div>";
+                        groups.push(group);
                     });
-                    return g.join(", ");
+                    return "<div class='agent-groups'  style='display: inline-block;' >" + groups.join("") + "</div>";
                 }
             },
             {
@@ -86,6 +87,10 @@ $(document).ready(function () {
     });
     table.on('click', 'td.delete-agent', function (e) {
         restRequest('DELETE', {"index": "core_agent", "id": $(this).attr('id')}, refreshGroupCallback);
+    } );
+    table.on('click', '.tag', function (e) {
+        restRequest('DELETE', {"index": "core_group_map", "id": $(this).attr('id')}, refreshGroupCallback);
+        $(this).remove();
     } );
     agent_interval = setInterval(agent_refresh, agent_interval_time);
 });
