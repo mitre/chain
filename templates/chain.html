@@ -146,9 +146,6 @@
               <select id="ability-test" onchange="loadAbility();updateButtonState('#saveAbility','valid');">
                 <option value="" disabled selected>Select ability</option>
               </select>
-              <button id="saveAbility" type="button" class="button-notready atomic-button" onclick="createAbility()">Save
-                ability
-              </button>
             </div>
             <div class="column" style="flex:75%;text-align:left">
               <table style="width:100%;border-spacing:20px;border-collapse:collapse;" class="ability-table">
@@ -190,6 +187,11 @@
                   <td><p>Command:</p></td>
                   <td><textarea id="ability-command" spellcheck="false"
                           placeholder="Enter a command"></textarea></td>
+                </tr>
+                <tr>
+                  <td><p>Cleanup:</p></td>
+                  <td><input id="ability-cleanup" spellcheck="false"
+                          placeholder="Enter a cleanup"></input></td>
                 </tr>
                 <tr id="preconditions">
                   <td><p>Requires:</p></td>
