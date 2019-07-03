@@ -45,16 +45,16 @@
           <span class="caption">Abilities</span>
         </button>
       </div>
-      <div class="row-toolbar-section" id="section-3">
-        <button class="row-toolbar-button" onclick="viewSection('adversary-profile')">
-          <span class="icon"><img src="/chain/img/hacker.png"></span>
-          <span class="caption">Adversaries</span>
-        </button>
-      </div>
       <div class="row-toolbar-section" id="section-4">
         <button class="row-toolbar-button" onclick="viewSection('fact-profile')">
           <span class="icon"><img src="/chain/img/facts.png"></span>
           <span class="caption">Facts</span>
+        </button>
+      </div>
+      <div class="row-toolbar-section" id="section-3">
+        <button class="row-toolbar-button" onclick="viewSection('adversary-profile')">
+          <span class="icon"><img src="/chain/img/hacker.png"></span>
+          <span class="caption">Adversaries</span>
         </button>
       </div>
       <div class="row-toolbar-section" id="section-5">
@@ -134,7 +134,7 @@
             <div class="column section-border" style="flex:25%;">
               <img src="/chain/img/ability.png">
               <h4>Manage abilities</h4>
-              <p>View, add or update techniques</p>
+              <p>View available techniques</p>
               <center>
                 <select id="ability-tactic-filter" onchange="populateTacticAbilities({{ exploits }});">
                   <option value="" disabled selected>Select ATT&CK tactic</option>
@@ -155,43 +155,35 @@
                 </tr>
                 <tr>
                   <td><p>ATT&CK Tactic:</p></td>
-                  <td><input id="ability-tactic" spellcheck="false"
-                         placeholder="Enter a tactic (must be an existing one)"/></td>
+                  <td><input id="ability-tactic" spellcheck="false"/></td>
                 </tr>
                 <tr>
                   <td><p>ATT&CK Technique ID:</p></td>
-                  <td><input id="ability-technique-id" spellcheck="false"
-                         placeholder="Enter ATT&CK technique ID"/></td>
+                  <td><input id="ability-technique-id" spellcheck="false"/></td>
                 </tr>
                 <tr>
                   <td><p>ATT&CK Technique Name:</p></td>
-                  <td><input id="ability-technique-name" spellcheck="false"
-                         placeholder="Enter ATT&CK technique name"/></td>
+                  <td><input id="ability-technique-name" spellcheck="false"/></td>
                 </tr>
                 <tr>
                   <td><p>Name:</p></td>
-                  <td><input id="ability-name" spellcheck="false"
-                         placeholder="Enter a name"/></td>
+                  <td><input id="ability-name" spellcheck="false"/></td>
                 </tr>
                 <tr>
                   <td><p>Description:</p></td>
-                  <td><input id="ability-description" spellcheck="false"
-                         placeholder="Enter a description"/></td>
+                  <td><input id="ability-description" spellcheck="false"/></td>
                 </tr>
                 <tr>
                   <td><p>Platform:</p></td>
-                  <td><input id="ability-executor" spellcheck="false"
-                         placeholder="Enter a command platform"/></td>
+                  <td><input id="ability-executor" spellcheck="false"/></td>
                 </tr>
                 <tr>
                   <td><p>Command:</p></td>
-                  <td><textarea id="ability-command" spellcheck="false"
-                          placeholder="Enter a command"></textarea></td>
+                  <td><textarea id="ability-command" spellcheck="false"></textarea></td>
                 </tr>
                 <tr>
                   <td><p>Cleanup:</p></td>
-                  <td><input id="ability-cleanup" spellcheck="false"
-                          placeholder="Enter a cleanup"></input></td>
+                  <td><input id="ability-cleanup" spellcheck="false"/></td>
                 </tr>
                 <tr id="preconditions">
                   <td><p>Requires:</p></td>
