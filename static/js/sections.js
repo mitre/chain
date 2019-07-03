@@ -118,7 +118,9 @@ function addGroupElements(data, groupElementId, optionIdPrefix) {
     let group_elem = $(groupElementId);
     $.each(data, function(index, gp) {
         if(!group_elem.find('option[value="'+gp.id+'"]').length > 0){
-            group_elem.append("<option id='" + optionIdPrefix + gp.name + "' value='" + gp.id + "'>" + gp.name + "</option>");
+            if (gp.deactivated == 0){
+                group_elem.append("<option id='" + optionIdPrefix + gp.name + "' value='" + gp.id + "'>" + gp.name + "</option>");
+            }
         }
     });
 }

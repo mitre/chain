@@ -93,7 +93,9 @@
                 <select name="group" id="groupName" onchange="checkGpsDeleteFormValid()">
                   <option class="groupDefault" value="" disabled selected>Select Group</option>
                     {% for g in groups %}
-                      <option id="ggroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
+                        {% if g.deactivated == 0 %}
+                            <option id="ggroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
                 <button id="deleteGroupBtn" type="button" class="button-notready atomic-button" onclick="deleteGroup()">Delete Group</button>
@@ -366,7 +368,9 @@
                   <select name="host" id="queueGroup" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
                     <option value="" disabled selected>Group</option>
                     {% for g in groups %}
-                      <option id="qgroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
+                        {% if g.deactivated == 0 %}
+                            <option id="qgroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
+                        {% endif %}
                     {% endfor %}
                   </select>
                   <select name="source" id="queueSource" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
