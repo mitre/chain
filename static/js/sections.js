@@ -293,10 +293,10 @@ function operationCallback(data){
 
     clearTimeline();
     for(let i=0;i<operation.chain.length;i++){
-        if($("#" + operation.chain[i].id).length === 0) {
+        if($("#op_id_" + operation.chain[i].id).length === 0) {
             let template = $("#link-template").clone();
             template.find('#link-description').html(operation.chain[i].abilityDescription);
-            template.attr("id", operation.chain[i].id);
+            template.attr("id", "op_id_" + operation.chain[i].id);
             template.attr("operation", operation.chain[i].op_id);
             template.attr("data-date", operation.chain[i].decide.split('.')[0]);
             template.find('#time-tactic').html('<p style="font-size: 13px;font-weight:100">Host #'
@@ -308,7 +308,7 @@ function operationCallback(data){
             $(template.find("#inner-contents")).slideUp();
             template.show();
         } else {
-            let existing = $("#"+operation.chain[i].id);
+            let existing = $("#op_id_"+operation.chain[i].id);
             refreshUpdatableFields(operation.chain[i], existing);
         }
     }
@@ -331,8 +331,8 @@ function refreshUpdatableFields(chain, div){
 }
 
 function rollup(id) {
-    let inner = $("#"+id).find("#inner-contents");
-    if ($("#"+id).find("#inner-contents").is(":visible")) {
+    let inner = $("#op_id_"+id).find("#inner-contents");
+    if ($("#op_id_"+id).find("#inner-contents").is(":visible")) {
         $(inner).slideUp();
     } else {
         $(inner).slideDown();
