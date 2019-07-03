@@ -223,7 +223,7 @@
                 </label>
               </div>
               <br>
-              <select id="profile-existing-name" onchange="loadAdversary()">
+              <select id="profile-existing-name" onchange="loadAdversary();updateButtonState('#createAdversary', 'valid');">
                 <option value="" disabled selected>Select an existing adversary</option>
                 {% for adv in adversaries %}
                   <option value="{{ adv.id }}">{{ adv.name }}</option>
