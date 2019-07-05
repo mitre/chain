@@ -574,6 +574,7 @@ function appendAbilityToList(tactic, value) {
         .data("description", value['description'])
         .data("platform", value['platform'])
         .data("test",value['test'])
+        .data("cleanup", value['cleanup'])
         .data("parser",value['parser'])
         .text(value['name'] +' ('+value['platform']+')'));
 }
@@ -598,7 +599,7 @@ function loadAbility() {
     $(parent).find('#ability-technique-name').val($(chosen).data('technique')['name']);
     $(parent).find('#ability-description').val($(chosen).data('description'));
     $(parent).find('#ability-command').html(atob($(chosen).data('test')));
-    $(parent).find('#ability-cleanup').html(atob($(chosen).data('cleanup')));
+    $(parent).find('#ability-cleanup').val(atob($(chosen).data('cleanup')));
 
     for(let k in $(chosen).data('parser')) {
         $(parent).find('#ability-postconditions').append('<li>'+$(chosen).data('parser')[k].property+'</li>');
