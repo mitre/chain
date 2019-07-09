@@ -216,6 +216,7 @@ function handleStartAction(){
         "name":name,
         "group":document.getElementById("queueGroup").value,
         "adversary":document.getElementById("queueFlow").value,
+        "planner":document.getElementById("queuePlanner").value,
         "cleanup":document.getElementById("queueCleanup").value,
         "stealth":document.getElementById("queueStealth").value,
         "jitter":jitter,
