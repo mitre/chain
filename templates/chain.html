@@ -367,6 +367,11 @@
                         {% endif %}
                     {% endfor %}
                   </select>
+                  <select name="planner" id="queuePlanner" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
+                    {% for p in planners %}
+                        <option value="{{ p.id }}">Use {{ p.name }} planner</option>
+                    {% endfor %}
+                  </select>
                   <select name="source" id="queueSource" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
                     <option value="" disabled selected>No fact source</option>
                         {% for s in sources %}

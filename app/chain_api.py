@@ -22,8 +22,9 @@ class ChainApi:
         adversaries = await self.data_svc.explode_adversaries()
         operations = await self.data_svc.dao.get('core_operation')
         sources = await self.data_svc.explode_sources()
+        planners = await self.data_svc.dao.get('core_planner')
         return dict(exploits=abilities, groups=groups, adversaries=adversaries, hosts=hosts, operations=operations,
-                    tactics=tactics, sources=sources)
+                    tactics=tactics, sources=sources, planners=planners)
 
     async def rest_api(self, request):
         await self.auth_svc.check_permissions(request)
