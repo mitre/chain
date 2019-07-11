@@ -108,6 +108,7 @@ a:hover {
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted var(--font-color);
+  font-size: 13px;
 }
 .tooltip .tooltiptext {
   visibility: hidden;
@@ -123,6 +124,7 @@ a:hover {
   z-index: 1;
   top: -5px;
   left: 105%;
+  font-size: 13px;
 }
 .tooltip:hover .tooltiptext {
   visibility: visible;

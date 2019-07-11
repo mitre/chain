@@ -293,17 +293,16 @@ function operationCallback(data){
     $("#dash-flow").html(operation.adversary.name);
 
     clearTimeline();
-    console.log(data);
     for(let i=0;i<operation.chain.length;i++){
         if($("#op_id_" + operation.chain[i].id).length === 0) {
             let template = $("#link-template").clone();
             let ability = operation.abilities.filter(item => item.id === operation.chain[i].ability)[0];
             template.find('#link-description').html(operation.chain[i].abilityDescription);
+            template.find('#link-technique').html(ability.technique['attack_id'] + '<span class="tooltiptext">' + ability.technique['name'] + '</span>');
             template.attr("id", "op_id_" + operation.chain[i].id);
             template.attr("operation", operation.chain[i].op_id);
             template.attr("data-date", operation.chain[i].decide.split('.')[0]);
-            template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100"><div class="tooltip">' +
-                ability.technique['attack_id'] +'<span class="tooltiptext">' + ability.technique['name'] + '</span></div> | Host #'
+            template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100">Host #'
                 + operation.chain[i].host_id +'... '+operation.chain[i].abilityName +' <span' +
             ' style="font-size:18px;float:right" onclick="rollup('+operation.chain[i].id+')">&#x2913;</span><span' +
             ' style="font-size:14px;float:right" onclick="findResults('+operation.chain[i].id+')">&#9733;</span></div>');
