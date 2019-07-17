@@ -243,8 +243,8 @@ function reloadOperationsElements(data){
 
 function refresh() {
     let selectedOperationId = $('#operations option:selected').attr('value');
-    let postData = selectedOperationId ? {'index':'core_operation','id': selectedOperationId, 'refresh_key': true} : null;
-    restRequest('POST', postData, operationCallback);
+    let postData = selectedOperationId ? {'index':'core_operation','id': selectedOperationId} : null;
+    restRequest('POST', postData, operationCallback, '/plugin/chain/full');
 }
 
 function deleteOperationCallback(){

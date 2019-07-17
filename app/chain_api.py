@@ -26,14 +26,19 @@ class ChainApi:
         return dict(exploits=abilities, groups=groups, adversaries=adversaries, hosts=hosts, operations=operations,
                     tactics=tactics, sources=sources, planners=planners)
 
+    async def rest_full(self, request):
+        base = await self.rest_core(request)
+        base[0]['abilities'] = await self.data_svc.explode_abilities()
+        return web.json_response(base)
+
     async def rest_api(self, request):
+        base = await self.rest_core(request)
+        return web.json_response(base)
+
+    async def rest_core(self, request):
         await self.auth_svc.check_permissions(request)
         data = dict(await request.json())
         index = data.pop('index')
-        try:
-            refresh_type = data.pop('refresh_key')
-        except:
-            refresh_type = False
         if request.method == 'DELETE':
             output = await self.data_svc.delete(index, **data)
             return web.json_response(output)
@@ -58,6 +63,4 @@ class ChainApi:
         output = await options[request.method][index](data)
         if request.method == 'PUT' and index == 'core_operation':
             self.loop.create_task(self.operation_svc.run(output))
-        if refresh_type:
-            output[0]['abilities'] = await self.data_svc.explode_abilities()
-        return web.json_response(output)
+        return output
