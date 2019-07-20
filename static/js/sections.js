@@ -115,11 +115,11 @@ function agent_refresh(){
 function reloadGroupElements(data){
     removeGroupElements(data, "qgroup-");
     addGroupElements(data, "#queueGroup", "qgroup-");
-    removeGroupElements(data,"ggroup-");
+    removeGroupElements(data, "ggroup-");
     addGroupElements(data, "#groupName", "ggroup-");
 }
 
-function addGroupElements(groupElementId, optionIdPrefix) {
+function addGroupElements(data, groupElementId, optionIdPrefix) {
     let group_elem = $(groupElementId);
     $.each(data, function(index, gp) {
         if(!group_elem.find('option[value="'+gp.id+'"]').length > 0){
