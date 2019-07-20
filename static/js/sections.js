@@ -113,10 +113,10 @@ function agent_refresh(){
 }
 
 function reloadGroupElements(data){
-    removeGroupElements(data,"qgroup-");
-    addGroupElements("#queueGroup", "qgroup-");
+    removeGroupElements(data, "qgroup-");
+    addGroupElements(data, "#queueGroup", "qgroup-");
     removeGroupElements(data,"ggroup-");
-    addGroupElements("#groupName", "ggroup-");
+    addGroupElements(data, "#groupName", "ggroup-");
 }
 
 function addGroupElements(groupElementId, optionIdPrefix) {
