@@ -113,9 +113,9 @@ function agent_refresh(){
 }
 
 function reloadGroupElements(data){
-    removeGroupElements("qgroup-");
+    removeGroupElements(data, "qgroup-");
     addGroupElements(data, "#queueGroup", "qgroup-");
-    removeGroupElements("ggroup-");
+    removeGroupElements(data, "ggroup-");
     addGroupElements(data, "#groupName", "ggroup-");
 }
 
@@ -123,19 +123,27 @@ function addGroupElements(data, groupElementId, optionIdPrefix) {
     let group_elem = $(groupElementId);
     $.each(data, function(index, gp) {
         if(!group_elem.find('option[value="'+gp.id+'"]').length > 0){
-            if (gp.deactivated == 0){
+            if (gp.deactivated === 0){
                 group_elem.append("<option id='" + optionIdPrefix + gp.name + "' value='" + gp.id + "'>" + gp.name + "</option>");
             }
         }
     });
 }
 
-function removeGroupElements(optionIdPrefix) {
+function removeGroupElements(data, optionIdPrefix) {
      let options = document.querySelectorAll('*[id^="' + optionIdPrefix + '"]');
      Array.prototype.forEach.call(options, function (node) {
-         node.parentNode.removeChild(node);
+         let remove = true;
+         data.forEach(function (item, index){
+             if (node.innerText === item['name']){
+                 remove = false;
+             }
+         });
+         if(remove){
+            node.parentNode.removeChild(node);
+        }
      });
- }
+}
 
 function toggleGroupView(){
     $('#createGroupSection').toggle();
