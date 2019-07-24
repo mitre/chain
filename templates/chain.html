@@ -120,23 +120,6 @@
               <img src="/chain/img/facts.png">
               <h4>Facts</h4>
               <p>Filter facts by their source</p>
-              <input id="factProperty" class="factOption" placeholder="Property" onchange="checkFactFormValid()"/>
-              <input id="factValue" class="factOption" placeholder="Value" onchange="checkFactFormValid()"/>
-              <select id="factSource" class="factOption" onchange="checkFactFormValid()">
-                  {% for s in sources %}
-                      <option value={{ s.id }} >{{ s.name }}</option>
-                  {% endfor %}
-              </select>
-              <select id="factScore" class="factOption" onchange="checkFactFormValid()">
-                  {% for n in range(10) %}
-                      <option value={{ n + 1 }} >Score = {{ n + 1 }}</option>
-                  {% endfor %}
-              </select>
-              <select id="factBlacklist" class="factOption" onchange="checkFactFormValid()">
-                <option value="0" selected>Do not blacklist</option>
-                <option value="1">Blacklist</option>
-              </select>
-              <button id="factBtn" type="button" class="button-notready atomic-button" onclick="handleFactAdd()">Add</button>
             </div>
             <div class="column" style="flex:75%;overflow:scroll;">
               <table id="factTbl" class="display" style="width:100%;">
@@ -147,7 +130,6 @@
                   <th>Source</th>
                   <th>Score</th>
                   <th>Blacklist</th>
-                  <th>Delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -163,7 +145,6 @@
                             {% else %}
                                 <td>no</td>
                             {% endif %}
-                            <td class="red-x" onclick="deleteObject('core_fact', {{ f.id }});">X</td>
                         </tr>
                         {% endfor %}
                     {% endfor %}
