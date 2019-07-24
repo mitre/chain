@@ -229,7 +229,7 @@
               </div>
 
               <div id="addOperation" style="display: none;">
-                    <input id="queueName" class="queueOption" style="opacity:0.5" disabled="true" placeholder="Operation name" onchange="checkOpformValid()"/>
+                    <input id="queueName" class="queueOption" style="opacity:0.5" disabled="true" placeholder="Operation name" oninput="checkOpformValid()"/>
                   <select name="work" id="queueFlow" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
                     <option value="" disabled selected>Adversary</option>
                     {% for adv in adversaries %}
@@ -263,7 +263,7 @@
                     <option value="0" selected>Run normal operation</option>
                     <option value="1">Run stealth operation</option>
                   </select>
-                  <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max)" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo" onchange="checkOpformValid()"/>
+                  <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max)" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo" oninput="checkOpformValid()"/>
                   <div id="jitterInfo" style="display:none;margin:0 25;">
                     <p>Jitter determines the min and the max time range (in seconds) that agents will check-in for new instructions during an operation. Default is '2/8'</p>
                   </div>
