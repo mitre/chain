@@ -113,9 +113,9 @@ function agent_refresh(){
 }
 
 function reloadGroupElements(data){
-    removeGroupElements("qgroup-");
+    removeGroupElements(data, "qgroup-");
     addGroupElements(data, "#queueGroup", "qgroup-");
-    removeGroupElements("ggroup-");
+    removeGroupElements(data, "ggroup-");
     addGroupElements(data, "#groupName", "ggroup-");
 }
 
@@ -123,19 +123,27 @@ function addGroupElements(data, groupElementId, optionIdPrefix) {
     let group_elem = $(groupElementId);
     $.each(data, function(index, gp) {
         if(!group_elem.find('option[value="'+gp.id+'"]').length > 0){
-            if (gp.deactivated == 0){
+            if (gp.deactivated === 0){
                 group_elem.append("<option id='" + optionIdPrefix + gp.name + "' value='" + gp.id + "'>" + gp.name + "</option>");
             }
         }
     });
 }
 
-function removeGroupElements(optionIdPrefix) {
+function removeGroupElements(data, optionIdPrefix) {
      let options = document.querySelectorAll('*[id^="' + optionIdPrefix + '"]');
      Array.prototype.forEach.call(options, function (node) {
-         node.parentNode.removeChild(node);
+         let remove = true;
+         data.forEach(function (item, index){
+             if (node.innerText === item['name']){
+                 remove = false;
+             }
+         });
+         if(remove){
+            node.parentNode.removeChild(node);
+        }
      });
- }
+}
 
 function toggleGroupView(){
     $('#createGroupSection').toggle();
@@ -155,25 +163,6 @@ $(document).ready(function () {
     $('#factTbl').DataTable({
     })
 });
-
-function handleFactAdd(){
-    let property = document.getElementById("factProperty").value;
-    if(!property){alert('Please enter a property'); return; }
-    let value = document.getElementById("factValue").value;
-    if(!value){alert('Please enter a value'); return; }
-    let source = document.getElementById("factSource").value;
-    if(!source){alert('Please enter a source'); return; }
-
-    let facts = {
-        "index":"core_fact",
-        "property":property,
-        "value":value,
-        "source_id":source,
-        "blacklist":document.getElementById("factBlacklist").value,
-        "score":document.getElementById("factScore").value
-    };
-    restRequest('PUT', facts, refreshCallback);
-}
 
 /** OPERATIONS **/
 
@@ -216,6 +205,7 @@ function handleStartAction(){
         "name":name,
         "group":document.getElementById("queueGroup").value,
         "adversary":document.getElementById("queueFlow").value,
+        "planner":document.getElementById("queuePlanner").value,
         "cleanup":document.getElementById("queueCleanup").value,
         "stealth":document.getElementById("queueStealth").value,
         "jitter":jitter,
@@ -243,7 +233,7 @@ function reloadOperationsElements(data){
 function refresh() {
     let selectedOperationId = $('#operations option:selected').attr('value');
     let postData = selectedOperationId ? {'index':'core_operation','id': selectedOperationId} : null;
-    restRequest('POST', postData, operationCallback);
+    restRequest('POST', postData, operationCallback, '/plugin/chain/full');
 }
 
 function deleteOperationCallback(){
@@ -295,12 +285,16 @@ function operationCallback(data){
     for(let i=0;i<operation.chain.length;i++){
         if($("#op_id_" + operation.chain[i].id).length === 0) {
             let template = $("#link-template").clone();
+            let ability = operation.abilities.filter(item => item.id === operation.chain[i].ability)[0];
             template.find('#link-description').html(operation.chain[i].abilityDescription);
+            template.find('#link-technique').html(ability.technique['attack_id'] + '<span class="tooltiptext">' + ability.technique['name'] + '</span>');
             template.attr("id", "op_id_" + operation.chain[i].id);
             template.attr("operation", operation.chain[i].op_id);
             template.attr("data-date", operation.chain[i].decide.split('.')[0]);
-            template.find('#time-tactic').html('<p style="font-size: 13px;font-weight:100">Host #'
-                + operation.chain[i].host_id +'... '+operation.chain[i].abilityName +' <span style="font-size:18px;float:right" onclick="rollup('+operation.chain[i].id+')">&#x2913;</span><span style="font-size:14px;float:right" onclick="findResults('+operation.chain[i].id+')">&#9733;</span></p>');
+            template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100">Host #'
+                + operation.chain[i].host_id +'... '+operation.chain[i].abilityName +' <span' +
+            ' style="font-size:18px;float:right" onclick="rollup('+operation.chain[i].id+')">&#x2913;</span><span' +
+            ' style="font-size:14px;float:right" onclick="findResults('+operation.chain[i].id+')">&#9733;</span></div>');
             template.find('#time-action').html(atob(operation.chain[i].command));
             refreshUpdatableFields(operation.chain[i], template);
 
@@ -361,254 +355,112 @@ $('#queueJitter').on({
 
 /** ADVERSARIES **/
 
-function toggleAdversaryView(){
-    if($('#togBtnAdv').is(':checked')) {
-        showHide('#profile-name,#profile-description,#profile-phase,#testId,#attach-ability-btn,#createAdversary', '#profile-existing-name');
-    } else {
-        showHide('#profile-existing-name', '#profile-name,#profile-description,#profile-phase,#testId,#attach-ability-btn,#createAdversary');
-    }
-}
-
 function loadAdversary() {
     restRequest('POST', {'index':'core_adversary', 'id': $('#profile-existing-name').val()}, loadAdversaryCallback);
 }
 
 function loadAdversaryCallback(data) {
-    $('#profile-name').val(data[0]['name']);
-    $('#profile-description').val(data[0]['description']);
-    $('#profile-tests').empty();
+    $('#profile-goal').html(data[0]['name'] + ' wants to ...');
+    $('#profile-description').html(data[0]['description']);
+    $('.tempPhase').remove();
+    $('.phase-headers').remove();
     $.each(data[0]['phases'], function(phase, abilities) {
+        let template = $("#phase-template").clone();
+        template.attr("id", "tempPhase" + phase);
+        template.addClass("tempPhase");
+
+        abilities = addPlatforms(abilities);
         abilities.forEach(function(a) {
-            $('#profile-tests').append(buildAbility(a.ability_id, a.name, a.technique.tactic, a.test, a.parser, phase, a.platform));
+            let abilityBox = buildAbility(a, phase);
+            template.find('#profile-tests').append(abilityBox);
         });
+        template.insertBefore('#dummy');
+        template.show();
+
+        let phaseHeader = $('<h4 class="phase-headers">Phase ' + phase +'<hr></h4>');
+        phaseHeader.insertBefore("#tempPhase" + phase);
+        phaseHeader.show();
     });
     refreshColorCodes();
 }
 
-function createAdversary() {
-    let name = $('#profile-name').val();
-    if(!name){alert('Please enter an adversary name!'); return; }
-    let description = $('#profile-description').val();
-    if(!description){alert('Please enter a description!'); return; }
-
-    let abilities = [];
-    $('#profile-tests li').each(function() {
-        abilities.push({"id": $(this).attr('id'),"phase":$(this).data('phase')})
-    });
-    if(abilities.length == 0) {
-        alert("You need to create some abilities!");
-        return;
-    }
-    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"core_adversary"}, createAdversaryCallback);
-}
-
-function createAdversaryCallback(data){
-    $("#togBtnAdv").prop("checked", false).change();
-    alert(data);
-    restRequest('POST', {'index':'core_adversary'}, reloadAdversaryElements);
-}
-
-function reloadAdversaryElements(data){
-    let adv_elem = $("#profile-existing-name");
-    $.each(data, function(index, adv) {
-        if(!adv_elem.find('option[value="'+adv.id+'"]').length > 0){
-            adv_elem.append('<option id="chosen-operation" value="' + adv.id +'">' + adv.name + '</option>');
-            $("#queueFlow").append("<option id='qflow-" + JSON.stringify(adv) + "' value='" + adv.id + "'>" + adv.name + "</option>");
+function addPlatforms(abilities) {
+    let ab = [];
+    abilities.forEach(function(a) {
+        let exists = false;
+        for(let i in ab){
+            if(ab[i].ability_id === a.ability_id) {
+                ab[i]['platform'].push(a.platform);
+                exists = true;
+                break;
+            }
+        }
+        if(!exists) {
+            a['platform'] = [a.platform];
+            ab.push(a);
         }
     });
-    adv_elem.prop('selectedIndex', adv_elem.find('option').length-1).change();
+    return ab;
 }
 
-function addAbility(exploits){
-    let phase = $('#profile-phase').find(":selected").val();
-    if(phase == 0){
-        alert('No phase chosen!');
-        return
+function buildAbility(ability, phase){
+    let requirements = buildRequirements(ability.test);
+    let template = $("#ability-template").clone();
+    template.attr('id', ability.ability_id)
+        .data('parser', ability.parser)
+        .data('testId', ability.ability_id)
+        .data('phase', phase)
+        .data('requirements', requirements);
+
+    let unlocked = [];
+    ability.parser.forEach(function (item) {
+        unlocked.push(item['property']);
+    });
+
+    if($('#advView').val() === "1") {
+        template.find('#name').html(ability.technique.tactic);
+        template.find('#description1').html(ability.technique.attack_id + ':'+ ability.technique.name);
+    } else if ($('#advView').val() === "2") {
+        template.find('#name').html(ability.name);
+        template.find('#description1').html('<b>Requires: </b>'+ requirements);
+        template.find('#description2').html('<b>Unlocks: </b>'+ unlocked);
+    } else {
+        template.find('#name').html(ability.name);
+        template.find('#description1').html(ability.description);
     }
-    let abilities = [];
-    exploits.forEach(function(a) {
-        if(a.ability_id === $('#testId').val()) {
-            abilities.push(a);
-            return true;
+    ability.platform.forEach(function(p) {
+        let icon = null;
+        if(p === 'windows') {
+            icon = $('<img src="/chain/img/windows.png"/>');
+        } else if (p === 'linux') {
+            icon = $('<img src="/chain/img/linux.png"/>');
+        } else {
+            icon = $('<center><img src="/chain/img/macos.png"/>');
         }
+        icon.appendTo(template.find('#icon-row'));
     });
-    if(abilities.length === 0) {
-        alert('No ability found!');
-        return;
-    }
-    if($('#profile-tests #' + abilities[0].ability_id).length) {
-        alert('The adversary already has this ability');
-        return;
-    }
-    abilities.forEach(function (ability) {
-        $('#adversary-profile').find('#profile-tests').append(buildAbility(ability.ability_id, ability.name, ability.technique.tactic, ability.test, ability.parser, phase, ability.platform));
-    });
-    refreshColorCodes();
-    filterByPhase();
-}
-
-function removeAbility(test_id){
-    $('#profile-tests #'+test_id).remove();
-    refreshColorCodes();
-}
-
-function buildAbility(testId, testName, tactic, encodedTest, parser, phase, platform){
-    let requirements = buildRequirements(encodedTest);
-    let li = $('<li/>')
-        .attr('id', testId)
-        .data('testId', testId)
-        .data('phase', phase);
-    let fieldset = $('<fieldset/>').addClass('ability-box')
-        .data('parser', parser)
-        .data('requirements', requirements)
-        .appendTo(li);
-    let legend = $('<legend/>').text('P'+phase + ':'+tactic).appendTo(fieldset);
-    let span = $('<span/>').text(' RM');
-    span.click(function() { removeAbility(testId); });
-    span.appendTo(legend);
-    let image = $('<p style="font-size:11px"/>').text(testName + ' ('+platform+')');
-    image.appendTo(fieldset);
-
-    //add to filter
-    if($('#phaseFilter #phase'+phase).length == 0) {
-        $('#phaseFilter').append($("<option></option>")
-        .attr("id",'phase'+phase)
-        .attr("value",phase)
-        .text('Phase '+phase));
-    }
-    return li;
+    template.show();
+    return template;
 }
 
 function refreshColorCodes(){
-    $('#adv-reqs').css('display', 'none');
-    let missingReqs = [];
-    $("#missingAdvReqs").empty();
     $('.ability-box').each(function() {
-        let parser = [];
-        $('.ability-box').each(function() {
-            $(this).data('parser').forEach(function(item) {
-                parser.push(item['property']);
+        if($(this).data('parser') != null) {
+            let parser = [];
+            $('.ability-box').each(function () {
+                if ($(this).data('parser') != null) {
+                    $(this).data('parser').forEach(function (item) {
+                        parser.push(item['property']);
+                    });
+                }
             });
-        });
-        let difference = $(this).data('requirements').filter(x => !parser.includes(x));
-        if(difference.length) {
-            $(this).css('border', '2px solid red');
-            missingReqs.push({'ability_id': $(this).parent('li').attr('id'), 'name': $(this).children('p').text(), 'facts': difference});
-        } else {
-            $(this).css('border', '2px solid green');
-        }
-    });
-    if(missingReqs.length)
-        updateAdversaryMissingRequirements(missingReqs);
-}
-
-function updateAdversaryMissingRequirements(missingReqs){
-    $('#adv-reqs').css('display', 'block');
-    missingReqs.forEach(function (r) {
-        r['facts'].forEach(function(f) {
-            let fact = f.split('.').join('');
-            if(!$('ul#missingAdvReqs > li#'+fact).length) {
-                $('#missingAdvReqs').append('<li id="' + fact + '"><h4>Missing: ' + f +
-                    '</h4><ul class="missing-facts-sublist" id="missing-' + fact + '">' +
-                    '<li>&#8627; ' + r['name'] + '</li>' +
-                    '</ul></li>');
-            }else{
-                $('#missing-'+fact).append('<li>&#8627; ' + r['name'] + '</li>');
+            let difference = $(this).data('requirements').filter(x => !parser.includes(x));
+            $(this).data("facts", parser);
+            if (difference.length) {
+                $(this).css('border', '4px solid red');
             }
-        });
-    });
-}
-
-function filterByPhase(){
-    let filter = $('#phaseFilter').val();
-    for (let li of $("#profile-tests li")) {
-        if(filter == 0 || filter == $(li).data('phase')) {
-            $(li).show();
-        } else {
-            $(li).hide();
         }
-    }
-}
-
-/** ABILITIES **/
-
-$(document).ready(function () {
-    $("#ability-property-filter option").val(function(idx, val) {
-        $(this).siblings('[value="'+ val +'"]').remove();
     });
-    $('#nextAbility').click(function() {
-        $('#ability-test option:selected').next().prop("selected", true);
-        loadAbility();
-    });
-    $('#previousAbility').click(function() {
-        $('#ability-test option:selected').prev().prop("selected", true);
-        loadAbility();
-    });
-    $('#nextResult').click(function() {
-        $('#decisionResult').get(0).value++;
-        findResults();
-    });
-});
-
-function populateTacticAbilities(exploits){
-    let parent = $('#ability-profile');
-    clearAbilityDossier();
-    $(parent).find('#ability-test').empty().append("<option disabled='disabled' selected>Select ability</option>");
-
-    let tactic = $(parent).find('#ability-tactic-filter').find(":selected").data('tactic');
-    exploits.forEach(function(ability) {
-        if(tactic == ability.technique.tactic)
-            appendAbilityToList(tactic, ability);
-    });
-    $('#ability-property-filter').css('opacity',0.5);
-    $('#ability-tactic-filter').css('opacity',1.0);
-}
-
-function appendAbilityToList(tactic, value) {
-    $('#ability-profile').find('#ability-test').append($("<option></option>")
-        .attr("value",value['name'])
-        .attr("ability_id",value['ability_id'])
-        .data("tactic", tactic)
-        .data("technique", value['technique'])
-        .data("name", value['name'])
-        .data("description", value['description'])
-        .data("platform", value['platform'])
-        .data("test",value['test'])
-        .data("parser",value['parser'])
-        .text(value['name'] +' ('+value['platform']+')'));
-}
-
-function clearAbilityDossier(){
-    $('#ability-profile .ability-table tr:last td:input,ol').each(function(){
-        $(this).val('');
-        $(this).empty();
-    });
-}
-
-function loadAbility() {
-    let parent = $('#ability-profile');
-    clearAbilityDossier();
-
-    let chosen = $('#ability-test option:selected');
-    $(parent).find('#ability-id').val($(chosen).attr('ability_id'));
-    $(parent).find('#ability-name').val($(chosen).data('name'));
-    $(parent).find('#ability-executor').val($(chosen).data('platform'));
-    $(parent).find('#ability-tactic').val($(chosen).data('technique')['tactic']);
-    $(parent).find('#ability-technique-id').val($(chosen).data('technique')['attack_id']);
-    $(parent).find('#ability-technique-name').val($(chosen).data('technique')['name']);
-    $(parent).find('#ability-description').val($(chosen).data('description'));
-    $(parent).find('#ability-command').html(atob($(chosen).data('test')));
-    $(parent).find('#ability-cleanup').html(atob($(chosen).data('cleanup')));
-
-    for(let k in $(chosen).data('parser')) {
-        $(parent).find('#ability-postconditions').append('<li>'+$(chosen).data('parser')[k].property+'</li>');
-        $(parent).find('#ability-fact-name').val($(chosen).data('parser')[k].fact);
-        $(parent).find('#ability-fact-regex').val($(chosen).data('parser')[k].regex);
-    }
-    let requirements = buildRequirements($(chosen).data('test'));
-    for(let k in requirements) {
-        $(parent).find('#ability-preconditions').append('<li>'+requirements[k]+'</li>');
-    }
 }
 
 function buildRequirements(encodedTest){
@@ -631,16 +483,6 @@ function checkGpsDeleteFormValid() {
 
 function checkGpsAddFormValid(){
     validateFormState(($('#groupNewName').val()), '#addGroupBtn');
-}
-
-function checkAdvFormValid(){
-    validateFormState(($('#profile-name').val() && $('#profile-description').val() && ($('#profile-tests li').length>0)),
-        '#createAdversary');
-}
-
-function checkFactFormValid() {
-    validateFormState(($('#factProperty').val() && $('#factValue').val()),
-        '#factBtn');
 }
 
 function checkOpformValid(){
