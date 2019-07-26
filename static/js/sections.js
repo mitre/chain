@@ -11,6 +11,7 @@ $(document).ready(function () {
             type: 'POST',
             contentType: 'application/json',
             dataType: 'json',
+            error: function (xhr, ajaxOptions, thrownError) { location.reload(true); },
             data: function(d) {
 	            return JSON.stringify({"index": "core_agent"});
 			},
@@ -112,7 +113,7 @@ function agent_refresh(){
     restRequest('POST', {"index":"core_group"}, reloadGroupElements);
 }
 
-function reloadGroupElements(data){
+function reloadGroupElements(data) {
     removeGroupElements(data, "qgroup-");
     addGroupElements(data, "#queueGroup", "qgroup-");
     removeGroupElements(data, "ggroup-");
@@ -347,11 +348,6 @@ function loadResults(data){
     $('#resultCmd').html(atob(data[0].link.command));
     $('#resultView').html(res);
 }
-
-$('#queueJitter').on({
-    'mouseenter':function(){$('#jitterInfo').fadeIn();},
-    'mouseleave':function(){$('#jitterInfo').fadeOut();}
-});
 
 /** ADVERSARIES **/
 
