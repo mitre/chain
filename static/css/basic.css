@@ -111,6 +111,9 @@
 .section-profile button {
     width: 75%;
 }
+.section-description {
+    padding: 25px;
+}
 .top-tip {
     position: absolute;
     color: var(--font-color);
@@ -215,7 +218,7 @@
    color: var(--font-color);
    display: block;
    float: left;
-   width:30%;
+   width:45%;
    margin: 5px;
 }
 .ability-box {

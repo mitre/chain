@@ -68,7 +68,9 @@
             <div class="column section-border" style="flex:25%;">
               <img src="/chain/img/group.png">
               <h4 style="margin-bottom:-5px">Groups</h4>
-              <p>No hosts? Deploy an agent</p>
+              <p class="section-description">
+                  Groups are collections of agents so hosts can be compromised simultaneously.
+              </p>
               <div class="toggle">
                 <label class="switch"><input type="checkbox" id="togBtnGrp" onchange="toggleGroupView()" checked>
                   <div class="slider round"><span class="on">ADD</span><span class="off">DELETE</span>
@@ -119,7 +121,9 @@
               <div class="column section-border" style="flex:25%">
               <img src="/chain/img/facts.png">
               <h4>Facts</h4>
-              <p>Filter facts by their source</p>
+              <p class="section-description">
+                  Facts are identifiable pieces of data, collected by agents or pre-populated at run-time.
+              </p>
             </div>
             <div class="column" style="flex:75%;overflow:scroll;">
               <table id="factTbl" class="display" style="width:100%;">
@@ -161,7 +165,9 @@
             <div class="column section-border" style="flex:25%;">
               <img src="/chain/img/hacker.png">
               <h4 style="margin-bottom:-5px">Adversaries</h4>
-              <p>View adversary profiles</p>
+              <p class="section-description">
+                  Adversaries are collections of ATT&CK TTPs, designed to allow testing of specific threats.
+              </p>
               <select id="profile-existing-name" onchange="loadAdversary();">
                 <option value="" disabled selected>Select an existing adversary</option>
                 {% for adv in adversaries %}
@@ -244,6 +250,7 @@
                         {% endif %}
                     {% endfor %}
                   </select>
+                  <h4 style="margin-top:10px;">OPTIONAL:</h4>
                   <select name="planner" id="queuePlanner" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
                     {% for p in planners %}
                         <option value="{{ p.id }}">Use {{ p.name }} planner</option>
@@ -256,17 +263,14 @@
                         {% endfor %}
                   </select>
                   <select name="cleanup" id="queueCleanup" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
-                    <option value="1" selected>Clean up artifacts</option>
-                    <option value="0">Leave Artifacts</option>
+                    <option value="1" selected>Run cleanup commands</option>
+                    <option value="0">Skip cleanup commands</option>
                   </select>
                   <select name="stealth" id="queueStealth" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
                     <option value="0" selected>Run normal operation</option>
                     <option value="1">Run stealth operation</option>
                   </select>
                   <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max)" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo" oninput="checkOpformValid()"/>
-                  <div id="jitterInfo" style="display:none;margin:0 25;">
-                    <p>Jitter determines the min and the max time range (in seconds) that agents will check-in for new instructions during an operation. Default is '2/8'</p>
-                  </div>
                   <button id="opBtn" type="button" style="opacity:0.5" disabled="true"
                       class="button-notready atomic-button" onclick="handleStartAction()">Start
                   </button>
