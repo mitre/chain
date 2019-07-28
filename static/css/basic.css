@@ -226,6 +226,7 @@
     border-radius:15px;
     border: 0 none;
     margin-bottom: 5px;
+    position: relative;
 }
 .ability-box h4 {
     margin-top: 10px;
@@ -240,10 +241,18 @@
 }
 .ability-box img {
     height: 25px;
-    margin: 5px;
+    margin: 2px;
     margin-bottom: 15px;
-    border: 2px solid var(--theme-color);
-    margin-top: -10px;
+    border: none;
+}
+.ability-attack {
+    background-color: var(--theme-color);
+}
+.topright {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 10px;
 }
 .phase-headers {
     text-align: left;
