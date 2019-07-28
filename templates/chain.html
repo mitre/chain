@@ -174,11 +174,6 @@
                     <option value="{{ adv.id }}">{{ adv.name }}</option>
                 {% endfor %}}
               </select>
-              <select id="advView" onchange="loadAdversary()">
-                <option value="0">View ability descriptions</option>
-                <option value="1">View ATT&CK information</option>
-                <option value="2">View required/unlocked facts</option>
-              </select>
             </div>
             <div id="phases" class="column" style="flex:75%;">
                 <center>
@@ -203,9 +198,12 @@
 
         <li id="ability-template" class="ability-box" style="display: none">
             <center>
+                <div id="ability-requires"></div>
                 <h4 id="name"></h4>
-                <p id="description1"></p>
-                <p id="description2"></p>
+                <p id="description"></p>
+                <div class="ability-attack">
+                    <b><p id="ability-attack" style="text-transform: uppercase;font-size:11px;"></p></b>
+                </div>
                 <div id="icon-row" class="icon-row"></div>
             </center>
         </li>

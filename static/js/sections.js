@@ -408,22 +408,14 @@ function buildAbility(ability, phase){
         .data('phase', phase)
         .data('requirements', requirements);
 
-    let unlocked = [];
-    ability.parser.forEach(function (item) {
-        unlocked.push(item['property']);
-    });
+    template.find('#name').html(ability.name);
+    template.find('#description').html(ability.description);
+    template.find('#ability-attack').html(ability.technique.tactic + ' | '+ ability.technique.attack_id + ' | '+ ability.technique.name);
 
-    if($('#advView').val() === "1") {
-        template.find('#name').html(ability.technique.tactic);
-        template.find('#description1').html(ability.technique.attack_id + ':'+ ability.technique.name);
-    } else if ($('#advView').val() === "2") {
-        template.find('#name').html(ability.name);
-        template.find('#description1').html('<b>Requires: </b>'+ requirements);
-        template.find('#description2').html('<b>Unlocks: </b>'+ unlocked);
-    } else {
-        template.find('#name').html(ability.name);
-        template.find('#description1').html(ability.description);
+    if(requirements.length > 0) {
+        template.find('#ability-requires').html('<div id="ability-padlock" class="topright">&#128274;</div>');
     }
+
     ability.platform.forEach(function(p) {
         let icon = null;
         if(p === 'windows') {
@@ -453,7 +445,7 @@ function refreshColorCodes(){
             let difference = $(this).data('requirements').filter(x => !parser.includes(x));
             $(this).data("facts", parser);
             if (difference.length) {
-                $(this).css('border', '4px solid red');
+                $(this).css('opacity', 0.4);
             }
         }
     });
