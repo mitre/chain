@@ -44,6 +44,9 @@
 .row-canvas{
     flex:40%;
 }
+.section-profile {
+    margin-bottom: 25px;
+}
 .section-border {
     border-right: .5px var(--font-color) solid;
 }
@@ -244,6 +247,9 @@
     margin: 2px;
     margin-bottom: 15px;
     border: none;
+    border-radius: 0;
+    background-color: transparent;
+    filter: invert(100%);
 }
 .ability-attack {
     background-color: var(--theme-color);
@@ -253,6 +259,19 @@
     top: 0px;
     right: 0px;
     padding: 10px;
+}
+.adv-legend {
+    margin-top: 25px;
+    font-size: 13px;
+    border-spacing: 5px;
+    color: var(--font-color);
+}
+.adv-legend img {
+    height: 35px;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    filter: invert(100%);
 }
 .phase-headers {
     text-align: left;
