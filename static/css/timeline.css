@@ -107,7 +107,6 @@ a:hover {
 .tooltip {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted var(--font-color);
   font-size: 13px;
 }
 .tooltip .tooltiptext {

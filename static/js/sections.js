@@ -419,11 +419,11 @@ function buildAbility(ability, phase){
     ability.platform.forEach(function(p) {
         let icon = null;
         if(p === 'windows') {
-            icon = $('<img src="/chain/img/windows.png"/>');
+            icon = $('<div class="tooltip"><span class="tooltiptext">Works on Windows</span><img src="/chain/img/windows.png"/></div>');
         } else if (p === 'linux') {
-            icon = $('<img src="/chain/img/linux.png"/>');
+            icon = $('<div class="tooltip"><span class="tooltiptext">Works on Linux</span><img src="/chain/img/linux.png"/></div>');
         } else {
-            icon = $('<center><img src="/chain/img/macos.png"/>');
+            icon = $('<div class="tooltip"><span class="tooltiptext">Works on MacOS</span><img src="/chain/img/macos.png"/></div>');
         }
         icon.appendTo(template.find('#icon-row'));
     });
