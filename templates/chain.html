@@ -164,16 +164,38 @@
           <div class="row">
             <div class="column section-border" style="flex:25%;">
               <img src="/chain/img/hacker.png">
-              <h4 style="margin-bottom:-5px">Adversaries</h4>
+              <h4 style="margin-bottom:-15px">Adversaries</h4>
               <p class="section-description">
-                  Adversaries are collections of ATT&CK TTPs, designed to allow testing of specific threats.
+                  Adversaries are collections of ATT&CK TTPs, designed to test specific threats.
+                  Abilities with unmet requirements are faded to show the adversary cannot use them unless an
+                  unlocking ability is added.
               </p>
-              <select id="profile-existing-name" onchange="loadAdversary();">
+              <select id="profile-existing-name" style="margin-top:-15px" onchange="loadAdversary();">
                 <option value="" disabled selected>Select an existing adversary</option>
                 {% for adv in adversaries %}
                     <option value="{{ adv.id }}">{{ adv.name }}</option>
                 {% endfor %}}
               </select>
+              <center>
+                  <table class="adv-legend">
+                      <tr>
+                          <td><img src="/chain/img/windows.png"/></td>
+                          <td>Works on Windows</td>
+                      </tr>
+                      <tr>
+                          <td><img src="/chain/img/linux.png"/></td>
+                          <td>Works on Linux</td>
+                      </tr>
+                      <tr>
+                          <td><img src="/chain/img/macos.png"/></td>
+                          <td>Works on MacOS</td>
+                      </tr>
+                      <tr>
+                          <td style="font-size:28px">&#128274;</td>
+                          <td>Fact is required</td>
+                      </tr>
+                  </table>
+              </center>
             </div>
             <div id="phases" class="column" style="flex:75%;">
                 <center>
