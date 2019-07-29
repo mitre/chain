@@ -167,7 +167,7 @@
               <h4 style="margin-bottom:-15px">Adversaries</h4>
               <p class="section-description">
                   Adversaries are collections of ATT&CK TTPs, designed to test specific threats.
-                  Abilities with unmet requirements are faded to show the adversary cannot use them unless an
+                  Abilities with unmet requirements are faded out to show the adversary cannot use them unless an
                   unlocking ability is added.
               </p>
               <select id="profile-existing-name" style="margin-top:-15px" onchange="loadAdversary();">
@@ -176,26 +176,12 @@
                     <option value="{{ adv.id }}">{{ adv.name }}</option>
                 {% endfor %}}
               </select>
-              <center>
-                  <table class="adv-legend">
-                      <tr>
-                          <td><img src="/chain/img/windows.png"/></td>
-                          <td>Works on Windows</td>
-                      </tr>
-                      <tr>
-                          <td><img src="/chain/img/linux.png"/></td>
-                          <td>Works on Linux</td>
-                      </tr>
-                      <tr>
-                          <td><img src="/chain/img/macos.png"/></td>
-                          <td>Works on MacOS</td>
-                      </tr>
-                      <tr>
-                          <td style="font-size:28px">&#128274;</td>
-                          <td>Fact is required</td>
-                      </tr>
-                  </table>
-              </center>
+              <select id="advFactSource" onchange="loadAdversary()">
+                <option value="" selected>Overlay fact source</option>
+                    {% for s in sources %}
+                        <option value="{{ s.facts | map(attribute='property') | list }}">{{ s.name }}</option>
+                    {% endfor %}
+              </select>
             </div>
             <div id="phases" class="column" style="flex:75%;">
                 <center>
@@ -219,13 +205,13 @@
         </div>
 
         <li id="ability-template" class="ability-box" style="display: none">
+            <h4 id="name"></h4>
+            <p id="description" style="opacity:0.7;font-size:13px;"></p>
+            <b><p id="ability-attack" style="text-transform: uppercase;font-size:11px;opacity:0.7;"></p></b>
             <center>
-                <div id="ability-requires"></div>
-                <h4 id="name"></h4>
-                <p id="description"></p>
-                <div class="ability-attack">
-                    <b><p id="ability-attack" style="text-transform: uppercase;font-size:11px;"></p></b>
-                </div>
+                <table class="topright">
+                    <tr id="ability-metadata"></tr>
+                </table>
                 <div id="icon-row" class="icon-row"></div>
             </center>
         </li>

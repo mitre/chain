@@ -413,17 +413,23 @@ function buildAbility(ability, phase){
     template.find('#ability-attack').html(ability.technique.tactic + ' | '+ ability.technique.attack_id + ' | '+ ability.technique.name);
 
     if(requirements.length > 0) {
-        template.find('#ability-requires').html('<div id="ability-padlock" class="topright">&#128274;</div>');
+        template.find('#ability-metadata').append('<td><div id="ability-padlock"><div class="tooltip"><span class="tooltiptext">This ability has requirements</span>&#128274;</div></div></td>');
+    }
+    if(ability.cleanup) {
+        template.find('#ability-metadata').append('<td><div id="ability-broom"><div class="tooltip"><span class="tooltiptext">This ability can clean itself up</span>&#128465;</div></div></td>');
+    }
+    if(ability.parser) {
+       template.find('#ability-metadata').append('<td><div id="ability-parser"><div class="tooltip"><span class="tooltiptext">This ability unlocks other abilities</span>&#128273;</div></div></td>');
     }
 
     ability.platform.forEach(function(p) {
         let icon = null;
         if(p === 'windows') {
-            icon = $('<img src="/chain/img/windows.png"/>');
+            icon = $('<div class="tooltip"><span class="tooltiptext">Works on Windows</span><img src="/chain/img/windows.png"/></div>');
         } else if (p === 'linux') {
-            icon = $('<img src="/chain/img/linux.png"/>');
+            icon = $('<div class="tooltip"><span class="tooltiptext">Works on Linux</span><img src="/chain/img/linux.png"/></div>');
         } else {
-            icon = $('<center><img src="/chain/img/macos.png"/>');
+            icon = $('<div class="tooltip"><span class="tooltiptext">Works on MacOS</span><img src="/chain/img/macos.png"/></div>');
         }
         icon.appendTo(template.find('#icon-row'));
     });
@@ -442,10 +448,17 @@ function refreshColorCodes(){
                     });
                 }
             });
+            if($('#advFactSource').val() != "") {
+                let facts = $('#advFactSource').val();
+                facts = facts.replace(/'/g, '"');
+                JSON.parse(facts).forEach(function(f) {
+                    parser.push(f);
+                });
+            }
             let difference = $(this).data('requirements').filter(x => !parser.includes(x));
             $(this).data("facts", parser);
             if (difference.length) {
-                $(this).css('opacity', 0.4);
+                $(this).css('opacity', '0.4');
             }
         }
     });

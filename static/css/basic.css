@@ -228,50 +228,36 @@
     background-color: var(--primary-background);
     border-radius:15px;
     border: 0 none;
-    margin-bottom: 5px;
     position: relative;
+    padding: 10px;
 }
 .ability-box h4 {
-    margin-top: 10px;
+    margin-left: 2%;
+    padding-bottom: 5px;
 }
 .ability-box p {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     margin-top: -10px;
-    padding-left: 5px;
     font-size: 13px;
+    margin-left: 2%;
 }
 .ability-box img {
-    height: 25px;
-    margin: 2px;
-    margin-bottom: 15px;
+    height: 18px;
+    margin: 5px;
     border: none;
     border-radius: 0;
     background-color: transparent;
     filter: invert(100%);
-}
-.ability-attack {
-    background-color: var(--theme-color);
+    margin-top: -3px;
+    margin-bottom: -3px;
 }
 .topright {
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 0;
+    right: 0;
     padding: 10px;
-}
-.adv-legend {
-    margin-top: 25px;
-    font-size: 13px;
-    border-spacing: 5px;
-    color: var(--font-color);
-}
-.adv-legend img {
-    height: 35px;
-    border: none;
-    border-radius: 0;
-    background-color: transparent;
-    filter: invert(100%);
 }
 .phase-headers {
     text-align: left;
