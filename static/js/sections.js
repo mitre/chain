@@ -408,8 +408,9 @@ function buildAbility(ability, phase){
         .data('phase', phase)
         .data('requirements', requirements);
 
-    template.find('#name').html(ability.name);
+    template.find('#name').html('<a>'+ability.name+'</a>');
     template.find('#description').html(ability.description);
+    template.find('#ability-id').html(ability.ability_id);
     template.find('#ability-attack').html(ability.technique.tactic + ' | '+ ability.technique.attack_id + ' | '+ ability.technique.name);
 
     if(requirements.length > 0) {
@@ -420,6 +421,9 @@ function buildAbility(ability, phase){
     }
     if(ability.parser) {
        template.find('#ability-metadata').append('<td><div id="ability-parser"><div class="tooltip"><span class="tooltiptext">This ability unlocks other abilities</span>&#128273;</div></div></td>');
+    }
+    if(ability.payload.length > 0) {
+       template.find('#ability-metadata').append('<td><div id="ability-parser"><div class="tooltip"><span class="tooltiptext">This ability uses a payload</span>&#128176;</div></div></td>');
     }
 
     ability.platform.forEach(function(p) {
