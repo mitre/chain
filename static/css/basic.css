@@ -249,9 +249,28 @@
     border: none;
     border-radius: 0;
     background-color: transparent;
-    filter: invert(100%);
+    filter: invert(var(--invert-percentage));
     margin-top: -3px;
     margin-bottom: -3px;
+}
+.ability-finder {
+    background-color: white;
+    border-radius: 10px;
+}
+.ability-finder h3 {
+    text-align: left;
+    color: black;
+    text-transform: none;
+}
+.ability-finder p {
+    text-align: left;
+    color: black;
+    font-size: 16px;
+}
+.ability-finder h4 {
+    color: var(--theme-color);
+    text-align: left;
+    text-transform: uppercase;
 }
 .topright {
     position: absolute;
@@ -264,7 +283,7 @@
 }
 .advGoal {
     font-size:24px;
-    color: white;
+    color: var(--font-color);
     font-weight: 100;
 }
 .icon-row {
