@@ -422,7 +422,8 @@ function buildAbility(ability, phase){
     if(ability.cleanup) {
         template.find('#ability-metadata').append('<td><div id="ability-broom"><div class="tooltip"><span class="tooltiptext">This ability can clean itself up</span>&#128465;</div></div></td>');
     }
-    if(ability.parser) {
+    console.log(ability);
+    if(ability.parser.length > 0) {
        template.find('#ability-metadata').append('<td><div id="ability-parser"><div class="tooltip"><span class="tooltiptext">This ability unlocks other abilities</span>&#128273;</div></div></td>');
     }
     if(ability.payload.length > 0) {
