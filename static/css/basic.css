@@ -253,21 +253,21 @@
     margin-top: -3px;
     margin-bottom: -3px;
 }
-.ability-finder {
+.ability-viewer {
     background-color: white;
     border-radius: 10px;
 }
-.ability-finder h3 {
+.ability-viewer h3 {
     text-align: left;
     color: black;
     text-transform: none;
 }
-.ability-finder p {
+.ability-viewer p {
     text-align: left;
     color: black;
     font-size: 16px;
 }
-.ability-finder h4 {
+.ability-viewer h4 {
     color: var(--theme-color);
     text-align: left;
     text-transform: uppercase;
