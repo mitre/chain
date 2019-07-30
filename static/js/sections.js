@@ -409,6 +409,9 @@ function buildAbility(ability, phase){
         .data('requirements', requirements);
 
     template.find('#name').html('<a>'+ability.name+'</a>');
+    template.find('#name').click(function() {
+        showAbility(ability);
+    });
     template.find('#description').html(ability.description);
     template.find('#ability-id').html(ability.ability_id);
     template.find('#ability-attack').html(ability.technique.tactic + ' | '+ ability.technique.attack_id + ' | '+ ability.technique.name);
@@ -480,6 +483,15 @@ function buildRequirements(encodedTest){
         });
     }
     return [];
+}
+
+function showAbility(ability) {
+    restRequest('POST', {"ability_id": ability.ability_id}, showAbilityModal, endpoint='/stockpile/ability');
+}
+
+function showAbilityModal(data) {
+    $('#ability-file').html(data);
+    document.getElementById("ability-modal").style.display="block";
 }
 
 function checkGpsDeleteFormValid() {
