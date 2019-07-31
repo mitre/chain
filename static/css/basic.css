@@ -62,7 +62,6 @@
     width: 90%;
     background: white;
     border: 1px solid #ddd;
-    border-left: 3px solid var(--theme-color);
     color: #666;
     page-break-inside: avoid;
     font-family: monospace;
@@ -198,6 +197,14 @@
     color: var(--font-color);
     background-color: inherit;
 }
+.adversary-header input {
+    background-color: inherit;
+    border: none;
+    color: var(--font-color);
+    text-align: left;
+    padding-bottom: 20px;
+    text-transform: lowercase;
+}
 .op-dets img {
     border-radius: 50%;
     height:30px;
@@ -282,9 +289,8 @@
     text-align: left;
 }
 .advGoal {
-    font-size:24px;
+    font-size:36px;
     color: var(--font-color);
-    font-weight: 100;
 }
 .icon-row {
     padding:5px;
@@ -372,6 +378,7 @@ table.dataTable tr.selected td.select-checkbox:after {
     display: block;
     width: 100%;
     margin: 0;
-
 }
-
+.watermarked {
+  position: relative;
+}

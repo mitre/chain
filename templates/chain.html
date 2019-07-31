@@ -168,7 +168,7 @@
               <p class="section-description">
                   Adversaries are collections of ATT&CK TTPs, designed to test specific threats.
                   Abilities with unmet requirements are faded out to show the adversary cannot use them unless an
-                  unlocking ability is added or a fact source is used with the adversary.
+                  unlocking ability is added.
               </p>
               <select id="profile-existing-name" style="margin-top:-15px" onchange="loadAdversary();">
                 <option value="" disabled selected>Select an existing adversary</option>
@@ -176,22 +176,19 @@
                     <option value="{{ adv.id }}">{{ adv.name }}</option>
                 {% endfor %}}
               </select>
-              <select id="advFactSource" onchange="loadAdversary()">
+              <select id="advFactSource" onchange="refreshColorCodes()">
                 <option value="" selected>Overlay fact source</option>
                     {% for s in sources %}
                         <option value="{{ s.facts | map(attribute='property') | list }}">{{ s.name }}</option>
                     {% endfor %}
               </select>
+              <button id="advNewBtn" type="button" class="button-notready atomic-button" onclick="saveNewAdversary()">Save new</button>
             </div>
-            <div id="phases" class="column" style="flex:75%;">
-                <center>
-                    <div>
-                    <h3 id="profile-goal" class="advGoal"></h3>
-                    <i><h4 id="profile-description"></h4></i>
-                </div>
+            <div id="phases" class="column adversary-header" style="flex:75%;text-align: left">
+                <input id="profile-goal" type="text" class="advGoal">
+                <input id="profile-description" type="text">
                 <br><br>
                 <div id="dummy"></div>
-                </center>
             </div>
           </div>
         </div>
@@ -208,7 +205,6 @@
             <h4 id="name"></h4>
             <p id="description" style="opacity:0.7;font-size:13px"></p>
             <b><p id="ability-attack" style="text-transform: uppercase;font-size:11px;opacity:0.7;"></p></b>
-            <p id="ability-id" style="opacity:0.7;font-size:13px;text-transform: uppercase;color:mediumpurple"></p>
             <center>
                 <table class="topright">
                     <tr id="ability-metadata"></tr>
@@ -356,14 +352,32 @@
              </form>
         </div>
 
-        <div id="ability-modal" class="modal">
+        <div id="phase-modal" class="modal">
             <form class="modal-content">
                 <div class="container section-profile row ability-viewer">
-                    <div class="column" style="flex:100%">
+                    <div class="column" style="flex:25%;">
+                        <img src="/chain/img/ability.png">
+                        <h4 style="text-align: center">Ability Finder</h4>
+                        <br>
+                        <select id="ability-tactic-filter" onchange="populateTechniques({{ exploits }});">
+                            <option disabled selected>Choose a tactic</option>
+                            {% for tactic in tactics %}
+                                <option value={{ tactic }} data-tactic={{ tactic }}>{{ tactic }}</option>
+                            {% endfor %}}
+                        </select>
+                        <select id="ability-technique-filter" onchange="populateAbilities({{ exploits }});">
+                            <option disabled selected>Choose a technique</option>
+                        </select>
+                        <select id="ability-ability-filter" onchange="showAbility()">
+                            <option disabled selected>Choose an ability</option>
+                        </select>
+                        <button id="phaseBtn" type="button" class="button-notready atomic-button" onclick="addToPhase()">Add to phase</button>
+                    </div>
+                    <div class="column" style="flex:75%;">
                         <pre id="ability-file" style="text-align: left"></pre>
                     </div>
                     <div class="imgcontainer">
-                        <span onclick="document.getElementById('ability-modal').style.display='none'" class="close" title="Close Modal">&times;</span>
+                        <span onclick="document.getElementById('phase-modal').style.display='none'" class="close" title="Close Modal">&times;</span>
                     </div>
                 </div>
              </form>
