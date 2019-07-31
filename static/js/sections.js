@@ -205,7 +205,7 @@ function handleStartAction(){
         "index":"core_operation",
         "name":name,
         "group":document.getElementById("queueGroup").value,
-        "adversary":document.getElementById("queueFlow").value,
+        "adversary_id":document.getElementById("queueFlow").value,
         "planner":document.getElementById("queuePlanner").value,
         "cleanup":document.getElementById("queueCleanup").value,
         "stealth":document.getElementById("queueStealth").value,
@@ -351,13 +351,33 @@ function loadResults(data){
 
 /** ADVERSARIES **/
 
+function saveNewAdversary() {
+    let name = $('#profile-goal').val();
+    if(!name){alert('Please enter an adversary name!'); return; }
+    let description = $('#profile-description').val();
+    if(!description){alert('Please enter a description!'); return; }
+
+    let abilities = [];
+    $('#profile-tests li').each(function() {
+        abilities.push({"id": $(this).attr('id'),"phase":$(this).data('phase')})
+    });
+    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"core_adversary", 'i': uuidv4()}, createAdversaryCallback);
+    location.reload(true);
+}
+
+function createAdversaryCallback(data) {
+    console.log(data);
+}
+
 function loadAdversary() {
     restRequest('POST', {'index':'core_adversary', 'id': $('#profile-existing-name').val()}, loadAdversaryCallback);
+    validateFormState(($('#profile-existing-name').val()), '#advNewBtn');
 }
 
 function loadAdversaryCallback(data) {
-    $('#profile-goal').html(data[0]['name'] + ' wants to ...');
-    $('#profile-description').html(data[0]['description']);
+    $('#profile-goal').val(data[0]['name']);
+    $('#profile-description').val(data[0]['description']);
+
     $('.tempPhase').remove();
     $('.phase-headers').remove();
     $.each(data[0]['phases'], function(phase, abilities) {
@@ -373,7 +393,7 @@ function loadAdversaryCallback(data) {
         template.insertBefore('#dummy');
         template.show();
 
-        let phaseHeader = $('<h4 class="phase-headers">Phase ' + phase +'<hr></h4>');
+        let phaseHeader = $('<h4 class="phase-headers">Phase ' + phase +'&nbsp&nbsp&nbsp;<span onclick="showPhaseModal('+phase+')">&#10010;</span><hr></h4>');
         phaseHeader.insertBefore("#tempPhase" + phase);
         phaseHeader.show();
     });
@@ -408,12 +428,8 @@ function buildAbility(ability, phase){
         .data('phase', phase)
         .data('requirements', requirements);
 
-    template.find('#name').html('<a>'+ability.name+'</a>');
-    template.find('#name').click(function() {
-        showAbility(ability);
-    });
+    template.find('#name').html(ability.name);
     template.find('#description').html(ability.description);
-    template.find('#ability-id').html(ability.ability_id);
     template.find('#ability-attack').html(ability.technique.tactic + ' | '+ ability.technique.attack_id + ' | '+ ability.technique.name);
 
     if(requirements.length > 0) {
@@ -422,12 +438,16 @@ function buildAbility(ability, phase){
     if(ability.cleanup) {
         template.find('#ability-metadata').append('<td><div id="ability-broom"><div class="tooltip"><span class="tooltiptext">This ability can clean itself up</span>&#128465;</div></div></td>');
     }
-    if(ability.parser.length > 0) {
+    if(ability.parser) {
        template.find('#ability-metadata').append('<td><div id="ability-parser"><div class="tooltip"><span class="tooltiptext">This ability unlocks other abilities</span>&#128273;</div></div></td>');
     }
     if(ability.payload.length > 0) {
-       template.find('#ability-metadata').append('<td><div id="ability-parser"><div class="tooltip"><span class="tooltiptext">This ability uses a payload</span>&#128176;</div></div></td>');
+       template.find('#ability-metadata').append('<td><div id="ability-payload"><div class="tooltip"><span class="tooltiptext">This ability uses a payload</span>&#128176;</div></div></td>');
     }
+    template.find('#ability-metadata').append('<td><div id="ability-remove"><div class="tooltip"><span class="tooltiptext">Remove this ability</span>&#x274C;</div></div></td>');
+    template.find('#ability-remove').click(function() {
+        removeAbility(ability.ability_id);
+    });
 
     ability.platform.forEach(function(p) {
         let icon = null;
@@ -485,13 +505,76 @@ function buildRequirements(encodedTest){
     return [];
 }
 
-function showAbility(ability) {
+function removeAbility(ability_id){
+    $('#'+ability_id).remove();
+    refreshColorCodes();
+}
+
+function populateTechniques(exploits){
+    exploits = addPlatforms(exploits);
+    let parent = $('#phase-modal');
+    $(parent).find('#ability-technique-filter').empty().append("<option disabled='disabled' selected>Choose a technique</option>");
+
+    let tactic = $(parent).find('#ability-tactic-filter').find(":selected").data('tactic');
+    let found = [];
+    exploits.forEach(function(ability) {
+        if(tactic == ability.technique.tactic && !found.includes(ability.technique.attack_id)) {
+            found.push(ability.technique.attack_id);
+            appendTechniqueToList(tactic, ability);
+        }
+    });
+}
+
+function populateAbilities(exploits){
+    exploits = addPlatforms(exploits);
+    let parent = $('#phase-modal');
+    $(parent).find('#ability-ability-filter').empty().append("<option disabled='disabled' selected>Choose an ability</option>");
+
+    let attack_id = $(parent).find('#ability-technique-filter').find(":selected").data('technique');
+    exploits.forEach(function(ability) {
+        if(attack_id == ability.technique.attack_id) {
+            appendAbilityToList(ability);
+        }
+    });
+}
+
+function appendTechniqueToList(tactic, value) {
+    $('#phase-modal').find('#ability-technique-filter').append($("<option></option>")
+        .attr("value", value['technique']['attack_id'])
+        .data("technique", value['technique']['attack_id'])
+        .text(value['technique']['attack_id'] + ' | '+ value['technique']['name']));
+}
+
+function appendAbilityToList(value) {
+    $('#phase-modal').find('#ability-ability-filter').append($("<option></option>")
+        .attr("value", value['name'])
+        .data("ability", value)
+        .text(value['name']));
+}
+
+function showAbility() {
+    let ability = $('#phase-modal').find('#ability-ability-filter').find(":selected").data('ability');
     restRequest('POST', {"ability_id": ability.ability_id}, showAbilityModal, endpoint='/stockpile/ability');
+    validateFormState(($('#ability-ability-filter').val()), '#phaseBtn');
 }
 
 function showAbilityModal(data) {
+    $('#phase-modal').data("ability", data);
     $('#ability-file').html(data);
-    document.getElementById("ability-modal").style.display="block";
+}
+
+function showPhaseModal(phase) {
+    $('#phase-modal').data("phase", phase);
+    document.getElementById("phase-modal").style.display="block";
+}
+
+function addToPhase() {
+    let parent = $('#phase-modal');
+    let phase = $(parent).data('phase');
+    let ability = $('#phase-modal').find('#ability-ability-filter').find(":selected").data('ability');
+    let abilityBox = buildAbility(ability, phase);
+    $('#tempPhase' + phase).find('#profile-tests').append(abilityBox);
+    refreshColorCodes();
 }
 
 function checkGpsDeleteFormValid() {
@@ -511,4 +594,11 @@ function validateFormState(conditions, selector){
     (conditions) ?
         updateButtonState(selector, 'valid') :
         updateButtonState(selector, 'invalid');
+}
+
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
 }
