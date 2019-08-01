@@ -486,6 +486,8 @@ function refreshColorCodes(){
             $(this).data("facts", parser);
             if (difference.length) {
                 $(this).css('opacity', '0.4');
+            } else {
+                $(this).css('opacity', '1.0');
             }
         }
     });

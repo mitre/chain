@@ -18,11 +18,11 @@ class ChainApi:
         abilities = await self.data_svc.explode_abilities()
         tactics = {a['technique']['tactic'] for a in abilities}
         groups = await self.data_svc.explode_groups()
-        hosts = await self.data_svc.dao.get('core_agent')
+        hosts = await self.data_svc.explode_agents()
         adversaries = await self.data_svc.explode_adversaries()
-        operations = await self.data_svc.dao.get('core_operation')
+        operations = await self.data_svc.explode_operation()
         sources = await self.data_svc.explode_sources()
-        planners = await self.data_svc.dao.get('core_planner')
+        planners = await self.data_svc.explode_planners()
         return dict(exploits=abilities, groups=groups, adversaries=adversaries, hosts=hosts, operations=operations,
                     tactics=tactics, sources=sources, planners=planners)
 
