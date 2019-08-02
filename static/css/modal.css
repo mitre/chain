@@ -57,16 +57,15 @@ span.psw {
     left: 0;
     top: 0;
     width: 100%; /* Full width */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    background-color: var(--navbar-background);
     padding-top: 70px;
     overflow-y: scroll;
     height: 100%;
 }
 .modal-content {
-    background-color: #fefefe;
+    background-color: var(--navbar-background);
     margin: 5% auto 15% auto;
-    width: 80%;
+    width: 90%;
 }
 .modal p {
     color: #333;

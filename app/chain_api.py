@@ -17,13 +17,13 @@ class ChainApi:
         await self.auth_svc.check_permissions(request)
         abilities = await self.data_svc.explode_abilities()
         tactics = {a['technique']['tactic'] for a in abilities}
-        groups = await self.data_svc.explode_groups()
         hosts = await self.data_svc.explode_agents()
+        groups = list(set(([h['host_group'] for h in hosts])))
         adversaries = await self.data_svc.explode_adversaries()
         operations = await self.data_svc.explode_operation()
         sources = await self.data_svc.explode_sources()
         planners = await self.data_svc.explode_planners()
-        return dict(exploits=abilities, groups=groups, adversaries=adversaries, hosts=hosts, operations=operations,
+        return dict(exploits=abilities, groups=groups, adversaries=adversaries, agents=hosts, operations=operations,
                     tactics=tactics, sources=sources, planners=planners)
 
     async def rest_full(self, request):
@@ -45,18 +45,17 @@ class ChainApi:
         
         options = dict(
             PUT=dict(
-                core_group=lambda d: self.data_svc.create_group(**d),
-                core_adversary=lambda d: self.data_svc.create_adversary(**d),
+                core_adversary=lambda d: self.data_svc.persist_adversary(**d),
                 core_ability=lambda d: self.data_svc.create_ability(**d),
                 core_operation=lambda d: self.data_svc.create_operation(**d),
-                core_fact=lambda d: self.data_svc.create_fact(**d)
-            ),
+                core_fact=lambda d: self.data_svc.create_fact(**d),
+                core_agent=lambda d: self.data_svc.update('core_agent', 'paw', d.pop('paw'), d)
+        ),
             POST=dict(
                 core_adversary=lambda d: self.data_svc.explode_adversaries(criteria=d),
                 core_ability=lambda d: self.data_svc.explode_abilities(criteria=d),
                 core_operation=lambda d: self.data_svc.explode_operation(criteria=d),
                 core_agent=lambda d: self.data_svc.explode_agents(criteria=d),
-                core_group=lambda d: self.data_svc.explode_groups(criteria=d),
                 core_result=lambda d: self.data_svc.explode_results(criteria=d),
             ),
         )
