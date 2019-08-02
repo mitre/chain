@@ -1,162 +1,17 @@
 /** GROUPS **/
 
-let agent_interval_time = 30000;
-let agent_interval = null;
-
 $(document).ready(function () {
-    let table = $('#netTbl');
-    table.DataTable({
-        ajax: {
-            url: '/plugin/chain/rest',
-            type: 'POST',
-            contentType: 'application/json',
-            dataType: 'json',
-            error: function (xhr, ajaxOptions, thrownError) { location.reload(true); },
-            data: function(d) {
-	            return JSON.stringify({"index": "core_agent"});
-			},
-            dataSrc: ''
-        },
-        rowId: 'paw',
-        columnDefs:[
-            {
-                targets: 0,
-                data: null,
-                className: 'select-checkbox',
-                orderable: false,
-                sDefaultContent: ''
-            },
-            {
-                targets: 1,
-                data: null,
-                render: {
-                    "_" : "paw"
-                }
-            },
-            {
-                targets: 2,
-                data: null,
-                render: {
-                    "_" : "checks"
-                }
-            },
-            {
-                targets: 3,
-                data: null,
-                fnCreatedCell: function(td, cellData, rowData, row, col){
-                    $(td).addClass('agent-groups');
-                },
-                render: function(data,type,row,meta){
-                    let groups = [];
-                    data['groups'].forEach(function(e){
-                        let group = "<div class='tag' id='" + e['map_id'] + "'>" + e['name'] + "</div>";
-                        groups.push(group);
-                    });
-                    return "<div class='agent-groups'  style='display: inline-block;' >" + groups.join("") + "</div>";
-                }
-            },
-            {
-                targets: 4,
-                data: null,
-                render: {
-                    "_" : "platform"
-                }
-            },
-            {
-                targets: 5,
-                data: null,
-                render: {
-                    "_" : "last_seen"
-                }
-            },
-            {
-                targets: -1,
-                data: null,
-                fnCreatedCell: function(td, cellData, rowData, row, col){
-                    $(td).addClass('red-x');
-                    $(td).addClass('delete-agent');
-                    $(td).attr('id', rowData['id']);
-                },
-                defaultContent: "X"
-            }
-        ],
-        select: {
-			style: 'multi'
-		},
-        order: [[1, 'asc']],
-        errMode: 'throw'
-    });
-    table.on('click', 'td.delete-agent', function (e) {
-        restRequest('DELETE', {"index": "core_agent", "id": $(this).attr('id')}, refreshGroupCallback);
-    } );
-    table.on('click', '.tag', function (e) {
-        restRequest('DELETE', {"index": "core_group_map", "id": $(this).attr('id')}, refreshGroupCallback);
-        $(this).remove();
-    } );
-    agent_interval = setInterval(agent_refresh, agent_interval_time);
+    $('#netTbl').DataTable({})
 });
 
-function createGroup(){
-    let paws = $.map($('#netTbl').DataTable().rows('.selected').data(), function (item) {return item['paw'];});
-    if(paws.length == 0){ alert("You need to select some hosts!"); return;}
-    let groupName = $("#groupNewName").val();
-    restRequest('PUT', {"name":groupName,"paws":paws,"index":"core_group"}, refreshGroupCallback);
-}
-
-function refreshGroupCallback(data){
-    $('#netTbl').DataTable().rows().deselect();
-    agent_refresh();
-}
-
-function agent_refresh(){
-    $('#netTbl').DataTable().ajax.reload();
-    restRequest('POST', {"index":"core_group"}, reloadGroupElements);
-}
-
-function reloadGroupElements(data) {
-    removeGroupElements(data, "qgroup-");
-    addGroupElements(data, "#queueGroup", "qgroup-");
-    removeGroupElements(data, "ggroup-");
-    addGroupElements(data, "#groupName", "ggroup-");
-}
-
-function addGroupElements(data, groupElementId, optionIdPrefix) {
-    let group_elem = $(groupElementId);
-    $.each(data, function(index, gp) {
-        if(!group_elem.find('option[value="'+gp.id+'"]').length > 0){
-            if (gp.deactivated === 0){
-                group_elem.append("<option id='" + optionIdPrefix + gp.name + "' value='" + gp.id + "'>" + gp.name + "</option>");
-            }
-        }
+function saveGroups(){
+    let data = $('#netTbl').DataTable().rows().data();
+    data.each(function (value, index) {
+        let group = document.getElementById(value[0]).value;
+        restRequest('PUT', {"index":"core_agent", "paw": value[0], "host_group": group});
     });
+    location.reload(true);
 }
-
-function removeGroupElements(data, optionIdPrefix) {
-     let options = document.querySelectorAll('*[id^="' + optionIdPrefix + '"]');
-     Array.prototype.forEach.call(options, function (node) {
-         let remove = true;
-         data.forEach(function (item, index){
-             if (node.innerText === item['name']){
-                 remove = false;
-             }
-         });
-         if(remove){
-            node.parentNode.removeChild(node);
-        }
-     });
-}
-
-function toggleGroupView(){
-    $('#createGroupSection').toggle();
-    $('#deleteGroupSection').toggle();
-}
-
-function deleteGroup(){
-    restRequest('DELETE', {"index": "core_group",
-        "id": document.getElementById("groupName").value}, refreshGroupCallback);
-    $(".groupDefault").prop('selected', true);
-}
-
 
 /** FACTS **/
 

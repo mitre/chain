@@ -71,44 +71,30 @@
               <p class="section-description">
                   Groups are collections of agents so hosts can be compromised simultaneously.
               </p>
-              <div class="toggle">
-                <label class="switch"><input type="checkbox" id="togBtnGrp" onchange="toggleGroupView()" checked>
-                  <div class="slider round"><span class="on">ADD</span><span class="off">DELETE</span>
-                  </div>
-                </label>
-              </div>
-              <br>
-
-              <div id="createGroupSection">
-                <input placeholder="Enter name" name="newName" id="groupNewName" required oninput="checkGpsAddFormValid()">
-                <button id="addGroupBtn" type="button" class="button-notready atomic-button" onclick="createGroup()">Add group</button>
-              </div>
-
-              <div id="deleteGroupSection" style="display: none;">
-                <select name="group" id="groupName" onchange="checkGpsDeleteFormValid()">
-                  <option class="groupDefault" value="" disabled selected>Select Group</option>
-                    {% for g in groups %}
-                        {% if g.deactivated == 0 %}
-                            <option id="ggroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-                <button id="deleteGroupBtn" type="button" class="button-notready atomic-button" onclick="deleteGroup()">Delete Group</button>
-              </div>
+              <button id="addGroupBtn" type="button" class="button-success atomic-button" onclick="saveGroups()">Save changes</button>
             </div>
             <div class="column" style="flex:75%">
               <table id="netTbl" class="display" style="width:100%;" >
                 <thead>
                 <tr>
-                  <th></th>
                   <th>Host <i style="font-size:11px">paw print</i></th>
                   <th>Checks</th>
-                  <th>Groups</th>
+                  <th>Group</th>
                   <th>Platform</th>
                   <th>Last seen</th>
-                  <th>Delete</th>
                 </tr>
                 </thead>
+                <tbody>
+                  {% for a in agents %}
+                      <tr>
+                        <td>{{ a.paw }}</td>
+                        <td>{{ a.checks }}</td>
+                        <td><input id="{{a.paw}}" type="text" value="{{ a.host_group }}"></td>
+                        <td>{{ a.platform }}</td>
+                        <td>{{ a.last_seen }}</td>
+                      </tr>
+                  {% endfor %}
+                </tbody>
               </table>
             </div>
           </div>
@@ -125,7 +111,7 @@
                   Facts are identifiable pieces of data, collected by agents or pre-populated at run-time.
               </p>
             </div>
-            <div class="column" style="flex:75%;overflow:scroll;">
+            <div class="column" style="flex:75%;overflow:hidden;">
               <table id="factTbl" class="display" style="width:100%;text-align: left">
                 <thead>
                 <tr>
@@ -248,9 +234,7 @@
                   <select name="host" id="queueGroup" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
                     <option value="" disabled selected>Group</option>
                     {% for g in groups %}
-                        {% if g.deactivated == 0 %}
-                            <option id="qgroup-{{ g.name }}" value="{{ g.id }}">{{ g.name }}</option>
-                        {% endif %}
+                        <option id="qgroup-{{ g }}" value="{{ g }}">{{ g }}</option>
                     {% endfor %}
                   </select>
                   <h4 style="margin-top:10px;">OPTIONAL:</h4>
@@ -340,7 +324,7 @@
         <!-- START MODALS -->
 
         <div id="more-modal" class="modal">
-            <form class="modal-content">
+            <form class="modal-content ability-viewer">
                 <div class="imgcontainer">
                   <span onclick="document.getElementById('more-modal').style.display='none'" class="close" title="Close Modal">&times;</span>
                 </div>
