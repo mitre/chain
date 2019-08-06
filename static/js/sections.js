@@ -208,6 +208,24 @@ function loadResults(data){
     $('#resultView').html(res);
 }
 
+function downloadOperationReport() {
+    function downloadObjectAsJson(data){
+        let operationName = data[0]['name'];
+        let exportName = 'operation_report_' + operationName;
+        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+        let downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href",     dataStr);
+        downloadAnchorNode.setAttribute("download", exportName + ".json");
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
+
+    let selectedOperationId = $('#operations option:selected').attr('value');
+    let postData = selectedOperationId ? {'index':'core_operation','id': selectedOperationId} : null;
+    restRequest('POST', postData, downloadObjectAsJson, '/plugin/chain/full');
+}
+
 /** ADVERSARIES **/
 
 function saveNewAdversary() {
