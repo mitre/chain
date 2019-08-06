@@ -134,7 +134,11 @@ function operationCallback(data){
     }
     $("#dash-start").html(operation.start);
     $("#dash-finish").html(operation.finish);
-    $("#dash-group").html(operation.host_group.name);
+    if(operation.host_group.length > 0) {
+        $("#dash-group").html(operation.host_group[0].host_group);
+    } else {
+        $('#dash-group').html('---');
+    }
     $("#dash-flow").html(operation.adversary.name);
 
     clearTimeline();
@@ -370,29 +374,58 @@ function removeAbility(ability_id){
 function populateTechniques(exploits){
     exploits = addPlatforms(exploits);
     let parent = $('#phase-modal');
+    $(parent).find('#ability-ability-filter').empty();
     $(parent).find('#ability-technique-filter').empty().append("<option disabled='disabled' selected>Choose a technique</option>");
 
     let tactic = $(parent).find('#ability-tactic-filter').find(":selected").data('tactic');
     let found = [];
+    let showing = [];
     exploits.forEach(function(ability) {
         if(tactic == ability.technique.tactic && !found.includes(ability.technique.attack_id)) {
             found.push(ability.technique.attack_id);
             appendTechniqueToList(tactic, ability);
+            appendAbilityToList(ability);
+            showing += 1;
         }
     });
+    $(parent).find('#ability-ability-filter').prepend("<option disabled='disabled' selected>"+showing.length+" abilities</option>");
+}
+
+function searchAbilities(exploits) {
+    let parent = $('#phase-modal');
+    $(parent).find('#ability-ability-filter').empty();
+    $(parent).find('#ability-technique-filter').empty().append("<option disabled='disabled' selected>Choose a technique</option>");
+    let showing = [];
+    if($('#ability-search').val()) {
+        exploits = addPlatforms(exploits);
+        exploits.forEach(function(ability) {
+            ability['test'] = atob(ability.test);
+            ability['cleanup'] = atob(ability.cleanup);
+            if(JSON.stringify(ability).toLowerCase().includes($('#ability-search').val().toLowerCase())) {
+                ability['test'] = btoa(ability.test);
+                ability['cleanup'] = btoa(ability.cleanup);
+                appendAbilityToList(ability);
+                showing += 1;
+            }
+        });
+    }
+    $(parent).find('#ability-ability-filter').prepend("<option disabled='disabled' selected>"+showing.length+" abilities</option>");
 }
 
 function populateAbilities(exploits){
     exploits = addPlatforms(exploits);
     let parent = $('#phase-modal');
-    $(parent).find('#ability-ability-filter').empty().append("<option disabled='disabled' selected>Choose an ability</option>");
+    $(parent).find('#ability-ability-filter').empty();
 
+    let showing = [];
     let attack_id = $(parent).find('#ability-technique-filter').find(":selected").data('technique');
     exploits.forEach(function(ability) {
         if(attack_id == ability.technique.attack_id) {
             appendAbilityToList(ability);
+            showing += 1;
         }
     });
+    $(parent).find('#ability-ability-filter').prepend("<option disabled='disabled' selected>"+showing.length+" abilities</option>");
 }
 
 function appendTechniqueToList(tactic, value) {
