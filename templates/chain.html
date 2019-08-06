@@ -108,33 +108,26 @@
               <img src="/chain/img/facts.png">
               <h4>Facts</h4>
               <p class="section-description">
-                  Facts are identifiable pieces of data, collected by agents or pre-populated at run-time.
+                  Facts are identifiable pieces of data, collected by agents or loaded at boot.
+                  A source is a collection of facts.
               </p>
             </div>
             <div class="column" style="flex:75%;overflow:hidden;">
-              <table id="factTbl" class="display" style="width:100%;text-align: left">
+              <table id="factTbl" class="display" style="width:100%;text-align:center">
                 <thead>
                 <tr>
-                  <th>Property</th>
-                  <th>Value</th>
                   <th>Source</th>
+                  <th>Property</th>
                   <th>Score</th>
-                  <th>Blacklist</th>
                 </tr>
                 </thead>
                 <tbody>
                     {% for s in sources %}
                         {% for f in s.facts %}
                         <tr>
-                            <td>{{ f.property }}</td>
-                            <td style="width:50px">{{ f.value }}</td>
-                            <td><p class="tag" style="margin:0px">{{ s.name }}</p></td>
+                            <td>{{ s.name }}</td>
+                            <td onclick="alert('{{f.value}}')"><a>{{ f.property }}</a></td>
                             <td>{{ f.score }}</td>
-                            {% if f.blacklist == 1 %}
-                                <td>yes</td>
-                            {% else %}
-                                <td>no</td>
-                            {% endif %}
                         </tr>
                         {% endfor %}
                     {% endfor %}
@@ -343,6 +336,8 @@
                         <img src="/chain/img/ability.png">
                         <h4 style="text-align: center">Ability Finder</h4>
                         <br>
+                        <input id="ability-search" type="text" placeholder="Search for anything" onkeypress="searchAbilities({{ exploits }})"/>
+                        <h4 style="margin-top:10px;text-align:center;font-size:14px;">OR FILTER:</h4>
                         <select id="ability-tactic-filter" onchange="populateTechniques({{ exploits }});">
                             <option disabled selected>Choose a tactic</option>
                             {% for tactic in tactics %}
@@ -352,8 +347,9 @@
                         <select id="ability-technique-filter" onchange="populateAbilities({{ exploits }});">
                             <option disabled selected>Choose a technique</option>
                         </select>
+                        <br><br><hr><br>
                         <select id="ability-ability-filter" onchange="showAbility()">
-                            <option disabled selected>Choose an ability</option>
+                            <option disabled selected>0 abilities</option>
                         </select>
                         <button id="phaseBtn" type="button" class="button-notready atomic-button" onclick="addToPhase()">Add to phase</button>
                     </div>
