@@ -151,10 +151,10 @@ function operationCallback(data){
             template.attr("id", "op_id_" + operation.chain[i].id);
             template.attr("operation", operation.chain[i].op_id);
             template.attr("data-date", operation.chain[i].decide.split('.')[0]);
-            template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100">Host #'
-                + operation.chain[i].host_id +'... '+operation.chain[i].abilityName +' <span' +
-            ' style="font-size:18px;float:right" onclick="rollup('+operation.chain[i].id+')">&#x2913;</span><span' +
-            ' style="font-size:14px;float:right" onclick="findResults('+operation.chain[i].id+')">&#9733;</span></div>');
+            template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100" ' +
+            'onclick="rollup('+operation.chain[i].id+')">Host #' + operation.chain[i].host_id + '... ' + 
+            operation.chain[i].abilityName + '<span style="font-size:14px;float:right" ' + 
+            'onclick="findResults('+operation.chain[i].id+')">&#9733;</span></div>');
             template.find('#time-action').html(atob(operation.chain[i].command));
             refreshUpdatableFields(operation.chain[i], template);
 
