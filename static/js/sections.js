@@ -214,7 +214,7 @@ function downloadOperationReport() {
         let exportName = 'operation_report_' + operationName;
         let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
         let downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href",     dataStr);
+        downloadAnchorNode.setAttribute("href", dataStr);
         downloadAnchorNode.setAttribute("download", exportName + ".json");
         document.body.appendChild(downloadAnchorNode); // required for firefox
         downloadAnchorNode.click();
