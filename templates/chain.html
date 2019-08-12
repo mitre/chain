@@ -214,10 +214,11 @@
                   {% endfor %}
                 </select>
                 <button type="button" class="button-success atomic-button" onclick="deleteOperation()">Delete Operation</button>
+                <button onclick="downloadOperationReport()" type="button" class="button-success atomic-button" >Download Report</button>
               </div>
 
               <div id="addOperation" style="display: none;">
-                    <input id="queueName" class="queueOption" style="opacity:0.5" disabled="true" placeholder="Operation name" oninput="checkOpformValid()"/>
+                  <input id="queueName" class="queueOption" style="opacity:0.5" disabled="true" placeholder="Operation name" oninput="checkOpformValid()"/>
                   <select name="work" id="queueFlow" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
                     <option value="" disabled selected>Adversary</option>
                     {% for adv in adversaries %}
