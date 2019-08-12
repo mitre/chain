@@ -103,6 +103,7 @@ a:hover {
 .member-result {
     color: var(--font-color);
     font-size: 13px;
+    word-break: break-word;
 }
 .tooltip {
   position: relative;
