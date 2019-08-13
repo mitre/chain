@@ -89,6 +89,13 @@ function reloadOperationsElements(data){
 function refresh() {
     let selectedOperationId = $('#operations option:selected').attr('value');
     let postData = selectedOperationId ? {'index':'core_operation','id': selectedOperationId} : null;
+    if (selectedOperationId > 0){
+        $('#deleteOperation').prop('disabled', false).css('opacity', 1.0);
+        $('#downloadOperationReport').prop('disabled', false).css('opacity', 1.0);
+    } else {
+        $('#deleteOperation').prop('disabled', true).css('opacity', 0.5);
+        $('#downloadOperationReport').prop('disabled', true).css('opacity', 0.5);
+    }
     restRequest('POST', postData, operationCallback, '/plugin/chain/full');
 }
 
@@ -111,6 +118,7 @@ function clearTimeline() {
 
 function deleteOperation() {
     let op_id = document.getElementById("operations").value;
+    console.log(op_id);
     restRequest('DELETE', {"index": "core_operation", "id": op_id}, deleteOperationCallback);
 }
 
