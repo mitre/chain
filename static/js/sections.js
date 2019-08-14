@@ -510,3 +510,10 @@ function uuidv4() {
     return v.toString(16);
   });
 }
+
+function resetMoreModal() {
+    let modal = $('#more-modal');
+    modal.hide();
+    modal.find('resultCmd').text('');
+    modal.find('resultView').text('');
+}
