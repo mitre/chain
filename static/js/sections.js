@@ -107,6 +107,15 @@ function clearTimeline() {
             $(this).remove();
         }
     });
+    clearCleanupList();
+}
+
+function clearCleanupList() {
+    let cleanup = $('#cleanup-content');
+    cleanup.hide();
+    cleanup.find('#cleanup-list li').each(function () {
+        $(this).remove();
+    });
 }
 
 function deleteOperation() {
@@ -143,8 +152,8 @@ function operationCallback(data){
             template.attr("operation", operation.chain[i].op_id);
             template.attr("data-date", operation.chain[i].decide.split('.')[0]);
             template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100" ' +
-            'onclick="rollup('+operation.chain[i].id+')">Host #' + operation.chain[i].host_id + '... ' + 
-            operation.chain[i].abilityName + '<span style="font-size:14px;float:right" ' + 
+            'onclick="rollup('+operation.chain[i].id+')">Host #' + operation.chain[i].host_id + '... ' +
+            operation.chain[i].abilityName + '<span style="font-size:14px;float:right" ' +
             'onclick="findResults(this, '+operation.chain[i].id+')"' +
             'data-encoded-cmd="'+operation.chain[i].command+'"'+'>&#9733;</span></div>');
             template.find('#time-action').html(atob(operation.chain[i].command));
@@ -160,7 +169,9 @@ function operationCallback(data){
     }
     if(operation.finish != null) {
         console.log("Turning off refresh interval for page");
+        populateCleanupList(operation);
         clearInterval(atomic_interval);
+        atomic_interval = null;
     } else {
         if(!atomic_interval) {
             console.log("Setting refresh interval for page");
@@ -488,14 +499,6 @@ function addToPhase() {
     refreshColorCodes();
 }
 
-function checkGpsDeleteFormValid() {
-    validateFormState(($('#groupName').prop('selectedIndex') !== 0), '#deleteGroupBtn');
-}
-
-function checkGpsAddFormValid(){
-    validateFormState(($('#groupNewName').val()), '#addGroupBtn');
-}
-
 function checkOpformValid(){
     validateFormState(($('#queueName').val()) && ($('#queueFlow').prop('selectedIndex') !== 0) && ($('#queueGroup').prop('selectedIndex') !== 0),
         '#opBtn');
@@ -519,4 +522,46 @@ function resetMoreModal() {
     modal.hide();
     modal.find('#resultCmd').text('');
     modal.find('#resultView').text('');
+}
+
+function populateCleanupList(operation) {
+    if(operation.cleanup === 1) {
+        let cleanup = $('#cleanup-content');
+        let cleanupCmds = [];
+        operation.chain.forEach(function (link) {
+            if (link.cleanup) {
+                let added = false;
+                cleanupCmds.forEach(function (cmd) {
+                    if (cmd.host_id == link.host_id){
+                        cmd.commands.push({"name": link.abilityName, "command": link.cleanup});
+                        added = true;
+                    }
+                });
+                if (!added) {
+                    let list = [];
+                    list.push({"name": link.abilityName, "command": link.cleanup});
+                    cleanupCmds.push({"host_id": link.host_id, "commands": list});
+                }
+            }
+        });
+        if (cleanupCmds.length) {
+            buildCleanupListTemplate(cleanupCmds);
+            cleanup.show();
+        }
+    }
+}
+
+function buildCleanupListTemplate(cleanup) {
+    let cleanList = $('#cleanup-list');
+    cleanup.forEach(function(host){
+        let template = $("#cleanup-template").clone();
+        template.attr('id', 'host_'+host.host_id);
+        template.attr('data-host-name', 'Host '+host.host_id);
+        let list = template.find('#host-number ul');
+        host.commands.forEach(function(cmd){
+            list.append('<li><div style="font-size: 13px;font-weight:100">Cleaning up... '+cmd.name+'</div></li>');
+        });
+        template.show();
+        cleanList.append(template);
+    });
 }
