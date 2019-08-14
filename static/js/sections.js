@@ -154,7 +154,8 @@ function operationCallback(data){
             template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100" ' +
             'onclick="rollup('+operation.chain[i].id+')">Host #' + operation.chain[i].host_id + '... ' + 
             operation.chain[i].abilityName + '<span style="font-size:14px;float:right" ' + 
-            'onclick="findResults('+operation.chain[i].id+')">&#9733;</span></div>');
+            'onclick="findResults(this, '+operation.chain[i].id+')"' +
+            'data-encoded-cmd="'+operation.chain[i].command+'"'+'>&#9733;</span></div>');
             template.find('#time-action').html(atob(operation.chain[i].command));
             refreshUpdatableFields(operation.chain[i], template);
 
@@ -193,19 +194,21 @@ function rollup(id) {
     }
 }
 
-function findResults(link_id){
+function findResults(elem, link_id){
     document.getElementById('more-modal').style.display='block';
+    $('#resultCmd').html(atob($(elem).attr('data-encoded-cmd')));
     restRequest('POST', {'index':'core_result','link_id':link_id}, loadResults);
 }
 
 function loadResults(data){
-    let res = atob(data[0].output);
-    $.each(data[0].link.facts, function(k, v) {
-        let regex = new RegExp(v.value, "g");
-        res = res.replace(regex, "<span class='highlight'>"+v.value+"</span>");
-    });
-    $('#resultCmd').html(atob(data[0].link.command));
-    $('#resultView').html(res);
+    if (data[0]) {
+        let res = atob(data[0].output);
+        $.each(data[0].link.facts, function (k, v) {
+            let regex = new RegExp(v.value, "g");
+            res = res.replace(regex, "<span class='highlight'>" + v.value + "</span>");
+        });
+        $('#resultView').html(res);
+    }
 }
 
 function downloadOperationReport() {
@@ -514,6 +517,6 @@ function uuidv4() {
 function resetMoreModal() {
     let modal = $('#more-modal');
     modal.hide();
-    modal.find('resultCmd').text('');
-    modal.find('resultView').text('');
+    modal.find('#resultCmd').text('');
+    modal.find('#resultView').text('');
 }
