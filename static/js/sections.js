@@ -123,15 +123,6 @@ function removeOperationElements() {
 
 function operationCallback(data){
     let operation = data[0];
-    if(operation.finish != null) {
-        console.log("Turning off refresh interval for page");
-        clearInterval(atomic_interval);
-    } else {
-        if(!atomic_interval) {
-            console.log("Setting refresh interval for page");
-            atomic_interval = setInterval(refresh, 5000);
-        }
-    }
     $("#dash-start").html(operation.start);
     $("#dash-finish").html(operation.finish);
     if(operation.host_group.length > 0) {
@@ -164,6 +155,15 @@ function operationCallback(data){
         } else {
             let existing = $("#op_id_"+operation.chain[i].id);
             refreshUpdatableFields(operation.chain[i], existing);
+        }
+    }
+    if(operation.finish != null) {
+        console.log("Turning off refresh interval for page");
+        clearInterval(atomic_interval);
+    } else {
+        if(!atomic_interval) {
+            console.log("Setting refresh interval for page");
+            atomic_interval = setInterval(refresh, 5000);
         }
     }
 }
