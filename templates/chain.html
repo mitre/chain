@@ -138,67 +138,70 @@
         </div>
 
         <!-- adversary -->
-       
-			<div id="adversary-profile" class="section-profile" style="display: none">
-          <div class="row">
-            <div class="column section-border" style="flex:25%;">
-              <img src="/chain/img/hacker.png">
-              <h4 style="margin-bottom:-15px">Adversaries</h4>
-              <br>
-               <div class="toggle">
-                <label class="switch"><input type="checkbox" id="togBtnOp" checked onchange="toggleAdversaryView()" >
-                  <div class="slider round"><span class="on">VIEW</span><span class="off">NEW</span></div>
-                </label>
-              </div>
-              <br>
-              <p class="section-description">
-                  Adversaries are collections of ATT&CK TTPs, designed to test specific threats.
-                  Abilities with unmet requirements are faded out to show the adversary cannot use them unless an
-                  unlocking ability is added.
-              </p>
-              <div id="viewAdversary">
-              	<select id="profile-existing-name" style="margin-top:-15px" onchange="loadAdversary();">
-                	<option value="" disabled selected>Select existing</option>
-               	 {% for adv in adversaries %}
-                    	<option value="{{ adv.id }}">{{ adv.name }}</option>
-               	 {% endfor %}}
-             	 </select>
-            	  <select id="advFactSource" onchange="refreshColorCodes()">
-             	   <option value="" selected>Overlay fact source</option>
-             	       {% for s in sources %}
-             	           <option value="{{ s.facts | map(attribute='property') | list }}">{{ s.name }}</option>
-             	       {% endfor %}
-      	        </select>
-                 <button id="advNewBtn" type="button" class="button-notready atomic-button" onclick="saveNewAdversary()">Save / update</button>
-              </div>
-              
-              <div id="addAdversary" style="display: none;">
-            	  <select id="advFactSource" onchange="refreshColorCodes()">
-             	   <option value="" selected>Overlay fact source</option>
-             	       {% for s in sources %}
-             	           <option value="{{ s.facts | map(attribute='property') | list }}">{{ s.name }}</option>
-             	       {% endfor %}
-      	        </select>
-                 <button id="advNewBtn" type="button" class="button-success atomic-button" onclick="saveNewAdversary()">Save new</button>
-              </div>
-
-            </div>
-            <div id="phases" class="column adversary-header" style="flex:75%;text-align: left">
-                <input id="profile-goal" type="text" class="advGoal" placeholder="Enter adversary name">
-                <input id="profile-description" type="text" placeholder="enter adversary description">
-                <br><br>
-               
-                <div id="dummy"></div>
-                
-                <div id="new_phase" style="display: none;">
-                	<h4 class="phase-headers">Phase 1<span onclick="showPhaseModal(1)">✚</span><hr></h4>
-                	<div id="tempPhase1" style="" class="tempPhase">
-                		<ul id="profile-tests" class="profile-tests"></ul>
-                	</div>
+        
+        <div id="adversary-profile" class="section-profile" style="display: none">
+            <div class="row">
+                <div class="column section-border" style="flex:25%;">
+                    <img src="/chain/img/hacker.png">
+                    <h4 style="margin-bottom:-15px">Adversaries</h4>
+                    <br>
+                    <div class="toggle">
+                        <label class="switch">
+                            <input type="checkbox" id="togBtnOp" checked onchange="toggleAdversaryView()">
+                            <div class="slider round"><span class="on">VIEW</span><span class="off">NEW</span></div>
+                        </label>
+                    </div>
+                    <p class="section-description" style="margin-top: 0px">
+                        Adversaries are collections of ATT&CK TTPs, designed to test specific threats. Abilities with unmet requirements are faded out to show the adversary cannot use them unless an unlocking ability is added.
+                    </p>
+        
+                    <div id="viewAdversary">
+                        <select id="profile-existing-name" onchange="loadAdversary();">
+                            <option value="" disabled selected>Select existing</option>
+                            {% for adv in adversaries %}
+                            <option value="{{ adv.id }}">{{ adv.name }}</option>
+                            {% endfor %}}
+                        </select>
+                        <select id="advFactSource" onchange="refreshColorCodes()">
+                            <option value="" selected>Overlay fact source</option>
+                            {% for s in sources %}
+                            <option value="{{ s.facts | map(attribute='property') | list }}">{{ s.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <button id="advNewBtn" type="button" class="button-notready atomic-button" onclick="saveNewAdversary()">Save / update</button>
+                    </div>
+        
+                    <div id="addAdversary" style="display: none;">
+                        <select id="advFactSource" onchange="refreshColorCodes()">
+                            <option value="" selected>Overlay fact source</option>
+                            {% for s in sources %}
+                            <option value="{{ s.facts | map(attribute='property') | list }}">{{ s.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <button id="advNewBtn" type="button" class="button-success atomic-button" onclick="saveNewAdversary()">Save new</button>
+                    </div>
+        
                 </div>
-             </div>
+                <div id="phases" class="column adversary-header" style="flex:75%;text-align: left">
+                    <input id="profile-goal" type="text" class="advGoal" placeholder="Enter adversary name">
+                    <input id="profile-description" type="text" placeholder="enter adversary description">
+                    <br>
+                    <br>
+        
+                    <div id="dummy"></div>
+        
+                    <div id="new_phase" style="display: none;">
+                        <h4 class="phase-headers">Phase 1<span onclick="showPhaseModal(1)">✚</span><hr></h4>
+                        <div id="tempPhase1" style="" class="tempPhase">
+                            <ul id="profile-tests" class="profile-tests"></ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>        
+        </div>       
+
+
+
         
         
 
