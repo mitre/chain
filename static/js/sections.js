@@ -242,6 +242,18 @@ function downloadOperationReport() {
 
 /** ADVERSARIES **/
 
+function toggleAdversaryView() {
+    $('#viewAdversary, #new_phase').toggle();
+    $('#addAdversary').toggle();
+
+
+    if ($('#togBtnOp').is(':checked')) {
+        showHide('.queueOption,#opBtn', '#adversaries');
+    } else {
+        showHide('#adversaries', '.queueOption,#opBtn');
+    }
+}
+
 function saveNewAdversary() {
     let name = $('#profile-goal').val();
     if(!name){alert('Please enter an adversary name!'); return; }
