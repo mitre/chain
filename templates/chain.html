@@ -143,11 +143,11 @@
             <div class="row">
                 <div class="column section-border" style="flex:25%;">
                     <img src="/chain/img/hacker.png">
-                    <h4 style="margin-bottom:-15px">Adversaries</h4>
+                    <h4 >Adversaries</h4>
                     <br>
                     <div class="toggle">
                         <label class="switch">
-                            <input type="checkbox" id="togBtnOp" checked onchange="toggleAdversaryView()">
+                            <input type="checkbox" id="togBtnAd" checked onchange="toggleAdversaryView()">
                             <div class="slider round"><span class="on">VIEW</span><span class="off">NEW</span></div>
                         </label>
                     </div>
@@ -168,7 +168,7 @@
                             <option value="{{ s.facts | map(attribute='property') | list }}">{{ s.name }}</option>
                             {% endfor %}
                         </select>
-                        <button id="advNewBtn" type="button" class="button-notready atomic-button" onclick="saveNewAdversary()">Save / update</button>
+
                     </div>
         
                     <div id="addAdversary" style="display: none;">
@@ -191,7 +191,7 @@
                     <div id="dummy"></div>
         
                     <div id="new_phase" style="display: none;">
-                        <h4 class="phase-headers">Phase 1<span onclick="showPhaseModal(1)">✚</span><hr></h4>
+                        <h4 class="phase-headers">Phase 1&nbsp;&nbsp;&nbsp;<span onclick="showPhaseModal(1)">✚</span><hr></h4>
                         <div id="tempPhase1" style="" class="tempPhase">
                             <ul id="profile-tests" class="profile-tests"></ul>
                         </div>

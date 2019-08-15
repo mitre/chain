@@ -243,14 +243,14 @@ function downloadOperationReport() {
 /** ADVERSARIES **/
 
 function toggleAdversaryView() {
-    $('#viewAdversary, #new_phase').toggle();
-    $('#addAdversary').toggle();
+    $('#viewAdversary').toggle();
+    $('#addAdversary, #new_phase').toggle();
 
 
-    if ($('#togBtnOp').is(':checked')) {
-        showHide('.queueOption,#opBtn', '#adversaries');
+    if ($('#togBtnAd').is(':checked')) {
+        showHide('#addAdversary,#new_phase', '#viewAdversary');
     } else {
-        showHide('#adversaries', '.queueOption,#opBtn');
+        showHide('#viewAdversary', '#addAdversary,#new_phase');
     }
 }
 
@@ -259,7 +259,7 @@ function saveNewAdversary() {
     if(!name){alert('Please enter an adversary name!'); return; }
     let description = $('#profile-description').val();
     if(!description){alert('Please enter a description!'); return; }
-
+    
     let abilities = [];
     $('#profile-tests li').each(function() {
         abilities.push({"id": $(this).attr('id'),"phase":$(this).data('phase')})
