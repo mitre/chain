@@ -35,7 +35,7 @@
       <div class="row-toolbar-section" id="section-1">
         <button class="row-toolbar-button" onclick="viewSection('group-profile');">
           <span class="icon"><img src="/chain/img/group.png"></span>
-          <span class="caption">Agents</span>
+          <span class="caption">Groups</span>
         </button>
       </div>
       <div class="row-toolbar-section" id="section-4">
@@ -61,13 +61,13 @@
     <div id="atomic-blocks" class="row-canvas">
       <center>
 
-        <!-- agents -->
+        <!-- group -->
 
         <div id="group-profile" class="section-profile" style="display: none">
           <div class="row">
             <div class="column section-border" style="flex:25%;">
               <img src="/chain/img/group.png">
-              <h4 style="margin-bottom:-5px">Agents</h4>
+              <h4 style="margin-bottom:-5px">Groups</h4>
               <p class="section-description">
                   Groups are collections of agents so hosts can be compromised simultaneously.
               </p>
@@ -78,18 +78,20 @@
                 <thead>
                 <tr>
                   <th>Host <i style="font-size:11px">paw print</i></th>
+                  <th>Checks</th>
+                  <th>Group</th>
                   <th>Platform</th>
                   <th>Last seen</th>
-                  <th>Group</th>
                 </tr>
                 </thead>
                 <tbody>
                   {% for a in agents %}
                       <tr>
                         <td>{{ a.paw }}</td>
+                        <td>{{ a.checks }}</td>
+                        <td><input id="{{a.paw}}" type="text" value="{{ a.host_group }}"></td>
                         <td>{{ a.platform }}</td>
                         <td>{{ a.last_seen }}</td>
-                        <td><input id="{{a.paw}}-group" type="text" value="{{ a.host_group }}"></td>
                       </tr>
                   {% endfor %}
                 </tbody>
@@ -240,6 +242,10 @@
                         {% for s in sources %}
                             <option value="{{ s.id }}">{{ s.name }}</option>
                         {% endfor %}
+                  </select>
+                  <select name="cleanup" id="queueCleanup" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
+                    <option value="1" selected>Run cleanup commands</option>
+                    <option value="0">Skip cleanup commands</option>
                   </select>
                   <select name="stealth" id="queueStealth" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
                     <option value="0" selected>Run normal operation</option>

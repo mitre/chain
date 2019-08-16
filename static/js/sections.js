@@ -7,7 +7,7 @@ $(document).ready(function () {
 function saveGroups(){
     let data = $('#netTbl').DataTable().rows().data();
     data.each(function (value, index) {
-        let group = document.getElementById(value[0]+'-group').value;
+        let group = document.getElementById(value[0]).value;
         restRequest('PUT', {"index":"core_agent", "paw": value[0], "host_group": group});
     });
     location.reload(true);
@@ -62,6 +62,7 @@ function handleStartAction(){
         "group":document.getElementById("queueGroup").value,
         "adversary_id":document.getElementById("queueFlow").value,
         "planner":document.getElementById("queuePlanner").value,
+        "cleanup":document.getElementById("queueCleanup").value,
         "stealth":document.getElementById("queueStealth").value,
         "jitter":jitter,
         "sources":[document.getElementById("queueSource").value]
@@ -151,7 +152,7 @@ function operationCallback(data){
             template.attr("operation", operation.chain[i].op_id);
             template.attr("data-date", operation.chain[i].decide.split('.')[0]);
             template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100" ' +
-            'onclick="rollup('+operation.chain[i].id+')">'+ operation.chain[i].paw + '... ' +
+            'onclick="rollup('+operation.chain[i].id+')">Host #' + operation.chain[i].host_id + '... ' +
             operation.chain[i].abilityName + '<span style="font-size:14px;float:right" ' +
             'onclick="findResults(this, '+operation.chain[i].id+')"' +
             'data-encoded-cmd="'+operation.chain[i].command+'"'+'>&#9733;</span></div>');
@@ -531,7 +532,7 @@ function populateCleanupList(operation) {
             if (link.cleanup) {
                 let added = false;
                 cleanupCmds.forEach(function (cmd) {
-                    if (cmd.paw == link.paw){
+                    if (cmd.host_id == link.host_id){
                         cmd.commands.push({"name": link.abilityName, "command": link.cleanup});
                         added = true;
                     }
@@ -539,7 +540,7 @@ function populateCleanupList(operation) {
                 if (!added) {
                     let list = [];
                     list.push({"name": link.abilityName, "command": link.cleanup});
-                    cleanupCmds.push({"paw": link.paw, "commands": list});
+                    cleanupCmds.push({"host_id": link.host_id, "commands": list});
                 }
             }
         });
@@ -554,8 +555,8 @@ function buildCleanupListTemplate(cleanup) {
     let cleanList = $('#cleanup-list');
     cleanup.forEach(function(host){
         let template = $("#cleanup-template").clone();
-        template.attr('id', 'host_'+host.paw);
-        template.attr('data-host-name', host.paw);
+        template.attr('id', 'host_'+host.host_id);
+        template.attr('data-host-name', 'Host '+host.host_id);
         let list = template.find('#host-number ul');
         host.commands.forEach(function(cmd){
             list.append('<li><div style="font-size: 13px;font-weight:100">Cleaning up... '+cmd.name+'</div></li>');
