@@ -42,7 +42,7 @@ class ChainApi:
         if request.method == 'DELETE':
             output = await self.data_svc.delete(index, **data)
             return web.json_response(output)
-        
+
         options = dict(
             PUT=dict(
                 core_adversary=lambda d: self.data_svc.persist_adversary(**d),
@@ -50,7 +50,7 @@ class ChainApi:
                 core_operation=lambda d: self.data_svc.create_operation(**d),
                 core_fact=lambda d: self.data_svc.create_fact(**d),
                 core_agent=lambda d: self.data_svc.update('core_agent', 'paw', d.pop('paw'), d)
-        ),
+            ),
             POST=dict(
                 core_adversary=lambda d: self.data_svc.explode_adversaries(criteria=d),
                 core_ability=lambda d: self.data_svc.explode_abilities(criteria=d),
