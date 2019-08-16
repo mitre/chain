@@ -531,30 +531,29 @@ function resetMoreModal() {
 }
 
 function populateCleanupList(operation) {
-    if(operation.cleanup === 1) {
-        let cleanup = $('#cleanup-content');
-        let cleanupCmds = [];
-        operation.chain.forEach(function (link) {
-            if (link.cleanup) {
-                let added = false;
-                cleanupCmds.forEach(function (cmd) {
-                    if (cmd.paw == link.paw){
-                        cmd.commands.push({"name": link.abilityName, "command": link.cleanup});
-                        added = true;
-                    }
-                });
-                if (!added) {
-                    let list = [];
-                    list.push({"name": link.abilityName, "command": link.cleanup});
-                    cleanupCmds.push({"paw": link.paw, "commands": list});
+    let cleanup = $('#cleanup-content');
+    let cleanupCmds = [];
+    operation.chain.forEach(function (link) {
+        if (link.cleanup) {
+            let added = false;
+            cleanupCmds.forEach(function (cmd) {
+                if (cmd.paw == link.paw){
+                    cmd.commands.push({"name": link.abilityName, "command": link.cleanup});
+                    added = true;
                 }
+            });
+            if (!added) {
+                let list = [];
+                list.push({"name": link.abilityName, "command": link.cleanup});
+                cleanupCmds.push({"paw": link.paw, "commands": list});
             }
-        });
-        if (cleanupCmds.length) {
-            buildCleanupListTemplate(cleanupCmds);
-            cleanup.show();
         }
+    });
+    if (cleanupCmds.length) {
+        buildCleanupListTemplate(cleanupCmds);
+        cleanup.show();
     }
+
 }
 
 function buildCleanupListTemplate(cleanup) {
