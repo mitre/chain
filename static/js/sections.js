@@ -117,13 +117,6 @@ function clearCleanupList() {
     });
 }
 
-function removeOperationElements() {
-     let options = document.querySelectorAll('.operationOption');
-     Array.prototype.forEach.call(options, function (node) {
-         node.parentNode.removeChild(node);
-     });
- }
-
 function operationCallback(data){
     let operation = data[0];
     $("#dash-start").html(operation.start);

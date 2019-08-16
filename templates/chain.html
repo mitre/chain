@@ -211,6 +211,9 @@
                     <option class="operationOption" id="{{ op}}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
                   {% endfor %}
                 </select>
+                <div id="viewOperationButtons">
+                  <button id="downloadOperationReport" type="button" class="button-success atomic-button" onclick="downloadOperationReport()" style="opacity:0.5" disabled="true">Download</button>
+                </div>
               </div>
               <div id="addOperation" style="display: none;">
                   <input id="queueName" class="queueOption" style="opacity:0.5" disabled="true" placeholder="Operation name" oninput="checkOpformValid()"/>
