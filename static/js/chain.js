@@ -25,14 +25,6 @@ function showHide(show, hide) {
     $(hide).each(function(){$(this).prop('disabled', true).css('opacity', 0.5)});
 }
 
-function refreshCallback(data) {
-    location.reload();
-}
-
-function deleteObject(table, identifier) {
-    restRequest('DELETE', {"index": table, "id": identifier}, refreshCallback);
-}
-
 function updateButtonState(selector, state) {
     (state === 'valid') ?
         $(selector).attr('class','button-success atomic-button') :

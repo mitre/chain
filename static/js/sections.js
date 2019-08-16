@@ -98,13 +98,6 @@ function refresh() {
     restRequest('POST', postData, operationCallback, '/plugin/chain/full');
 }
 
-function deleteOperationCallback(){
-    removeOperationElements();
-    clearTimeline();
-    restRequest('POST', {'index':'core_operation'}, reloadOperationsElements);
-    $("#operationDefault").prop('selected', true);
-}
-
 function clearTimeline() {
     let selectedOperationId = $('#operations option:selected').attr('value');
     $('.event').each(function() {
@@ -122,11 +115,6 @@ function clearCleanupList() {
     cleanup.find('#cleanup-list li').each(function () {
         $(this).remove();
     });
-}
-
-function deleteOperation() {
-    let op_id = document.getElementById("operations").value;
-    restRequest('DELETE', {"index": "core_operation", "id": op_id}, deleteOperationCallback);
 }
 
 function removeOperationElements() {
