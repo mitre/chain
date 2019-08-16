@@ -211,8 +211,10 @@
                     <option class="operationOption" id="{{ op}}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
                   {% endfor %}
                 </select>
-                <button type="button" class="button-success atomic-button" onclick="deleteOperation()">Delete Operation</button>
-                <button onclick="downloadOperationReport()" type="button" class="button-success atomic-button" >Download Report</button>
+                <div id="viewOperationButtons">
+                  <button id="downloadOperationReport" type="button" class="button-success atomic-button" onclick="downloadOperationReport()" style="opacity:0.5" disabled="true">Download</button>
+                  <button id="deleteOperation" type="button" class="button-warn atomic-button" onclick="deleteOperation()" style="opacity:0.5" disabled="true">Delete</button>
+                </div>
               </div>
 
               <div id="addOperation" style="display: none;">
