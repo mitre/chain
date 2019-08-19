@@ -44,12 +44,6 @@
 .row-canvas{
     flex:40%;
 }
-.section-profile {
-    margin-bottom: 25px;
-}
-.section-border {
-    border-right: .5px var(--font-color) solid;
-}
 .atomic-button {
     height:35px;
     margin-top: 10px;
@@ -57,64 +51,6 @@
     width: 100%;
     border:none;
     border-radius: 25px;
-}
-.section-profile pre {
-    width: 90%;
-    background: white;
-    border: 1px solid #ddd;
-    color: #666;
-    page-break-inside: avoid;
-    font-family: monospace;
-    font-size: 15px;
-    line-height: 1.6;
-    margin-bottom: 1.6em;
-    max-width: 100%;
-    overflow: auto;
-    padding: 1em 1.5em;
-    display: block;
-    word-wrap: break-word;
-}
-.section-profile img {
-    border-radius: 50%;
-    height:65px;
-    width: auto;
-    background-color: white;
-    border: 5px solid var(--theme-color);
-    margin-bottom:10px;
-}
-.section-profile h4 {
-    margin-bottom:10px;
-    margin-top:0px;
-}
-.section-profile h3 {
-    text-transform: uppercase;
-    font-weight: 400;
-    margin-bottom:0px;
-}
-.section-profile ul {
-    list-style-type: none;
-}
-.section-profile p {
-    font-size: 13px;
-}
-.section-profile li {
-    text-align: left;
-}
-.section-profile input {
-    height: 18px;
-    width: 75%;
-    margin:5px;
-}
-.section-profile select {
-    height: 30px;
-    width: 75%;
-    margin: 5px;
-}
-.section-profile button {
-    width: 75%;
-}
-.section-description {
-    padding: 25px;
 }
 .top-tip {
     position: absolute;
