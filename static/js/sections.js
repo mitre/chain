@@ -542,7 +542,7 @@ function buildCleanupListTemplate(cleanup) {
     cleanup.forEach(function(host){
         let template = $("#cleanup-template").clone();
         template.attr('id', 'host_'+host.paw);
-        template.attr('data-host-name', host.paw);
+        template.attr('data-host-name', host.paw.slice(0, 18) + '..');
         let list = template.find('#host-number ul');
         host.commands.forEach(function(cmd){
             list.append('<li><div style="font-size: 13px;font-weight:100">Cleaning up... '+cmd.name+'</div></li>');
