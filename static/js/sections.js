@@ -308,7 +308,7 @@ function buildAbility(ability, phase){
 
     template.find('#name').html(ability.name);
     template.find('#description').html(ability.description);
-    template.find('#ability-attack').html(ability.technique.tactic + ' | '+ ability.technique.attack_id + ' | '+ ability.technique.name);
+    template.find('#ability-attack').html(eval(ability.technique.tactic).join(" / ") + ' | '+ ability.technique.attack_id + ' | '+ ability.technique.name);
 
     if(requirements.length > 0) {
         template.find('#ability-metadata').append('<td><div id="ability-padlock"><div class="tooltip"><span class="tooltiptext">This ability has requirements</span>&#128274;</div></div></td>');
@@ -400,7 +400,7 @@ function populateTechniques(exploits){
     let found = [];
     let showing = [];
     exploits.forEach(function(ability) {
-        if(tactic == ability.technique.tactic && !found.includes(ability.technique.attack_id)) {
+        if(eval(ability.technique.tactic).includes(tactic) && !found.includes(ability.technique.attack_id)) {
             found.push(ability.technique.attack_id);
             appendTechniqueToList(tactic, ability);
             appendAbilityToList(ability);
