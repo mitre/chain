@@ -79,6 +79,7 @@
                 <tr>
                   <th>Host <i style="font-size:11px">paw print</i></th>
                   <th>Platform</th>
+                  <th>Executor</th>
                   <th>Last seen</th>
                   <th>Group</th>
                 </tr>
@@ -88,6 +89,7 @@
                       <tr>
                         <td>{{ a.paw }}</td>
                         <td>{{ a.platform }}</td>
+                        <td>{{ a.executor }}</td>
                         <td>{{ a.last_seen }}</td>
                         <td><input id="{{a.paw}}-group" type="text" value="{{ a.host_group }}"></td>
                       </tr>
