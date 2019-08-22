@@ -229,6 +229,33 @@ function downloadOperationReport() {
 
 /** ADVERSARIES **/
 
+function toggleAdversaryView() {
+    $('#viewAdversary').toggle();
+    $('#addAdversary').toggle();
+
+    //clear out canvas
+    $('#profile-goal').val('');
+    $('#profile-description').val('');
+    $('.tempPhase').remove();
+    $('.phase-headers').remove();
+}
+
+function addPhase(number) {
+    let template = $("#phase-template").clone();
+    if(number == null) {
+        let existingPhases = $('.tempPhase').length;
+        number = existingPhases + 1;
+    }
+    template.attr("id", "tempPhase" + number);
+    template.addClass("tempPhase");
+    template.insertBefore('#dummy');
+    template.show();
+    let phaseHeader = $('<h4 class="phase-headers">Phase ' + number +'&nbsp&nbsp&nbsp;<span onclick="showPhaseModal('+number+')">&#10010;</span><hr></h4>');
+    phaseHeader.insertBefore("#tempPhase" + number);
+    phaseHeader.show();
+    return template;
+}
+
 function saveNewAdversary() {
     let name = $('#profile-goal').val();
     if(!name){alert('Please enter an adversary name!'); return; }
@@ -259,21 +286,13 @@ function loadAdversaryCallback(data) {
     $('.tempPhase').remove();
     $('.phase-headers').remove();
     $.each(data[0]['phases'], function(phase, abilities) {
-        let template = $("#phase-template").clone();
-        template.attr("id", "tempPhase" + phase);
-        template.addClass("tempPhase");
+        let template = addPhase(phase);
 
         abilities = addPlatforms(abilities);
         abilities.forEach(function(a) {
             let abilityBox = buildAbility(a, phase);
             template.find('#profile-tests').append(abilityBox);
         });
-        template.insertBefore('#dummy');
-        template.show();
-
-        let phaseHeader = $('<h4 class="phase-headers">Phase ' + phase +'&nbsp&nbsp&nbsp;<span onclick="showPhaseModal('+phase+')">&#10010;</span><hr></h4>');
-        phaseHeader.insertBefore("#tempPhase" + phase);
-        phaseHeader.show();
     });
     refreshColorCodes();
 }

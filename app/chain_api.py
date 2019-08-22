@@ -10,6 +10,7 @@ class ChainApi:
         self.data_svc = services.get('data_svc')
         self.operation_svc = services.get('operation_svc')
         self.auth_svc = services.get('auth_svc')
+        self.plugin_svc = services.get('plugin_svc')
         self.loop = asyncio.get_event_loop()
 
     @template('chain.html')
@@ -23,8 +24,9 @@ class ChainApi:
         operations = await self.data_svc.explode_operation()
         sources = await self.data_svc.explode_sources()
         planners = await self.data_svc.explode_planners()
+        plugins = [dict(name=getattr(p, 'name'), address=getattr(p, 'address')) for p in self.plugin_svc.get_plugins()]
         return dict(exploits=abilities, groups=groups, adversaries=adversaries, agents=hosts, operations=operations,
-                    tactics=tactics, sources=sources, planners=planners)
+                    tactics=tactics, sources=sources, planners=planners, plugins=plugins)
 
     async def rest_full(self, request):
         base = await self.rest_core(request)
