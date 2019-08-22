@@ -17,7 +17,11 @@
 </script>
 <div class="topnav">
   <a href="/">Home</a>
-  <a class="active" href="/plugin/chain/gui">Chain</a>
+  {% for plugin in plugins %}
+      {% if plugin.address %}
+        <a href="{{ plugin.address }}">{{ plugin.name }}</a>
+      {% endif %}
+  {% endfor %}
   <div class="topnav-right">
     <a href="https://github.com/mitre/caldera/wiki" target="_blank">Docs</a>
     <a href="/logout">Logout</a>
@@ -144,28 +148,41 @@
             <div class="column section-border" style="flex:25%;">
               <img src="/chain/img/hacker.png">
               <h4>Adversaries</h4>
+              <br>
+              <div class="toggle">
+                <label class="switch"><input type="checkbox" id="togBtnAdv" onchange="toggleAdversaryView()">
+                  <div class="slider round"><span class="on">ADD</span><span class="off">VIEW</span></div>
+                </label>
+              </div>
+              <br>
               <p class="section-description">
                   Adversaries are collections of ATT&CK TTPs, designed to test specific threats.
                   Abilities with unmet requirements are faded out to show the adversary cannot use them unless an
                   unlocking ability is added.
               </p>
-              <select id="profile-existing-name" style="margin-top:-15px" onchange="loadAdversary();">
-                <option value="" disabled selected>Select an existing adversary</option>
-                {% for adv in adversaries %}
-                    <option value="{{ adv.id }}">{{ adv.name }}</option>
-                {% endfor %}}
-              </select>
+              <br>
+              <div id="viewAdversary">
+                  <select id="profile-existing-name" style="margin-top:-15px" onchange="loadAdversary();">
+                    <option value="" disabled selected>Select an existing adversary</option>
+                    {% for adv in adversaries %}
+                        <option value="{{ adv.id }}">{{ adv.name }}</option>
+                    {% endfor %}}
+                  </select>
+              </div>
+              <div id="addAdversary" style="display: none">
+                  <button class="button-embedded" onclick="addPhase(null)">Add phase</button>
+              </div>
               <select id="advFactSource" onchange="refreshColorCodes()">
                 <option value="" selected>Overlay fact source</option>
                     {% for s in sources %}
                         <option value="{{ s.facts | map(attribute='property') | list }}">{{ s.name }}</option>
                     {% endfor %}
               </select>
-              <button id="advNewBtn" type="button" class="button-notready atomic-button" onclick="saveNewAdversary()">Save new</button>
+              <button id="advNewBtn" type="button" class="button-success atomic-button" onclick="saveNewAdversary()">Save as new</button>
             </div>
             <div id="phases" class="column adversary-header" style="flex:75%;text-align: left">
-                <input id="profile-goal" type="text" class="advGoal">
-                <input id="profile-description" type="text">
+                <input id="profile-goal" type="text" class="advGoal" placeholder="enter an adversary name">
+                <input id="profile-description" type="text" placeholder="enter an adversary description">
                 <br><br>
                 <div id="dummy"></div>
             </div>
