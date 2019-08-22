@@ -64,3 +64,18 @@ class ChainApi:
         if request.method == 'PUT' and index == 'core_operation':
             self.loop.create_task(self.operation_svc.run(output))
         return output
+
+    async def rest_state_control(self, request):
+        body = await request.json()
+        state = body.get('state')
+        valid_states = ('running', 'paused', 'run_one_link')
+
+        op = await self.data_svc.dao.get('core_operation', dict(id=body['id']))
+        if not len(op):
+            raise web.HTTPNotFound
+        elif op[0]['state'] == 'finished':
+            raise web.HTTPBadRequest(body='This operation has already finished.')
+        elif state not in valid_states:
+            raise web.HTTPBadRequest(body='state must be one of {}'.format(valid_states))
+        await self.data_svc.update('core_operation', 'id', body['id'], dict(state=state))
+        return web.Response()

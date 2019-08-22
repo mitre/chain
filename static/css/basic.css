@@ -318,3 +318,28 @@ table.dataTable tr.selected td.select-checkbox:after {
 .watermarked {
   position: relative;
 }
+.op-control-text {
+    text-transform: uppercase;
+    border: 2px solid var(--theme-color);
+    background-color: var(--navbar-background);
+    padding: 5px 5px 5px 5px;
+    height: 30px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: medium;
+    font-weight: bold;
+    width: 5%
+}
+.op-control button {
+    background-color: white;
+    border: 2px solid var(--theme-color);
+    height: 30px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: medium;
+    width: 5%
+}
+
+.op-control button:hover {
+    cursor: pointer;
+}

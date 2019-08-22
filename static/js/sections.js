@@ -61,12 +61,23 @@ function handleStartAction(){
         "name":name,
         "group":document.getElementById("queueGroup").value,
         "adversary_id":document.getElementById("queueFlow").value,
+        "state":document.getElementById("queueState").value,
         "planner":document.getElementById("queuePlanner").value,
         "stealth":document.getElementById("queueStealth").value,
         "jitter":jitter,
         "sources":[document.getElementById("queueSource").value]
     };
     restRequest('PUT', queueDetails, handleStartActionCallback);
+}
+function changeCurrentOperationState(newState){
+    let selectedOperationId = $('#operations option:selected').attr('value');
+    let state = $('#op-control-state').text();
+    if(state === 'finished'){
+        alert('This operation has finished.');
+        return;
+    }
+    let data = {'id': selectedOperationId, 'state': newState};
+    restRequest('PUT', data, function(d){refresh()}, '/plugin/chain/operation/state');
 }
 
 function handleStartActionCallback(data){
@@ -121,6 +132,7 @@ function operationCallback(data){
     let operation = data[0];
     $("#dash-start").html(operation.start);
     $("#dash-finish").html(operation.finish);
+    $("#op-control-state").html(operation.state);
     if(operation.host_group.length > 0) {
         $("#dash-group").html(operation.host_group[0].host_group);
     } else {

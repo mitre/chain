@@ -11,4 +11,4 @@ async def initialize(app, services):
     app.router.add_route('GET', '/plugin/chain/gui', chain_api.landing)
     app.router.add_route('*', '/plugin/chain/full', chain_api.rest_full)
     app.router.add_route('*', '/plugin/chain/rest', chain_api.rest_api)
-
+    app.router.add_route('PUT', '/plugin/chain/operation/state', chain_api.rest_state_control)
