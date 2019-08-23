@@ -117,15 +117,6 @@ function clearTimeline() {
             $(this).remove();
         }
     });
-    clearCleanupList();
-}
-
-function clearCleanupList() {
-    let cleanup = $('#cleanup-content');
-    cleanup.hide();
-    cleanup.find('#cleanup-list li').each(function () {
-        $(this).remove();
-    });
 }
 
 function operationCallback(data){
@@ -146,13 +137,17 @@ function operationCallback(data){
             let template = $("#link-template").clone();
             let ability = operation.abilities.filter(item => item.id === operation.chain[i].ability)[0];
             template.find('#link-description').html(operation.chain[i].abilityDescription);
+            let title = operation.chain[i].abilityName;
+            if(operation.chain[i].cleanup) {
+                title = title + " (CLEANUP)"
+            }
             template.find('#link-technique').html(ability.technique['attack_id'] + '<span class="tooltiptext">' + ability.technique['name'] + '</span>');
             template.attr("id", "op_id_" + operation.chain[i].id);
             template.attr("operation", operation.chain[i].op_id);
             template.attr("data-date", operation.chain[i].decide.split('.')[0]);
             template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100" ' +
             'onclick="rollup('+operation.chain[i].id+')">'+ operation.chain[i].paw + '... ' +
-            operation.chain[i].abilityName + '<span style="font-size:14px;float:right" ' +
+                title + '<span style="font-size:14px;float:right" ' +
             'onclick="findResults(this, '+operation.chain[i].id+')"' +
             'data-encoded-cmd="'+operation.chain[i].command+'"'+'>&#9733;</span></div>');
             template.find('#time-action').html(atob(operation.chain[i].command));
@@ -168,7 +163,6 @@ function operationCallback(data){
     }
     if(operation.finish != null) {
         console.log("Turning off refresh interval for page");
-        populateCleanupList(operation);
         clearInterval(atomic_interval);
         atomic_interval = null;
     } else {
@@ -540,45 +534,4 @@ function resetMoreModal() {
     modal.hide();
     modal.find('#resultCmd').text('');
     modal.find('#resultView').text('');
-}
-
-function populateCleanupList(operation) {
-    let cleanup = $('#cleanup-content');
-    let cleanupCmds = [];
-    operation.chain.forEach(function (link) {
-        if (link.cleanup) {
-            let added = false;
-            cleanupCmds.forEach(function (cmd) {
-                if (cmd.paw == link.paw){
-                    cmd.commands.push({"name": link.abilityName, "command": link.cleanup});
-                    added = true;
-                }
-            });
-            if (!added) {
-                let list = [];
-                list.push({"name": link.abilityName, "command": link.cleanup});
-                cleanupCmds.push({"paw": link.paw, "commands": list});
-            }
-        }
-    });
-    if (cleanupCmds.length) {
-        buildCleanupListTemplate(cleanupCmds);
-        cleanup.show();
-    }
-
-}
-
-function buildCleanupListTemplate(cleanup) {
-    let cleanList = $('#cleanup-list');
-    cleanup.forEach(function(host){
-        let template = $("#cleanup-template").clone();
-        template.attr('id', 'host_'+host.paw);
-        template.attr('data-host-name', host.paw.slice(0, 18) + '..');
-        let list = template.find('#host-number ul');
-        host.commands.forEach(function(cmd){
-            list.append('<li><div style="font-size: 13px;font-weight:100">Cleaning up... '+cmd.name+'</div></li>');
-        });
-        template.show();
-        cleanList.append(template);
-    });
 }
