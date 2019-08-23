@@ -249,8 +249,7 @@
                     {% endfor %}
                   </select>
                   <select name="state" id="queueState" class="queueOption" style="opacity:0.5" disabled="false" onchange="checkOpformValid()">
-{#                      <option value="" disabled selected>Group</option>#}
-                    <option id="qstate-run" value="run">Run Operation on Start</option>
+                    <option id="qstate-run" value="running">Run Operation on Start</option>
                     <option id="qstate-paused" value="paused">Start Operation Paused</option>
                   <h4 style="margin-top:10px;">OPTIONAL:</h4>
                   </select>
@@ -291,10 +290,10 @@
                     </tr>
                   </table>
                     <div class="op-control">
-                        <span title="Current Operation Status" class="op-control-text" id="op-control-state">Select or Add an Operation</span>
-                        <span title="Run Operation"><button id="op-control-run" class="op-control" onclick="changeCurrentOperationState('running')">&#9658;</button></span>
+                        <span title="Current Operation Status" class="op-control-text" id="op-control-state"></span>
                         <span title="Pause Operation"><button id="op-control-pause" class="op-control" onclick="changeCurrentOperationState('paused')">&#10074; &#10074;</button></span>
                         <span title="Run One Step"><button id="run-one-link" class="op-control" onclick="changeCurrentOperationState('run_one_link')">&#8635</button></span>
+                        <span title="Run Operation"><button id="op-control-run" class="op-control" onclick="changeCurrentOperationState('running')">&#9658;</button></span>
                     </div>
                 </center>
               </div>
