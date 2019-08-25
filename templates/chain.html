@@ -269,6 +269,7 @@
                     <option value="1">Run stealth operation</option>
                   </select>
                   <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max)" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo" oninput="checkOpformValid()"/>
+                  <input name="maxWaiting" id="queueMaxWaiting" class="queueOption" placeholder="Max waiting (seconds)" style="opacity:0.5;" disabled="true" oninput="checkOpformValid()"/>
                   <button id="opBtn" type="button" style="opacity:0.5" disabled="true"
                       class="button-notready atomic-button" onclick="handleStartAction()">Start
                   </button>
