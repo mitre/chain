@@ -402,6 +402,7 @@ function buildRequirements(encodedTest){
         matchedRequirements = matchedRequirements.filter(function(e) { return e !== '#{server}' });
         matchedRequirements = matchedRequirements.filter(function(e) { return e !== '#{group}' });
         matchedRequirements = matchedRequirements.filter(function(e) { return e !== '#{location}' });
+        matchedRequirements = matchedRequirements.filter(function(e) { return e !== '#{paw}' });
         matchedRequirements = [...new Set(matchedRequirements)];
         return matchedRequirements.map(function(val){
            return val.replace(/[#{}]/g, "");
