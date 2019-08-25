@@ -56,6 +56,28 @@ function handleStartAction(){
         return;
     }
 
+    let maxWaiting = document.getElementById("queueMaxWaiting").value;
+    if (maxWaiting === "") { maxWaiting = null; }
+    if(maxWaiting){
+        try {
+            let checkIfIsNumber = /^\d+$/.test(maxWaiting);
+            if(!checkIfIsNumber){
+                throw true;
+            }
+            maxWaitingInt = parseInt(maxWaiting);
+            if(!maxWaitingInt){
+                throw true;
+            }
+            if(maxWaitingInt <= 0){
+                alert('Max waiting time must be > 0.');
+                return;
+            }
+        } catch (e) {
+            alert('Max waiting time must be an integer!');
+            return;
+        }
+    }
+
     let queueDetails = {
         "index":"core_operation",
         "name":name,
@@ -65,10 +87,12 @@ function handleStartAction(){
         "planner":document.getElementById("queuePlanner").value,
         "stealth":document.getElementById("queueStealth").value,
         "jitter":jitter,
-        "sources":[document.getElementById("queueSource").value]
+        "sources":[document.getElementById("queueSource").value],
+        "max_waiting":maxWaiting
     };
     restRequest('PUT', queueDetails, handleStartActionCallback);
 }
+
 function changeCurrentOperationState(newState){
     let selectedOperationId = $('#operations option:selected').attr('value');
     let state = $('#op-control-state').text();
