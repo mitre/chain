@@ -94,7 +94,7 @@
                       <tr>
                         <td>{{ a.paw }}</td>
                         <td>{{ a.platform }}</td>
-                        <td>{{ a.executor }}</td>
+                        <td> {% for e in a.executors  %}{{ e }}<br />{% endfor %}</td>
                         <td>{{ a.last_seen }}</td>
                         <td>{{ a.pid }}</td>
                         <td><input id="{{a.paw}}-group" type="text" value="{{ a.host_group }}"></td>
