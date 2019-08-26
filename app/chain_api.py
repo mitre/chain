@@ -15,7 +15,7 @@ class ChainApi:
 
     @template('chain.html')
     async def landing(self, request):
-        #await self.auth_svc.check_permissions(request)
+        await self.auth_svc.check_permissions(request)
         abilities = await self.data_svc.explode_abilities()
         tactics = set([a['tactic'].lower() for a in abilities])
         hosts = await self.data_svc.explode_agents()
@@ -38,7 +38,7 @@ class ChainApi:
         return web.json_response(base)
 
     async def rest_core(self, request):
-        #await self.auth_svc.check_permissions(request)
+        await self.auth_svc.check_permissions(request)
         data = dict(await request.json())
         index = data.pop('index')
         if request.method == 'DELETE':
