@@ -85,6 +85,7 @@
                   <th>Platform</th>
                   <th>Executor</th>
                   <th>Last seen</th>
+                  <th>PID</th>
                   <th>Group</th>
                 </tr>
                 </thead>
@@ -95,6 +96,7 @@
                         <td>{{ a.platform }}</td>
                         <td>{{ a.executor }}</td>
                         <td>{{ a.last_seen }}</td>
+                        <td>{{ a.pid }}</td>
                         <td><input id="{{a.paw}}-group" type="text" value="{{ a.host_group }}"></td>
                       </tr>
                   {% endfor %}
