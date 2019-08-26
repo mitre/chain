@@ -141,7 +141,7 @@ function operationCallback(data){
             if(operation.chain[i].cleanup) {
                 title = title + " (CLEANUP)"
             }
-            template.find('#link-technique').html(ability.technique['attack_id'] + '<span class="tooltiptext">' + ability.technique['name'] + '</span>');
+            template.find('#link-technique').html(ability.technique_id + '<span class="tooltiptext">' + ability.technique_name + '</span>');
             template.attr("id", "op_id_" + operation.chain[i].id);
             template.attr("operation", operation.chain[i].op_id);
             template.attr("data-date", operation.chain[i].decide.split('.')[0]);
@@ -333,7 +333,7 @@ function buildAbility(ability, phase){
 
     template.find('#name').html(ability.name);
     template.find('#description').html(ability.description);
-    template.find('#ability-attack').html(eval(ability.technique.tactic).join(" / ") + ' | '+ ability.technique.attack_id + ' | '+ ability.technique.name);
+    template.find('#ability-attack').html(ability.tactic + ' | '+ ability.technique_id + ' | '+ ability.technique_name);
 
     if(requirements.length > 0) {
         template.find('#ability-metadata').append('<td><div id="ability-padlock"><div class="tooltip"><span class="tooltiptext">This ability has requirements</span>&#128274;</div></div></td>');
@@ -426,8 +426,8 @@ function populateTechniques(exploits){
     let found = [];
     let showing = [];
     exploits.forEach(function(ability) {
-        if(eval(ability.technique.tactic).includes(tactic) && !found.includes(ability.technique.attack_id)) {
-            found.push(ability.technique.attack_id);
+        if(ability.tactic.includes(tactic) && !found.includes(ability.technique_id)) {
+            found.push(ability.technique_id);
             appendTechniqueToList(tactic, ability);
             appendAbilityToList(ability);
             showing += 1;
@@ -465,7 +465,7 @@ function populateAbilities(exploits){
     let showing = [];
     let attack_id = $(parent).find('#ability-technique-filter').find(":selected").data('technique');
     exploits.forEach(function(ability) {
-        if(attack_id == ability.technique.attack_id) {
+        if(attack_id == ability.technique_id) {
             appendAbilityToList(ability);
             showing += 1;
         }
@@ -475,9 +475,9 @@ function populateAbilities(exploits){
 
 function appendTechniqueToList(tactic, value) {
     $('#phase-modal').find('#ability-technique-filter').append($("<option></option>")
-        .attr("value", value['technique']['attack_id'])
-        .data("technique", value['technique']['attack_id'])
-        .text(value['technique']['attack_id'] + ' | '+ value['technique']['name']));
+        .attr("value", value['technique_id'])
+        .data("technique", value['technique_id'])
+        .text(value['technique_id'] + ' | '+ value['technique_name']));
 }
 
 function appendAbilityToList(value) {

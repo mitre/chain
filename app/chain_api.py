@@ -15,9 +15,9 @@ class ChainApi:
 
     @template('chain.html')
     async def landing(self, request):
-        await self.auth_svc.check_permissions(request)
+        #await self.auth_svc.check_permissions(request)
         abilities = await self.data_svc.explode_abilities()
-        tactics = set([tactic.lower() for sublist in [eval(a['technique']['tactic']) for a in abilities] for tactic in sublist])
+        tactics = set([a['tactic'].lower() for a in abilities])
         hosts = await self.data_svc.explode_agents()
         groups = list(set(([h['host_group'] for h in hosts])))
         adversaries = await self.data_svc.explode_adversaries()
@@ -38,7 +38,7 @@ class ChainApi:
         return web.json_response(base)
 
     async def rest_core(self, request):
-        await self.auth_svc.check_permissions(request)
+        #await self.auth_svc.check_permissions(request)
         data = dict(await request.json())
         index = data.pop('index')
         if request.method == 'DELETE':
@@ -47,7 +47,6 @@ class ChainApi:
         options = dict(
             PUT=dict(
                 core_adversary=lambda d: self.data_svc.persist_adversary(**d),
-                core_ability=lambda d: self.data_svc.create_ability(**d),
                 core_operation=lambda d: self.data_svc.create_operation(**d),
                 core_fact=lambda d: self.data_svc.create_fact(**d),
                 core_agent=lambda d: self.data_svc.update('core_agent', 'paw', d.pop('paw'), d)
