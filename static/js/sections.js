@@ -310,12 +310,14 @@ function addPlatforms(abilities) {
         for(let i in ab){
             if(ab[i].ability_id === a.ability_id) {
                 ab[i]['platform'].push(a.platform);
+                ab[i]['executor'].push(a.executor);
                 exists = true;
                 break;
             }
         }
         if(!exists) {
             a['platform'] = [a.platform];
+            a['executor'] = [a.executor];
             ab.push(a);
         }
     });
@@ -351,15 +353,20 @@ function buildAbility(ability, phase){
     template.find('#ability-remove').click(function() {
         removeAbility(ability.ability_id);
     });
-
-    ability.platform.forEach(function(p) {
+    
+    ability.platform.forEach(function(p, index) {
         let icon = null;
+        let exec = ability.executor[index];
+        if (exec === 'psh'){exec = 'powershell';}
+        else if(exec === 'pwsh') {exec = 'powershell core';}
+        else if(exec === 'sh') {exec = 'shell';}
+        else if(exec === 'cmd') {exec = 'commandline';}
         if(p === 'windows') {
-            icon = $('<div class="tooltip"><span class="tooltiptext">Works on Windows</span><img src="/chain/img/windows.png"/></div>');
+            icon = $('<div class="tooltip"><span class="tooltiptext">Works on Windows ('+ exec +')</span><img src="/chain/img/windows.png"/></div>');
         } else if (p === 'linux') {
-            icon = $('<div class="tooltip"><span class="tooltiptext">Works on Linux</span><img src="/chain/img/linux.png"/></div>');
+            icon = $('<div class="tooltip"><span class="tooltiptext">Works on Linux ('+ exec +')</span><img src="/chain/img/linux.png"/></div>');
         } else {
-            icon = $('<div class="tooltip"><span class="tooltiptext">Works on MacOS</span><img src="/chain/img/macos.png"/></div>');
+            icon = $('<div class="tooltip"><span class="tooltiptext">Works on MacOS ('+ exec +')</span><img src="/chain/img/macos.png"/></div>');
         }
         icon.appendTo(template.find('#icon-row'));
     });
