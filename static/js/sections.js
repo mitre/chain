@@ -293,66 +293,55 @@ function loadAdversaryCallback(data) {
     $('.phase-headers').remove();
     $.each(data[0]['phases'], function(phase, abilities) {
         let template = addPhase(phase);
-
-        abilities = addPlatforms(abilities);
         abilities.forEach(function(a) {
-            let abilityBox = buildAbility(a, phase);
-            template.find('#profile-tests').append(abilityBox);
+            for (let abilityId in a) {
+                let abilityBox = buildAbility(a[abilityId], phase);
+                template.find('#profile-tests').append(abilityBox);
+            }
         });
     });
     refreshColorCodes();
 }
 
-function addPlatforms(abilities) {
-    let ab = [];
-    abilities.forEach(function(a) {
-        let exists = false;
-        for(let i in ab){
-            if(ab[i].ability_id === a.ability_id) {
-                ab[i]['platform'].push(a.platform);
-                exists = true;
-                break;
-            }
-        }
-        if(!exists) {
-            a['platform'] = [a.platform];
-            ab.push(a);
-        }
-    });
-    return ab;
-}
-
 function buildAbility(ability, phase){
-    let requirements = buildRequirements(ability.test);
     let template = $("#ability-template").clone();
     template.attr('id', ability.ability_id)
-        .data('parser', ability.parser)
         .data('testId', ability.ability_id)
-        .data('phase', phase)
-        .data('requirements', requirements);
-
+        .data('phase', phase);
     template.find('#name').html(ability.name);
     template.find('#description').html(ability.description);
     template.find('#ability-attack').html(ability.tactic + ' | '+ ability.technique_id + ' | '+ ability.technique_name);
-
-    if(requirements.length > 0) {
-        template.find('#ability-metadata').append('<td><div id="ability-padlock"><div class="tooltip"><span class="tooltiptext">This ability has requirements</span>&#128274;</div></div></td>');
-    }
-    if(ability.cleanup) {
-        template.find('#ability-metadata').append('<td><div id="ability-broom"><div class="tooltip"><span class="tooltiptext">This ability can clean itself up</span>&#128465;</div></div></td>');
-    }
-    if(ability.parser.length > 0) {
-       template.find('#ability-metadata').append('<td><div id="ability-parser"><div class="tooltip"><span class="tooltiptext">This ability unlocks other abilities</span>&#128273;</div></div></td>');
-    }
-    if(ability.payload.length > 0) {
-       template.find('#ability-metadata').append('<td><div id="ability-payload"><div class="tooltip"><span class="tooltiptext">This ability uses a payload</span>&#128176;</div></div></td>');
-    }
     template.find('#ability-metadata').append('<td><div id="ability-remove"><div class="tooltip"><span class="tooltiptext">Remove this ability</span>&#x274C;</div></div></td>');
-    template.find('#ability-remove').click(function() {
-        removeAbility(ability.ability_id);
-    });
+    template.find('#ability-remove').click(function() { removeAbility(ability.ability_id); });
 
-    ability.platform.forEach(function(p) {
+    let reqs = [];
+    let cleanups = [];
+    let parsers = [];
+    let payloads = [];
+    let platforms = new Set();
+    ability.executors.forEach(function(e) {
+        let requirements = buildRequirements(e.test);
+        if(requirements.length > 0) { reqs.push(requirements); }
+        if(e.cleanup) { cleanups.push(e.cleanup); }
+        if(e.parser.length > 0) { parsers.push(e.parser); }
+        if(e.payload.length > 0) { payloads.push(e.payload); }
+        template.data('parser', e.parser);
+        template.data('requirements', requirements);
+        platforms.add(e.platform);
+     });
+     if(reqs.length > 0) {
+        template.find('#ability-metadata').append('<td><div id="ability-padlock"><div class="tooltip"><span class="tooltiptext">This ability has requirements</span>&#128274;</div></div></td>');
+     }
+     if(cleanups.length > 0) {
+        template.find('#ability-metadata').append('<td><div id="ability-broom"><div class="tooltip"><span class="tooltiptext">This ability can clean itself up</span>&#128465;</div></div></td>');
+     }
+     if(parsers.length > 0) {
+       template.find('#ability-metadata').append('<td><div id="ability-parser"><div class="tooltip"><span class="tooltiptext">This ability unlocks other abilities</span>&#128273;</div></div></td>');
+     }
+     if(payloads.length > 0) {
+       template.find('#ability-metadata').append('<td><div id="ability-payload"><div class="tooltip"><span class="tooltiptext">This ability uses a payload</span>&#128176;</div></div></td>');
+     }
+     platforms.forEach(function(p) {
         let icon = null;
         if(p === 'windows') {
             icon = $('<div class="tooltip"><span class="tooltiptext">Works on Windows</span><img src="/chain/img/windows.png"/></div>');
@@ -362,9 +351,9 @@ function buildAbility(ability, phase){
             icon = $('<div class="tooltip"><span class="tooltiptext">Works on MacOS</span><img src="/chain/img/macos.png"/></div>');
         }
         icon.appendTo(template.find('#icon-row'));
-    });
-    template.show();
-    return template;
+     });
+     template.show();
+     return template;
 }
 
 function refreshColorCodes(){
@@ -417,7 +406,6 @@ function removeAbility(ability_id){
 }
 
 function populateTechniques(exploits){
-    exploits = addPlatforms(exploits);
     let parent = $('#phase-modal');
     $(parent).find('#ability-ability-filter').empty();
     $(parent).find('#ability-technique-filter').empty().append("<option disabled='disabled' selected>Choose a technique</option>");
@@ -425,14 +413,14 @@ function populateTechniques(exploits){
     let tactic = $(parent).find('#ability-tactic-filter').find(":selected").data('tactic');
     let found = [];
     let showing = [];
-    exploits.forEach(function(ability) {
-        if(ability.tactic.includes(tactic) && !found.includes(ability.technique_id)) {
-            found.push(ability.technique_id);
-            appendTechniqueToList(tactic, ability);
-            appendAbilityToList(ability);
+    for (let abilityId in exploits) {
+        if(exploits[abilityId].tactic.includes(tactic) && !found.includes(exploits[abilityId].technique_id)) {
+            found.push(exploits[abilityId].technique_id);
+            appendTechniqueToList(tactic, exploits[abilityId]);
+            appendAbilityToList(exploits[abilityId]);
             showing += 1;
         }
-    });
+    }
     $(parent).find('#ability-ability-filter').prepend("<option disabled='disabled' selected>"+showing.length+" abilities</option>");
 }
 
@@ -442,34 +430,28 @@ function searchAbilities(exploits) {
     $(parent).find('#ability-technique-filter').empty().append("<option disabled='disabled' selected>Choose a technique</option>");
     let showing = [];
     if($('#ability-search').val()) {
-        exploits = addPlatforms(exploits);
-        exploits.forEach(function(ability) {
-            ability['test'] = atob(ability.test);
-            ability['cleanup'] = atob(ability.cleanup);
-            if(JSON.stringify(ability).toLowerCase().includes($('#ability-search').val().toLowerCase())) {
-                ability['test'] = btoa(ability.test);
-                ability['cleanup'] = btoa(ability.cleanup);
-                appendAbilityToList(ability);
+        for (let abilityId in exploits) {
+            if (JSON.stringify(exploits[abilityId]).toLowerCase().includes($('#ability-search').val().toLowerCase())) {
+                appendAbilityToList(exploits[abilityId]);
                 showing += 1;
             }
-        });
+        }
     }
     $(parent).find('#ability-ability-filter').prepend("<option disabled='disabled' selected>"+showing.length+" abilities</option>");
 }
 
 function populateAbilities(exploits){
-    exploits = addPlatforms(exploits);
     let parent = $('#phase-modal');
     $(parent).find('#ability-ability-filter').empty();
 
     let showing = [];
     let attack_id = $(parent).find('#ability-technique-filter').find(":selected").data('technique');
-    exploits.forEach(function(ability) {
-        if(attack_id == ability.technique_id) {
-            appendAbilityToList(ability);
+    for (let abilityId in exploits) {
+        if(attack_id == exploits[abilityId].technique_id) {
+            appendAbilityToList(exploits[abilityId]);
             showing += 1;
         }
-    });
+    }
     $(parent).find('#ability-ability-filter').prepend("<option disabled='disabled' selected>"+showing.length+" abilities</option>");
 }
 

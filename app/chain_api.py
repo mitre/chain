@@ -17,7 +17,7 @@ class ChainApi:
     async def landing(self, request):
         await self.auth_svc.check_permissions(request)
         abilities = await self.data_svc.explode_abilities()
-        tactics = set([a['tactic'].lower() for a in abilities])
+        tactics = set([a['tactic'].lower() for a in abilities.values()])
         hosts = await self.data_svc.explode_agents()
         groups = list(set(([h['host_group'] for h in hosts])))
         adversaries = await self.data_svc.explode_adversaries()
