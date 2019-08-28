@@ -94,7 +94,7 @@
                       <tr>
                         <td>{{ a.paw }}</td>
                         <td>{{ a.platform }}</td>
-                        <td>{% for e in a.executors  %}{{ e }}<br />{% endfor %}</td>
+                        <td>{% for e in a.executors  %}{{ e.executor }}<br />{% endfor %}</td>
                         <td>{{ a.last_seen }}</td>
                         <td>{{ a.pid }}</td>
                         <td><input id="{{a.paw}}-group" type="text" value="{{ a.host_group }}"></td>
@@ -328,6 +328,9 @@
                           <tr>
                             <td>Command:</td>
                             <td><p id="time-action" class="member-result"></p></td>
+                          </tr><tr>
+                            <td>Executor:</td>
+                            <td><p id="time-executor" class="member-result"></p></td>
                           </tr>
                         </table>
                       </div>

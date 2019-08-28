@@ -151,6 +151,7 @@ function operationCallback(data){
             'onclick="findResults(this, '+operation.chain[i].id+')"' +
             'data-encoded-cmd="'+operation.chain[i].command+'"'+'>&#9733;</span></div>');
             template.find('#time-action').html(atob(operation.chain[i].command));
+            template.find('#time-executor').html(operation.chain[i].executor);
             refreshUpdatableFields(operation.chain[i], template);
 
             template.insertBefore("#time-start");
