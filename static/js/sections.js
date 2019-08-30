@@ -8,17 +8,15 @@ function saveGroups(){
     let data = $('#netTbl').DataTable().rows().data();
     data.each(function (value, index) {
         let group = document.getElementById(value[0]+'-group').value;
-        restRequest('PUT', {"index":"core_agent", "paw": value[0], "host_group": group}, reloadLocation);
+        let status = document.getElementById(value[0]+'-status').value;
+        restRequest('PUT', {"index":"core_agent", "paw": value[0], "host_group": group}, doNothing);
+        restRequest('PUT', {'index':'core_agent', "paw": value[0], "trusted": status}, reloadLocation, '/plugin/chain/agents/trust');
     });
 }
 
-function resetTrust(){
-    restRequest('PUT', {'index':'core_agent'}, reloadLocation, '/plugin/chain/agents/trust');
-}
+function reloadLocation(data){ location.reload(true); }
 
-function reloadLocation(data){
-    location.reload(true);
-}
+function doNothing(data){ }
 
 /** FACTS **/
 
