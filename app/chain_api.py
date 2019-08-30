@@ -3,6 +3,7 @@ import asyncio
 from aiohttp import web
 from aiohttp_jinja2 import template
 
+from datetime import datetime
 
 class ChainApi:
 
@@ -79,4 +80,12 @@ class ChainApi:
 
         await _validate_request()
         await self.data_svc.update('core_operation', 'id', body['id'], dict(state=body.get('state')))
+        return web.Response()
+
+    async def rest_reset_trust(self, request):
+        await self.auth_svc.check_permissions(request)
+        untrusted_agents = await self.data_svc.explode_agents(criteria=dict(trusted=0))
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        for a in untrusted_agents:
+            await self.data_svc.update('core_agent', 'paw', a['paw'], data=dict(trusted=1, last_trusted_seen=now))
         return web.Response()
