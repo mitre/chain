@@ -76,12 +76,14 @@
                   Groups are collections of agents so hosts can be compromised simultaneously.
               </p>
               <button id="addGroupBtn" type="button" class="button-success atomic-button" onclick="saveGroups()">Save changes</button>
+              <button id="setTrusted" type="button" class="button-success atomic-button" onclick="resetTrust();">Reset trust</button>
             </div>
             <div class="column" style="flex:75%">
               <table id="netTbl" class="display" style="width:100%;" >
                 <thead>
                 <tr>
                   <th>Host <i style="font-size:11px">paw print</i></th>
+                  <th>Status</th>
                   <th>Platform</th>
                   <th>Executor</th>
                   <th>Last seen</th>
@@ -93,6 +95,12 @@
                   {% for a in agents %}
                       <tr>
                         <td>{{ a.paw }}</td>
+                        {% if a.trusted == 1 %}
+                        <td style="color:#2bff00">trusted</td>
+                        {% endif %}
+                        {% if a.trusted == 0 %}
+                        <td style="color:#ff0000">untrusted</td>
+                        {% endif %}
                         <td>{{ a.platform }}</td>
                         <td>{% for e in a.executors  %}{{ e.executor }}<br />{% endfor %}</td>
                         <td>{{ a.last_seen }}</td>
@@ -269,6 +277,10 @@
                   <select name="stealth" id="queueStealth" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
                     <option value="0" selected>Run normal operation</option>
                     <option value="1">Run stealth operation</option>
+                  </select>
+                  <select name="untrusted" id="queueUntrusted" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
+                    <option value="0" selected>Not allow untrusted agents</option>
+                    <option value="1">Allow untrusted agents</option>
                   </select>
                   <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max)" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo" oninput="checkOpformValid()"/>
                   <button id="opBtn" type="button" style="opacity:0.5" disabled="true"
