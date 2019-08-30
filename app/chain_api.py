@@ -57,6 +57,7 @@ class ChainApi:
                 core_operation=lambda d: self.data_svc.explode_operation(criteria=d),
                 core_agent=lambda d: self.data_svc.explode_agents(criteria=d),
                 core_result=lambda d: self.data_svc.explode_results(criteria=d),
+                operation_report=lambda d: self.operation_svc.generate_operation_report(**d),
             ),
         )
         output = await options[request.method][index](data)
