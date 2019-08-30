@@ -5,6 +5,7 @@ from aiohttp_jinja2 import template
 
 from datetime import datetime
 
+
 class ChainApi:
 
     def __init__(self, services):
@@ -85,8 +86,7 @@ class ChainApi:
 
     async def rest_reset_trust(self, request):
         await self.auth_svc.check_permissions(request)
-        untrusted_agents = await self.data_svc.explode_agents(criteria=dict(trusted=0))
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        for a in untrusted_agents:
-            await self.data_svc.update('core_agent', 'paw', a['paw'], data=dict(trusted=1, last_trusted_seen=now))
+        data = dict(await request.json())
+        update = dict(trusted=data.get('trusted'), last_trusted_seen=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        await self.data_svc.update('core_agent', 'paw', data['paw'], data=update)
         return web.Response()
