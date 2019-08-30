@@ -8,8 +8,15 @@ function saveGroups(){
     let data = $('#netTbl').DataTable().rows().data();
     data.each(function (value, index) {
         let group = document.getElementById(value[0]+'-group').value;
-        restRequest('PUT', {"index":"core_agent", "paw": value[0], "host_group": group});
+        restRequest('PUT', {"index":"core_agent", "paw": value[0], "host_group": group}, reloadLocation);
     });
+}
+
+function resetTrust(){
+    restRequest('PUT', {'index':'core_agent'}, reloadLocation, '/plugin/chain/agents/trust');
+}
+
+function reloadLocation(data){
     location.reload(true);
 }
 
@@ -65,7 +72,8 @@ function handleStartAction(){
         "planner":document.getElementById("queuePlanner").value,
         "stealth":document.getElementById("queueStealth").value,
         "jitter":jitter,
-        "sources":[document.getElementById("queueSource").value]
+        "sources":[document.getElementById("queueSource").value],
+        "allow_untrusted":document.getElementById("queueUntrusted").value
     };
     restRequest('PUT', queueDetails, handleStartActionCallback);
 }
