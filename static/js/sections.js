@@ -22,6 +22,8 @@ function doNothing(data){ }
 
 $(document).ready(function () {
     $('#factTbl').DataTable({
+    });
+    $('#dashboardTbl').DataTable({
     })
 });
 

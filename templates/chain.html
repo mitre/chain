@@ -60,6 +60,12 @@
           <span class="caption">Operations</span>
         </button>
       </div>
+      <div class="row-toolbar-section" id="section-6">
+        <button class="row-toolbar-button" onclick="viewSection('dashboard-profile')">
+          <span class="icon"><img src="/chain/img/windows.png"></span>
+          <span class="caption">Dashboard</span>
+        </button>
+      </div>
     </div>
 
     <div id="atomic-blocks" class="row-canvas">
@@ -355,6 +361,46 @@
                 </li>
               </div>
 
+            </div>
+          </div>
+        </div>
+
+        <!-- dashboard -->
+
+        <div id="dashboard-profile" class="section-profile" style="display: none">
+          <div class="row">
+            <div class="column section-border" style="flex:25%;">
+              <img src="/chain/img/windows.png">
+              <h4 style="margin-bottom:-15px">Dashboard</h4>
+              <p class="section-description">
+                  Dashboard
+              </p>
+            </div>
+            <div class="column" style="flex:75%;overflow:hidden;">
+                <table id="dashboardTbl" class="display" style="width:100%;text-align:center">
+                    <thead>
+                    <tr>
+                      <th>Operation Name</th>
+                      <th>Start Time</th>
+                      <th>End Time</th>
+                      <th>Group Name</th>
+                      <th>Adversary Name</th>
+                      <th>Success / Count (Rate)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for op in operations %}
+                            <tr>
+                                <td>{{ op.name }}</td>
+                                <td>{{ op.start }}</td>
+                                <td>{{ op.finish }}</td>
+                                <td>{{ op.host_group[0].host_group }}</td>
+                                <td>{{ op.adversary.name }}</td>
+                                <td>{{ op.summary.success }} / {{ op.chain|length }} ({{ op.summary.rate}}%)</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
           </div>
         </div>
