@@ -60,6 +60,12 @@
           <span class="caption">Operations</span>
         </button>
       </div>
+      <div class="row-toolbar-section" id="section-6">
+        <button class="row-toolbar-button" onclick="viewSection('dashboard-profile')">
+          <span class="icon"><img src="/chain/img/windows.png"></span>
+          <span class="caption">Dashboard</span>
+        </button>
+      </div>
     </div>
 
     <div id="atomic-blocks" class="row-canvas">
@@ -359,6 +365,49 @@
           </div>
         </div>
 
+        <!-- dashboard -->
+        <div id="dashboard-profile" class="section-profile" style="display: none">
+          <div class="row">
+            <div class="column section-border" style="flex:25%;">
+              <img src="/chain/img/windows.png">
+              <h4 style="margin-bottom:-15px">Dashboard</h4>
+              <p class="section-description">
+                  Summary of operations
+              </p>
+            </div>
+            <div class="column" style="flex:75%;overflow:hidden;">
+                <table id="dashboardTbl" class="display" style="width:100%;text-align:center">
+                    <thead>
+                    <tr>
+                      <th>Operation Name</th>
+                      <th>Start Time</th>
+                      <th>End Time</th>
+                      <th>Group Name</th>
+                      <th>Adversary Name</th>
+                      <th>Success / Count (Rate)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for op in operations %}
+                            <tr>
+                                <td>{{ op.name }}</td>
+                                <td>{{ op.start }}</td>
+                                <td>{{ op.finish }}</td>
+                                <td>{{ op.host_group[0].host_group }}</td>
+                                <td>{{ op.adversary.name }}</td>
+                                {% set success = namespace(count=0, rate=0) %}
+                                {% for ch in op.chain %}
+                                {% if ch.status == 0 %}{% set success.count = success.count + 1 %}{% endif %}
+                                {% endfor %}
+                                {% set success.rate = ((success.count / op.chain|length) * 100) | round(1) %}
+                                <td>{{ success.count }} / {{ op.chain|length }} ({{ success.rate }}%)</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
         <!-- START MODALS -->
 
         <div id="more-modal" class="modal">

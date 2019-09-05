@@ -25,6 +25,13 @@ $(document).ready(function () {
     })
 });
 
+/** Dashboard **/
+
+$(document).ready(function () {
+    $('#dashboardTbl').DataTable({
+    })
+});
+
 /** OPERATIONS **/
 
 let atomic_interval = null;
