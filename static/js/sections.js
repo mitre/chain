@@ -9,7 +9,8 @@ function saveGroups(){
     data.each(function (value, index) {
         let group = document.getElementById(value[0]+'-group').value;
         let status = document.getElementById(value[0]+'-status').value;
-        restRequest('PUT', {"index":"core_agent", "paw": value[0], "host_group": group}, doNothing);
+        let sleep = document.getElementById(value[0]+'-sleep').value;
+        restRequest('PUT', {"index":"core_agent", "paw": value[0], "host_group": group, "sleep": sleep}, doNothing);
         restRequest('PUT', {'index':'core_agent', "paw": value[0], "trusted": status}, reloadLocation, '/plugin/chain/agents/trust');
     });
 }
