@@ -556,7 +556,6 @@ function showReports(){
 }
 
 function displayReport(data) {
-    console.log(data);
     $('#report-name').html(data.name);
     $('#report-name-duration').html("The operation lasted " + reportDuration(data.start, data.finish) + " with a "+data.jitter + " second pause between steps");
     $('#report-adversary').html(data.adversary.name);
@@ -608,7 +607,6 @@ function addAttackBreakdown(phases, steps) {
             }
         });
     });
-    console.log(plans);
     plans.forEach(p => {
         $("#reports-dash-attack").append("<tr><td><span style='color:green'>"+p.success+"</span> / <span style='color:red'>"+p.failure+"</span></td><td>"+p.tactic+"</td><td>"+p.technique_id+"</td><td>"+p.technique_name+"</td></tr>");
     });
