@@ -2,14 +2,14 @@
     text-align: center;
 }
 .reports-dash .row {
-    margin-top: -10px;
-    margin-bottom: -85px;
+    margin-top: 0;
 }
 .report-box {
     background-color: var(--primary-background);
     padding: 10px;
     border-radius: 7px;
     width: 95%;
+    margin: 7px;
 }
 .reports-dash h4 {
     margin-top: 0;
@@ -26,7 +26,7 @@
     width: 100%;
     color: var(--font-color);
 }
-.report-box td {
+.report-box td, th {
   text-align: center;
   padding: 8px;
 }

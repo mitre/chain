@@ -142,21 +142,21 @@
               </p>
             </div>
             <div class="column" style="flex:75%;overflow:hidden;">
-              <table id="factTbl" class="display" style="width:100%;text-align:center">
+              <table id="factTbl" class="display" style="width:100%;text-align:left">
                 <thead>
                 <tr>
                   <th>Source</th>
                   <th>Property</th>
-                  <th>Score</th>
+                  <th>Value</th>
                 </tr>
                 </thead>
                 <tbody>
                     {% for s in sources %}
                         {% for f in s.facts %}
-                        <tr>
+                        <tr style="padding:5px">
                             <td>{{ s.name }}</td>
-                            <td onclick="alert('{{f.value}}')"><a>{{ f.property }}</a></td>
-                            <td>{{ f.score }}</td>
+                            <td>{{ f.property }}</td>
+                            <td>{{ f.value }}</td>
                         </tr>
                         {% endfor %}
                     {% endfor %}
@@ -419,18 +419,36 @@
                             <p id="report-planner-desc"></p>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="column report-box" style="flex:100%;">
-                        <p class="reports-dash-header">att&ck</p>
-                        <table id="reports-dash-attack" align="center" border=1 frame=void rules=rows>
-                            <th>worked / failed</th>
-                            <th>Tactic</th>
-                            <th>Technique ID</th>
-                            <th>Technique name</th>
-                            <tbody>
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="column report-box" style="flex:100%;">
+                            <p class="reports-dash-header">att&ck</p>
+                            <table id="reports-dash-attack" align="center" border=1 frame=void rules=rows>
+                                <th>worked / failed</th>
+                                <th>Tactic</th>
+                                <th>Technique ID</th>
+                                <th>Technique name</th>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column report-box" style="flex:40%;">
+                            <p class="reports-dash-header">facts</p>
+                            <table id="reports-dash-facts" align="center" border=1 frame=void rules=rows>
+                                <th>Property</th>
+                                <th>Count</th>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="column report-box" style="flex:60%;">
+                            <p class="reports-dash-header">payloads</p>
+                            <table id="reports-dash-payloads" align="center" border=1 frame=void rules=rows>
+                                <th>Agent</th>
+                                <th>Payload</th>
+                                <th>Downloaded</th>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
