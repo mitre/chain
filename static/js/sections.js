@@ -236,7 +236,7 @@ function downloadOperationReport() {
         downloadAnchorNode.remove();
     }
 
-    let selectedOperationId = $('#operations option:selected').attr('value');
+    let selectedOperationId = $('#reports option:selected').attr('value');
     let postData = selectedOperationId ? {'index':'operation_report', 'op_id': selectedOperationId} : null;
     restRequest('POST', postData, downloadObjectAsJson, '/plugin/chain/rest');
 }
@@ -544,4 +544,70 @@ function resetMoreModal() {
     modal.hide();
     modal.find('#resultCmd').text('');
     modal.find('#resultView').text('');
+}
+
+/** REPORTS **/
+
+function showReports(){
+    validateFormState(($('#reports').prop('selectedIndex') !== 0), '#reportBtn');
+    let selectedOperationId = $('#reports option:selected').attr('value');
+    let postData = selectedOperationId ? {'index':'operation_report', 'op_id': selectedOperationId} : null;
+    restRequest('POST', postData, displayReport, '/plugin/chain/rest');
+}
+
+function displayReport(data) {
+    $('#report-name').html(data.name);
+    $('#report-name-duration').html("The operation lasted " + reportDuration(data.start, data.finish) + " with a "+data.jitter + " second pause between steps");
+    $('#report-adversary').html(data.adversary.name);
+    $('#report-adversary-desc').html(data.adversary.description);
+    $('#report-group').html(data.host_group[0]['host_group']);
+    $('#report-group-cnt').html(data.host_group.length + ' hosts were included');
+    $('#report-steps').html(data.steps.length);
+    $('#report-steps-attack').html(data.adversary.name + " was " + reportScore(data.steps) + " successful in the attack");
+    $('#report-planner').html(data.planner.name);
+    $('#report-planner-desc').html(data.adversary.name + " collected " + data.facts.length + " facts and used them to make decisions");
+    addAttackBreakdown(data.adversary.phases, data.steps);
+}
+
+function reportDuration(start, end) {
+    let operationInSeconds = Math.abs(new Date(end) - new Date(start)) / 1000;
+    let operationInMinutes = Math.floor(operationInSeconds / 60) % 60;
+    operationInSeconds -= operationInMinutes * 60;
+    let secondsRemainder = operationInSeconds % 60;
+    return operationInMinutes+'min '+secondsRemainder+'sec';
+}
+
+function reportScore(steps) {
+    let failed = 0;
+    steps.forEach(s => {
+        if(s.score > 0) {
+            failed += 1;
+        }
+    });
+    return 100 - (failed/steps.length * 100) + '%';
+}
+
+function addAttackBreakdown(phases, steps) {
+    let plans = [];
+    $.each(phases, function (k, v) {
+        v.forEach(plannedStep => {
+            if(!plans.some(e => e.tactic == plannedStep.tactic) || !plans.some(e => e.technique_id == plannedStep.technique_id) || !plans.some(e => e.technique_name == plannedStep.technique_name)) {
+                plans.push({'tactic': plannedStep.tactic, 'technique_id': plannedStep.technique_id, 'technique_name': plannedStep.technique_name, "success": 0, "failure": 0});
+            }
+        });
+    });
+    plans.forEach(p => {
+        steps.forEach(s => {
+            if(p.tactic == s.attack.tactic && p.technique_id == s.attack.technique_id && p.technique_name == s.attack.technique_name) {
+                if(s.score > 0) {
+                    p['failure'] += 1;
+                } else {
+                    p['success'] += 1;
+                }
+            }
+        });
+    });
+    plans.forEach(p => {
+        $("#reports-dash-attack").append("<tr><td><span style='color:green'>"+p.success+"</span> / <span style='color:red'>"+p.failure+"</span></td><td>"+p.tactic+"</td><td>"+p.technique_id+"</td><td>"+p.technique_name+"</td></tr>");
+    });
 }
