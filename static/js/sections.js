@@ -557,7 +557,7 @@ function showReports(){
 
 function displayReport(data) {
     $('#report-name').html(data.name);
-    $('#report-name-duration').html("The operation lasted " + reportDuration(data.start, data.finish) + " with a "+data.jitter + " second pause between steps");
+    $('#report-name-duration').html("The operation lasted " + reportDuration(data.start, data.finish) + " with a random "+data.jitter + " second pause between steps");
     $('#report-adversary').html(data.adversary.name);
     $('#report-adversary-desc').html(data.adversary.description);
     $('#report-group').html(data.host_group[0]['host_group']);
@@ -633,31 +633,5 @@ function addFacts(facts){
     });
     unique.forEach(u => {
         $("#reports-dash-facts").append("<tr><td>"+u.property+"<td><td>"+u.count+"</td></tr>");
-    });
-}
-
-function addPayloads(steps, phases, hosts) {
-    $("#reports-dash-payloads").find("tr:gt(0)").remove();
-    let dropped = [];
-    steps.forEach(s => {
-        $.each(phases, function (k, v) {
-            v.forEach(plannedStep => {
-                if(s.ability_id === plannedStep.ability_id) {
-                    if(plannedStep.payload.length > 0) {
-                        hosts.forEach(agent => {
-                            if(agent.paw === s.paw) {
-                                let executor = agent.executors[0];
-                                if(plannedStep.executor === executor['executor']) {
-                                    if (!dropped.includes(plannedStep.payload[0]['payload'])) {
-                                        $("#reports-dash-payloads").append("<tr><td>"+agent.paw+"</td><td>"+plannedStep.payload[0]['payload']+"</td><td>"+s.run+"</td></tr>");
-                                        dropped.push(plannedStep.payload[0]['payload']);
-                                    }
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-        });
     });
 }
