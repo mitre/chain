@@ -1,0 +1,33 @@
+.reports-dash {
+    text-align: center;
+}
+.reports-dash .row {
+    margin-top: -10px;
+    margin-bottom: -85px;
+}
+.report-box {
+    background-color: var(--primary-background);
+    padding: 10px;
+    border-radius: 7px;
+    width: 95%;
+}
+.reports-dash h4 {
+    margin-top: 0;
+    font-size: 20px;
+    color: var(--font-color);
+}
+.reports-dash-header {
+    background-color: var(--theme-color);
+    padding: 2px;
+    border-radius: 7px;
+}
+.report-box table {
+    border-collapse: collapse;
+    width: 100%;
+    color: var(--font-color);
+}
+.report-box td {
+  text-align: center;
+  padding: 8px;
+}
+

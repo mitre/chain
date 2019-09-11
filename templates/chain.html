@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/gui/jquery/jquery.dataTables.min.css">
   <link rel="stylesheet" href="/chain/css/basic.css">
   <link rel="stylesheet" href="/chain/css/timeline.css">
+  <link rel="stylesheet" href="/chain/css/reports.css">
 </head>
 <body style="margin-bottom: 100px">
 <script>
@@ -58,6 +59,12 @@
         <button class="row-toolbar-button" onclick="viewSection('operation-profile')">
           <span class="icon"><img src="/chain/img/operation.png"></span>
           <span class="caption">Operations</span>
+        </button>
+      </div>
+      <div class="row-toolbar-section" id="section-6">
+        <button class="row-toolbar-button" onclick="viewSection('reports-profile')">
+          <span class="icon"><img src="/chain/img/reports.png"></span>
+          <span class="caption">Reports</span>
         </button>
       </div>
     </div>
@@ -238,6 +245,11 @@
                   <div class="slider round"><span class="on">ADD</span><span class="off">VIEW</span></div>
                 </label>
               </div>
+              <p class="section-description">
+                  Click on any row to show the details of the executed step. Click the &#9733; icon to view the
+                  standard output and error from the command that was executed. Highlighted text indicates
+                  facts which were learned from executing the step.
+              </p>
               <br>
               <div id="viewOperation">
                 <select id="operations" style="margin-bottom: 15px;" onchange="refresh()">
@@ -246,9 +258,6 @@
                     <option class="operationOption" id="{{ op}}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
                   {% endfor %}
                 </select>
-                <div id="viewOperationButtons">
-                  <button id="downloadOperationReport" type="button" class="button-success atomic-button" onclick="downloadOperationReport()" style="opacity:0.5" disabled="true">Download</button>
-                </div>
               </div>
               <div id="addOperation" style="display: none;">
                   <input id="queueName" class="queueOption" style="opacity:0.5" disabled="true" placeholder="Operation name" oninput="checkOpformValid()"/>
@@ -357,6 +366,71 @@
                 </li>
               </div>
 
+            </div>
+          </div>
+        </div>
+
+        <!-- reports -->
+
+        <div id="reports-profile" class="section-profile" style="display: none">
+          <div class="row">
+            <div class="column section-border" style="flex:25%;">
+              <img src="/chain/img/reports.png">
+              <h4 style="margin-bottom:-5px">Reports</h4>
+              <p class="section-description">
+                  View an operation report
+              </p>
+              <select id="reports" style="margin-bottom: 15px;" onchange="showReports()">
+                  <option id="reportDefault" value="" disabled selected>Operations</option>
+                  {% for op in operations %}
+                    <option class="operationOption" id="{{ op}}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
+                  {% endfor %}
+               </select>
+               <button id="reportBtn" type="button" class="button-notready atomic-button" onclick="downloadOperationReport()">Download</button>
+            </div>
+            <div class="column" style="flex:75%">
+                <div class="reports-dash">
+                    <div class="row">
+                        <div class="column report-box" style="flex:20%;">
+                            <p class="reports-dash-header">name</p>
+                            <h4 id="report-name"></h4>
+                            <p id="report-name-duration"></p>
+                        </div>
+                        <div class="column report-box" style="flex:20%;">
+                            <p class="reports-dash-header">adversary</p>
+                            <h4 id="report-adversary"></h4>
+                            <p id="report-adversary-desc"></p>
+                        </div>
+                        <div class="column report-box" style="flex:20%;">
+                            <p class="reports-dash-header">group</p>
+                            <h4 id="report-group"></h4>
+                            <p id="report-group-cnt"></p>
+                        </div>
+                        <div class="column report-box" style="flex:20%;">
+                            <p class="reports-dash-header">steps</p>
+                            <h4 id="report-steps"></h4>
+                            <p id="report-steps-attack"></p>
+                        </div>
+                        <div class="column report-box" style="flex:20%;">
+                            <p class="reports-dash-header">planner</p>
+                            <h4 id="report-planner"></h4>
+                            <p id="report-planner-desc"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column report-box" style="flex:100%;">
+                        <p class="reports-dash-header">att&ck</p>
+                        <table id="reports-dash-attack" align="center" border=1 frame=void rules=rows>
+                            <th>worked / failed</th>
+                            <th>Tactic</th>
+                            <th>Technique ID</th>
+                            <th>Technique name</th>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
           </div>
         </div>
