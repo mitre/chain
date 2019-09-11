@@ -567,6 +567,8 @@ function displayReport(data) {
     $('#report-planner').html(data.planner.name);
     $('#report-planner-desc').html(data.adversary.name + " collected " + data.facts.length + " facts and used them to make decisions");
     addAttackBreakdown(data.adversary.phases, data.steps);
+    addFacts(data.facts);
+    addPayloads(data.steps, data.adversary.phases, data.host_group);
 }
 
 function reportDuration(start, end) {
@@ -588,6 +590,7 @@ function reportScore(steps) {
 }
 
 function addAttackBreakdown(phases, steps) {
+    $("#reports-dash-attack").find("tr:gt(0)").remove();
     let plans = [];
     $.each(phases, function (k, v) {
         v.forEach(plannedStep => {
@@ -609,5 +612,52 @@ function addAttackBreakdown(phases, steps) {
     });
     plans.forEach(p => {
         $("#reports-dash-attack").append("<tr><td><span style='color:green'>"+p.success+"</span> / <span style='color:red'>"+p.failure+"</span></td><td>"+p.tactic+"</td><td>"+p.technique_id+"</td><td>"+p.technique_name+"</td></tr>");
+    });
+}
+
+function addFacts(facts){
+    $("#reports-dash-facts").find("tr:gt(0)").remove();
+    let unique = [];
+    facts.forEach(f => {
+        let found = false;
+        for(let i in unique){
+            if(unique[i].property == f.property) {
+                unique[i].count += 1;
+                found = true;
+                break;
+            }
+        }
+        if(!found) {
+            unique.push({'property':f.property, 'count':1});
+        }
+    });
+    unique.forEach(u => {
+        $("#reports-dash-facts").append("<tr><td>"+u.property+"<td><td>"+u.count+"</td></tr>");
+    });
+}
+
+function addPayloads(steps, phases, hosts) {
+    $("#reports-dash-payloads").find("tr:gt(0)").remove();
+    let dropped = [];
+    steps.forEach(s => {
+        $.each(phases, function (k, v) {
+            v.forEach(plannedStep => {
+                if(s.ability_id === plannedStep.ability_id) {
+                    if(plannedStep.payload.length > 0) {
+                        hosts.forEach(agent => {
+                            if(agent.paw === s.paw) {
+                                let executor = agent.executors[0];
+                                if(plannedStep.executor === executor['executor']) {
+                                    if (!dropped.includes(plannedStep.payload[0]['payload'])) {
+                                        $("#reports-dash-payloads").append("<tr><td>"+agent.paw+"</td><td>"+plannedStep.payload[0]['payload']+"</td><td>"+s.run+"</td></tr>");
+                                        dropped.push(plannedStep.payload[0]['payload']);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        });
     });
 }
