@@ -51,6 +51,12 @@
           <span class="caption">Facts</span>
         </button>
       </div>
+      <div class="row-toolbar-section" id="section-7">
+        <button class="row-toolbar-button" onclick="viewSection('ability-profile')">
+          <span class="icon"><img src="/chain/img/ability.png"></span>
+          <span class="caption">Abilities</span>
+        </button>
+      </div>
       <div class="row-toolbar-section" id="section-3">
         <button class="row-toolbar-button" onclick="viewSection('adversary-profile')">
           <span class="icon"><img src="/chain/img/hacker.png"></span>
@@ -181,6 +187,41 @@
                     {% endfor %}
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- abilities -->
+
+        <div id="ability-profile" class="section-profile" style="display: none">
+          <div class="row">
+            <div class="column section-border" style="flex:25%;">
+              <img src="/chain/img/ability.png">
+              <h4>Abilities</h4>
+              <p class="section-description">
+                  Abilities are technique implementations - or procedures - which can be executed on a host
+                  running an agent.
+              </p>
+              <br>
+              <div id="viewAbility">
+                  <input id="ability-search" placeholder="Search for anything" onkeypress="searchAbilities('viewAbility', {{ exploits }})"/>
+                  <h4 style="margin-top:10px;text-align:center;font-size:14px;">OR FILTER:</h4>
+                  <select id="ability-tactic-filter" onchange="populateTechniques('viewAbility', {{ exploits }});">
+                        <option disabled selected>Choose a tactic</option>
+                        {% for tactic in tactics %}
+                            <option value={{ tactic }} data-tactic={{ tactic }}>{{ tactic }}</option>
+                        {% endfor %}}
+                  </select>
+                  <select id="ability-technique-filter" onchange="populateAbilities('viewAbility', {{ exploits }});">
+                      <option disabled selected>Choose a technique</option>
+                  </select>
+                  <select id="ability-ability-filter" onchange="showAbility('viewAbility')">
+                      <option disabled selected>0 abilities</option>
+                  </select>
+              </div>
+            </div>
+            <div class="column" style="flex:75%;text-align: left">
+                <pre id="ability-file" style="text-align: left; background-color: var(--primary-background);color:var(--font-color);border:none"></pre>
             </div>
           </div>
         </div>
@@ -489,19 +530,19 @@
                         <img src="/chain/img/ability.png">
                         <h4 style="text-align: center">Ability Finder</h4>
                         <br>
-                        <input id="ability-search" type="text" placeholder="Search for anything" onkeypress="searchAbilities({{ exploits }})"/>
+                        <input id="ability-search" placeholder="Search for anything" onkeypress="searchAbilities('phase-modal', {{ exploits }})"/>
                         <h4 style="margin-top:10px;text-align:center;font-size:14px;">OR FILTER:</h4>
-                        <select id="ability-tactic-filter" onchange="populateTechniques({{ exploits }});">
+                        <select id="ability-tactic-filter" onchange="populateTechniques('phase-modal', {{ exploits }});">
                             <option disabled selected>Choose a tactic</option>
                             {% for tactic in tactics %}
                                 <option value={{ tactic }} data-tactic={{ tactic }}>{{ tactic }}</option>
                             {% endfor %}}
                         </select>
-                        <select id="ability-technique-filter" onchange="populateAbilities({{ exploits }});">
+                        <select id="ability-technique-filter" onchange="populateAbilities('phase-modal', {{ exploits }});">
                             <option disabled selected>Choose a technique</option>
                         </select>
                         <br><br><hr><br>
-                        <select id="ability-ability-filter" onchange="showAbility()">
+                        <select id="ability-ability-filter" onchange="showAbility('phase-modal')">
                             <option disabled selected>0 abilities</option>
                         </select>
                         <button id="phaseBtn" type="button" class="button-notready atomic-button" onclick="addToPhase()">Add to phase</button>
