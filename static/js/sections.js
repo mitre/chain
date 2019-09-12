@@ -447,9 +447,9 @@ function removeAbility(ability_id){
     refreshColorCodes();
 }
 
-function populateTechniques(exploits){
+function populateTechniques(parentId, exploits){
     exploits = addPlatforms(exploits);
-    let parent = $('#phase-modal');
+    let parent = $('#'+parentId);
     $(parent).find('#ability-ability-filter').empty();
     $(parent).find('#ability-technique-filter').empty().append("<option disabled='disabled' selected>Choose a technique</option>");
 
@@ -459,28 +459,30 @@ function populateTechniques(exploits){
     exploits.forEach(function(ability) {
         if(ability.tactic.includes(tactic) && !found.includes(ability.technique_id)) {
             found.push(ability.technique_id);
-            appendTechniqueToList(tactic, ability);
-            appendAbilityToList(ability);
+            appendTechniqueToList(parentId, tactic, ability);
+            appendAbilityToList(parentId, ability);
             showing += 1;
         }
     });
     $(parent).find('#ability-ability-filter').prepend("<option disabled='disabled' selected>"+showing.length+" abilities</option>");
 }
 
-function searchAbilities(exploits) {
-    let parent = $('#phase-modal');
+function searchAbilities(parentId, exploits) {
+    let parent = $('#'+parentId);
     $(parent).find('#ability-ability-filter').empty();
     $(parent).find('#ability-technique-filter').empty().append("<option disabled='disabled' selected>Choose a technique</option>");
     let showing = [];
-    if($('#ability-search').val()) {
+
+    let abilitySearch = $(parent).find('#ability-search');
+    if(abilitySearch.val()) {
         exploits = addPlatforms(exploits);
         exploits.forEach(function(ability) {
             ability['test'] = atob(ability.test);
             ability['cleanup'] = atob(ability.cleanup);
-            if(JSON.stringify(ability).toLowerCase().includes($('#ability-search').val().toLowerCase())) {
+            if(JSON.stringify(ability).toLowerCase().includes(abilitySearch.val().toLowerCase())) {
                 ability['test'] = btoa(ability.test);
                 ability['cleanup'] = btoa(ability.cleanup);
-                appendAbilityToList(ability);
+                appendAbilityToList(parentId, ability);
                 showing += 1;
             }
         });
@@ -488,45 +490,45 @@ function searchAbilities(exploits) {
     $(parent).find('#ability-ability-filter').prepend("<option disabled='disabled' selected>"+showing.length+" abilities</option>");
 }
 
-function populateAbilities(exploits){
+function populateAbilities(parentId, exploits){
     exploits = addPlatforms(exploits);
-    let parent = $('#phase-modal');
+    let parent = $('#'+parentId);
     $(parent).find('#ability-ability-filter').empty();
 
     let showing = [];
     let attack_id = $(parent).find('#ability-technique-filter').find(":selected").data('technique');
     exploits.forEach(function(ability) {
         if(attack_id == ability.technique_id) {
-            appendAbilityToList(ability);
+            appendAbilityToList(parentId, ability);
             showing += 1;
         }
     });
     $(parent).find('#ability-ability-filter').prepend("<option disabled='disabled' selected>"+showing.length+" abilities</option>");
 }
 
-function appendTechniqueToList(tactic, value) {
-    $('#phase-modal').find('#ability-technique-filter').append($("<option></option>")
+function appendTechniqueToList(parentId, tactic, value) {
+    $('#'+parentId).find('#ability-technique-filter').append($("<option></option>")
         .attr("value", value['technique_id'])
         .data("technique", value['technique_id'])
         .text(value['technique_id'] + ' | '+ value['technique_name']));
 }
 
-function appendAbilityToList(value) {
-    $('#phase-modal').find('#ability-ability-filter').append($("<option></option>")
+function appendAbilityToList(parentId, value) {
+    $('#'+parentId).find('#ability-ability-filter').append($("<option></option>")
         .attr("value", value['name'])
         .data("ability", value)
         .text(value['name']));
 }
 
-function showAbility() {
-    let ability = $('#phase-modal').find('#ability-ability-filter').find(":selected").data('ability');
+function showAbility(parentId) {
+    let ability = $('#'+parentId).find('#ability-ability-filter').find(":selected").data('ability');
     restRequest('POST', {"ability_id": ability.ability_id}, showAbilityModal, endpoint='/stockpile/ability');
     validateFormState(($('#ability-ability-filter').val()), '#phaseBtn');
 }
 
 function showAbilityModal(data) {
     $('#phase-modal').data("ability", data);
-    $('#ability-file').html(data);
+    $('pre[id^="ability-file"]').html(data);
 }
 
 function showPhaseModal(phase) {
