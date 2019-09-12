@@ -26,6 +26,28 @@ $(document).ready(function () {
     })
 });
 
+function handleFactAdd(){
+    let property = document.getElementById("factProperty").value;
+    if(!property){alert('Please enter a property'); return; }
+    let value = document.getElementById("factValue").value;
+    if(!value){alert('Please enter a value'); return; }
+    let source = document.getElementById("factSource").value;
+    if(!source){alert('Please enter a source'); return; }
+
+    let facts = {
+        "index":"core_fact",
+        "property":property,
+        "value":value,
+        "source_id":source,
+        "score":document.getElementById("factScore").value
+    };
+    restRequest('PUT', facts, reloadLocation);
+}
+
+function deleteFact(identifier) {
+    restRequest('DELETE', {"index": "core_fact", "id": identifier}, reloadLocation);
+}
+
 /** OPERATIONS **/
 
 let atomic_interval = null;
@@ -107,10 +129,8 @@ function refresh() {
     let selectedOperationId = $('#operations option:selected').attr('value');
     let postData = selectedOperationId ? {'index':'core_operation','id': selectedOperationId} : null;
     if (selectedOperationId > 0){
-        $('#deleteOperation').prop('disabled', false).css('opacity', 1.0);
         $('#downloadOperationReport').prop('disabled', false).css('opacity', 1.0);
     } else {
-        $('#deleteOperation').prop('disabled', true).css('opacity', 0.5);
         $('#downloadOperationReport').prop('disabled', true).css('opacity', 0.5);
     }
     restRequest('POST', postData, operationCallback, '/plugin/chain/full');
@@ -280,12 +300,8 @@ function saveNewAdversary() {
     $('#profile-tests li').each(function() {
         abilities.push({"id": $(this).attr('id'),"phase":$(this).data('phase')})
     });
-    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"core_adversary", 'i': uuidv4()}, createAdversaryCallback);
+    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"core_adversary", 'i': uuidv4()}, doNothing);
     location.reload(true);
-}
-
-function createAdversaryCallback(data) {
-    console.log(data);
 }
 
 function loadAdversary() {
@@ -568,7 +584,6 @@ function displayReport(data) {
     $('#report-planner-desc').html(data.adversary.name + " collected " + data.facts.length + " facts and used them to make decisions");
     addAttackBreakdown(data.adversary.phases, data.steps);
     addFacts(data.facts);
-    addPayloads(data.steps, data.adversary.phases, data.host_group);
 }
 
 function reportDuration(start, end) {
@@ -634,4 +649,14 @@ function addFacts(facts){
     unique.forEach(u => {
         $("#reports-dash-facts").append("<tr><td>"+u.property+"<td><td>"+u.count+"</td></tr>");
     });
+}
+
+/** DUK MODALS */
+
+function openDuk1(){
+    document.getElementById("duk-modal").style.display="block";
+    $('#duk-text').text('Did you know can add or remove facts during a running operation? Also fact scores ' +
+        'are used to determine the importance of a given fact. The higher the score, the more often it will be ' +
+        'used inside an operation. A score of 0 means it is blacklisted - meaning the fact cannot be used during ' +
+        'an operation.');
 }

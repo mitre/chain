@@ -137,16 +137,33 @@
               <img src="/chain/img/facts.png">
               <h4>Facts</h4>
               <p class="section-description">
-                  Facts are identifiable pieces of data, collected by agents or loaded at boot.
-                  A source is a collection of facts.
+                  Facts are identifiable pieces of data, collected by agents or loaded when the server starts.
+                  A source is a collection of facts. When an operation starts, a new source is created and all facts
+                  collected are stored inside. Add or remove facts using the form below.
               </p>
+              <div class="duk"><img onclick="openDuk1()" class="duk-icon" src="/gui/img/duk.png"></div>
+              <input id="factProperty" class="factOption" placeholder="Property"/>
+              <input id="factValue" class="factOption" placeholder="Value"/>
+              <select id="factSource" class="factOption">
+                  {% for s in sources %}
+                      <option value={{ s.id }} >{{ s.name }}</option>
+                  {% endfor %}
+              </select>
+              <select id="factScore" class="factOption">
+                  {% for n in range(10) %}
+                      <option value={{ n }} >Score = {{ n }}</option>
+                  {% endfor %}
+              </select>
+              <button type="button" class="button-success atomic-button" onclick="handleFactAdd()">Add</button>
             </div>
             <div class="column" style="flex:75%;overflow:hidden;">
               <table id="factTbl" class="display" style="width:100%;text-align:left">
                 <thead>
                 <tr>
+                  <th></th>
                   <th>Source</th>
                   <th>Property</th>
+                  <th>Score</th>
                   <th>Value</th>
                 </tr>
                 </thead>
@@ -154,8 +171,10 @@
                     {% for s in sources %}
                         {% for f in s.facts %}
                         <tr style="padding:5px">
+                            <td onclick="deleteFact({{ f.id }})">&#x274C;</td>
                             <td>{{ s.name }}</td>
                             <td>{{ f.property }}</td>
+                            <td>{{ f.score }}</td>
                             <td>{{ f.value }}</td>
                         </tr>
                         {% endfor %}
@@ -276,30 +295,30 @@
                     {% endfor %}
                   </select>
                   <h4 style="margin-top:10px;">OPTIONAL:</h4>
-                  <select name="state" id="queueState" class="queueOption" style="opacity:0.5" disabled="false" onchange="checkOpformValid()">
+                  <select name="state" id="queueState" class="queueOption" style="opacity:0.5" disabled="false">
                     <option id="qstate-run" value="running">Run Operation on Start</option>
                     <option id="qstate-paused" value="paused">Start Operation Paused</option>
                   </select>
-                  <select name="planner" id="queuePlanner" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
+                  <select name="planner" id="queuePlanner" class="queueOption" style="opacity:0.5" disabled="true">
                     {% for p in planners %}
                         <option value="{{ p.id }}">Use {{ p.name }} planner</option>
                     {% endfor %}
                   </select>
-                  <select name="source" id="queueSource" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
+                  <select name="source" id="queueSource" class="queueOption" style="opacity:0.5" disabled="true">
                     <option value="" disabled selected>No fact source</option>
                         {% for s in sources %}
                             <option value="{{ s.id }}">{{ s.name }}</option>
                         {% endfor %}
                   </select>
-                  <select name="stealth" id="queueStealth" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
+                  <select name="stealth" id="queueStealth" class="queueOption" style="opacity:0.5" disabled="true">
                     <option value="0" selected>Run normal operation</option>
                     <option value="1">Run stealth operation</option>
                   </select>
-                  <select name="untrusted" id="queueUntrusted" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
+                  <select name="untrusted" id="queueUntrusted" class="queueOption" style="opacity:0.5" disabled="true">
                     <option value="0" selected>Not allow untrusted agents</option>
                     <option value="1">Allow untrusted agents</option>
                   </select>
-                  <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max)" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo" oninput="checkOpformValid()"/>
+                  <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max) sec" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo"/>
                   <button id="opBtn" type="button" style="opacity:0.5" disabled="true"
                       class="button-notready atomic-button" onclick="handleStartAction()">Start
                   </button>
@@ -492,6 +511,22 @@
                     </div>
                     <div class="imgcontainer">
                         <span onclick="document.getElementById('phase-modal').style.display='none'" class="close" title="Close Modal">&times;</span>
+                    </div>
+                </div>
+             </form>
+        </div>
+
+        <div id="duk-modal" class="modal">
+            <form class="modal-content">
+                <div class="container">
+                    <div class="row duk-modal">
+                        <span onclick="document.getElementById('duk-modal').style.display='none'" class="close" title="Close Modal">&times;</span>
+                        <div class="column" style="flex:8%">
+                            <img src="/gui/img/duk.png"/>
+                        </div>
+                        <div class="column" style="flex:92%">
+                            <p id="duk-text" style="color: white"></p>
+                        </div>
                     </div>
                 </div>
              </form>
