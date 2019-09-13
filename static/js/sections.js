@@ -48,6 +48,23 @@ function deleteFact(identifier) {
     restRequest('DELETE', {"index": "core_fact", "id": identifier}, reloadLocation);
 }
 
+/** ABILITIES **/
+
+function saveAbility(){
+    let abilityDisplay = $('#displayAbility').find('#ability-file').html();
+    const v4 = new RegExp(/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/gm);
+    let identifier = v4.exec(abilityDisplay)[0];
+    if(identifier != null) {
+        restRequest('PUT', {"index": "core_ability", "ability_id": identifier, "file_contents": abilityDisplay}, reloadLocation);
+    } else {
+        alert("Ability not saved!");
+    }
+}
+
+function checkAbilitySaveValid() {
+    validateFormState(($('#displayAbility').find('#ability-file').html() != ''), '#abilityNewBtn');
+}
+
 /** OPERATIONS **/
 
 let atomic_interval = null;
@@ -529,6 +546,7 @@ function showAbility(parentId) {
 function showAbilityModal(data) {
     $('#phase-modal').data("ability", data);
     $('pre[id^="ability-file"]').html(data);
+    checkAbilitySaveValid();
 }
 
 function showPhaseModal(phase) {
@@ -657,8 +675,15 @@ function addFacts(facts){
 
 function openDuk1(){
     document.getElementById("duk-modal").style.display="block";
-    $('#duk-text').text('Did you know can add or remove facts during a running operation? Also fact scores ' +
+    $('#duk-text').text('Did you know... you can add or remove facts during a running operation. Also fact scores ' +
         'are used to determine the importance of a given fact. The higher the score, the more often it will be ' +
         'used inside an operation. A score of 0 means it is blacklisted - meaning the fact cannot be used during ' +
         'an operation.');
+}
+
+function openDuk2(){
+    document.getElementById("duk-modal").style.display="block";
+    $('#duk-text').text('Did you know... you can link abilities together by matching the output property from an ability\'s ' +
+        'parser to variables inside another ability\'s command. Variables can be identified by looking for ' +
+        '#{variable_name_goes_here} syntax. Also, did you know... abilities can be edited in the middle of an operation.');
 }
