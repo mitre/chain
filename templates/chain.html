@@ -199,10 +199,10 @@
               <img src="/chain/img/ability.png">
               <h4>Abilities</h4>
               <p class="section-description">
-                  Abilities are technique implementations - or procedures - which can be executed on a host
+                  Abilities are technique implementations - or procedures - which can be executed on any host
                   running an agent.
               </p>
-              <br>
+              <div class="duk"><img onclick="openDuk2()" class="duk-icon" src="/gui/img/duk.png"></div>
               <div id="viewAbility">
                   <input id="ability-search" placeholder="Search for anything" onkeypress="searchAbilities('viewAbility', {{ exploits }})"/>
                   <h4 style="margin-top:10px;text-align:center;font-size:14px;">OR FILTER:</h4>
@@ -215,13 +215,14 @@
                   <select id="ability-technique-filter" onchange="populateAbilities('viewAbility', {{ exploits }});">
                       <option disabled selected>Choose a technique</option>
                   </select>
-                  <select id="ability-ability-filter" onchange="showAbility('viewAbility')">
+                  <select id="ability-ability-filter" onchange="showAbility('viewAbility');">
                       <option disabled selected>0 abilities</option>
                   </select>
               </div>
+              <button id="abilityNewBtn" type="button" class="button-notready atomic-button" onclick="saveAbility()">Save</button>
             </div>
-            <div class="column" style="flex:75%;text-align: left">
-                <pre id="ability-file" style="text-align: left; background-color: var(--primary-background);color:var(--font-color);border:none"></pre>
+            <div id="displayAbility" class="column" style="flex:75%;text-align: left">
+                <pre id="ability-file" contenteditable="true" spellcheck="false" style="text-align: left; background-color: var(--primary-background);color:var(--font-color);border:none;display:inline-block;"></pre>
             </div>
           </div>
         </div>
