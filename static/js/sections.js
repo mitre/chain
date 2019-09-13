@@ -1,7 +1,35 @@
+function redrawTables() {
+    $('#netTbl').DataTable().columns.adjust().draw();
+    $('#factTbl').DataTable().columns.adjust().draw();
+}
+
 /** GROUPS **/
 
 $(document).ready(function () {
-    $('#netTbl').DataTable({})
+    $('#netTbl').DataTable({
+        columnDefs: [
+            {
+                targets: 0,
+                visible: false,
+                searchable: false
+            },
+            {
+                targets: [1,5,6],
+                width: "5%"
+            },
+            {
+                targets: [2,3],
+                width: "15%"
+            },
+            {
+                targets: 9,
+                orderDataType: "dom-text",
+                type: "string"
+            }
+            
+        ],
+        fixedColumns: true
+    });
 });
 
 function saveGroups(){
@@ -23,7 +51,7 @@ function doNothing(data){ }
 
 $(document).ready(function () {
     $('#factTbl').DataTable({
-    })
+    });
 });
 
 function handleFactAdd(){

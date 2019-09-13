@@ -3,6 +3,7 @@ function viewSection(identifier){
     $(parent).insertBefore($('#atomic-blocks-end'));
     $(parent).css('display', 'block');
     window.location.hash='#'+identifier;
+    redrawTables();
 }
 
 function clearWorkflow(){

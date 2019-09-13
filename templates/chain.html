@@ -84,7 +84,7 @@
 
         <div id="group-profile" class="section-profile" style="display: none">
           <div class="row">
-            <div class="column section-border" style="flex:25%;">
+            <div class="column section-border" style="flex:20%;">
               <img src="/chain/img/group.png">
               <h4 style="margin-bottom:-5px">Agents</h4>
               <p class="section-description">
@@ -92,17 +92,19 @@
               </p>
               <button id="addGroupBtn" type="button" class="button-success atomic-button" onclick="saveGroups()">Save changes</button>
             </div>
-            <div class="column" style="flex:75%">
+            <div class="column" style="flex:80%">
               <table id="netTbl" class="display" style="width:100%;" >
                 <thead>
                 <tr>
-                  <th>Host <i style="font-size:11px">paw print</i></th>
+                  <th>Paw Print</th>
+                  <th>PID</th>
+                  <th>Host</th>
+                  <th>User</th>
                   <th>Status</th>
                   <th>Platform</th>
                   <th>Executor</th>
                   <th>Last seen</th>
                   <th>Sleep</th>
-                  <th>PID</th>
                   <th>Group</th>
                 </tr>
                 </thead>
@@ -110,6 +112,9 @@
                   {% for a in agents %}
                       <tr>
                         <td>{{ a.paw }}</td>
+                        <td>{{ a.pid }}</td>
+                        <td>{{ a.hostname }}</td>
+                        <td>{{ a.username }}</td>
                         <td style="width:125px">
                             <select id="{{a.paw}}-status">
                                 {% if a.trusted == 1 %}
@@ -125,7 +130,6 @@
                         <td>{% for e in a.executors  %}{{ e.executor }}<br />{% endfor %}</td>
                         <td>{{ a.last_seen }}</td>
                         <td><input id="{{ a.paw }}-sleep" type="text" value="{{ a.sleep }}"></td>
-                        <td>{{ a.pid }}</td>
                         <td><input id="{{a.paw}}-group" type="text" value="{{ a.host_group }}"></td>
                       </tr>
                   {% endfor %}
@@ -590,6 +594,7 @@
 <script src="/gui/jquery/jquery-ui.js"></script>
 <script src="/gui/jquery/jquery.dataTables.min.js"></script>
 <script src="/gui/jquery/jquery.dataTables.select.min.js"></script>
+<script src="/gui/jquery/jquery.dataTables.dataSourcePlugins.js"></script>
 <script src="/chain/js/chain.js"></script>
 <script src="/chain/js/sections.js"></script>
 </html>
