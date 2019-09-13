@@ -285,6 +285,7 @@ function toggleAdversaryView() {
     $('#addAdversary').toggle();
 
     //clear out canvas
+    $('#profile-existing-name option:eq(0)').prop('selected', true);
     $('#profile-goal').val('');
     $('#profile-description').val('');
     $('.tempPhase').remove();
@@ -307,22 +308,27 @@ function addPhase(number) {
     return template;
 }
 
-function saveNewAdversary() {
+function saveAdversary() {
+    let identifier = $('#profile-existing-name').val();
+    if(!identifier){
+        identifier = uuidv4();
+    }
     let name = $('#profile-goal').val();
-    if(!name){alert('Please enter an adversary name!'); return; }
+    if(!name){ alert('Please enter an adversary name!'); return; }
     let description = $('#profile-description').val();
-    if(!description){alert('Please enter a description!'); return; }
+    if(!description){ alert('Please enter a description!'); return; }
 
     let abilities = [];
     $('#profile-tests li').each(function() {
         abilities.push({"id": $(this).attr('id'),"phase":$(this).data('phase')})
     });
-    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"core_adversary", 'i': uuidv4()}, doNothing);
+
+    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"core_adversary", 'i': identifier}, doNothing);
     location.reload(true);
 }
 
 function loadAdversary() {
-    restRequest('POST', {'index':'core_adversary', 'id': $('#profile-existing-name').val()}, loadAdversaryCallback);
+    restRequest('POST', {'index':'core_adversary', 'adversary_id': $('#profile-existing-name').val()}, loadAdversaryCallback);
     validateFormState(($('#profile-existing-name').val()), '#advNewBtn');
 }
 
@@ -540,11 +546,11 @@ function appendAbilityToList(parentId, value) {
 function showAbility(parentId) {
     let ability = $('#'+parentId).find('#ability-ability-filter').find(":selected").data('ability');
     restRequest('POST', {"ability_id": ability.ability_id}, showAbilityModal, endpoint='/stockpile/ability');
-    validateFormState(($('#ability-ability-filter').val()), '#phaseBtn');
 }
 
 function showAbilityModal(data) {
-    $('#phase-modal').data("ability", data);
+    let phaseModal = $('#phase-modal');
+    phaseModal.data("ability", data);
     $('pre[id^="ability-file"]').html(data);
     checkAbilitySaveValid();
 }

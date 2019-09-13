@@ -251,7 +251,7 @@
                   <select id="profile-existing-name" style="margin-top:-15px" onchange="loadAdversary();">
                     <option value="" disabled selected>Select an existing adversary</option>
                     {% for adv in adversaries %}
-                        <option value="{{ adv.id }}">{{ adv.name }}</option>
+                        <option value="{{ adv.adversary_id }}">{{ adv.name }}</option>
                     {% endfor %}}
                   </select>
               </div>
@@ -264,7 +264,7 @@
                         <option value="{{ s.facts | map(attribute='property') | list }}">{{ s.name }}</option>
                     {% endfor %}
               </select>
-              <button id="advNewBtn" type="button" class="button-success atomic-button" onclick="saveNewAdversary()">Save as new</button>
+              <button id="advNewBtn" type="button" class="button-success atomic-button" onclick="saveAdversary()">Save</button>
             </div>
             <div id="phases" class="column adversary-header" style="flex:75%;text-align: left">
                 <input id="profile-goal" type="text" class="advGoal" placeholder="enter an adversary name">
@@ -546,7 +546,7 @@
                         <select id="ability-ability-filter" onchange="showAbility('phase-modal')">
                             <option disabled selected>0 abilities</option>
                         </select>
-                        <button id="phaseBtn" type="button" class="button-notready atomic-button" onclick="addToPhase()">Add to phase</button>
+                        <button id="phaseBtn" type="button" class="button-success atomic-button" onclick="addToPhase()">Add to phase</button>
                     </div>
                     <div class="column" style="flex:75%;">
                         <pre id="ability-file" style="text-align: left"></pre>

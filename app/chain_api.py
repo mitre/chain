@@ -43,7 +43,8 @@ class ChainApi:
         data = dict(await request.json())
         index = data.pop('index')
         if request.method == 'DELETE':
-            return await self.data_svc.delete(index, **data)
+            await self.data_svc.delete(index, data)
+            return 'Delete action completed'
 
         options = dict(
             PUT=dict(
