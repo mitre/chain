@@ -101,7 +101,7 @@
                   <th>Platform</th>
                   <th>Executor</th>
                   <th>Last seen</th>
-                  <th>Sleep</th>
+                  <th>Sleep (Min/Max)</th>
                   <th>PID</th>
                   <th>Group</th>
                 </tr>
@@ -124,7 +124,7 @@
                         <td>{{ a.platform }}</td>
                         <td>{% for e in a.executors  %}{{ e.executor }}<br />{% endfor %}</td>
                         <td>{{ a.last_seen }}</td>
-                        <td><input id="{{ a.paw }}-sleep" type="text" value="{{ a.sleep }}"></td>
+                        <td><input id="{{ a.paw }}-sleep" type="text" value="{{ a.sleep_min }}/{{ a.sleep_max }}"></td>
                         <td>{{ a.pid }}</td>
                         <td><input id="{{a.paw}}-group" type="text" value="{{ a.host_group }}"></td>
                       </tr>

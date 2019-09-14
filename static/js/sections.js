@@ -10,9 +10,27 @@ function saveGroups(){
         let group = document.getElementById(value[0]+'-group').value;
         let status = document.getElementById(value[0]+'-status').value;
         let sleep = document.getElementById(value[0]+'-sleep').value;
-        restRequest('PUT', {"index":"core_agent", "paw": value[0], "host_group": group, "sleep": sleep}, doNothing);
+        let update = {"index":"core_agent", "paw": value[0], "host_group": group};
+        let sleepArr = parseSleep(sleep);
+        if (sleepArr.length !== 0) {
+            update["sleep_min"] = sleepArr[0];
+            update["sleep_max"] = sleepArr[1];
+        }
+        restRequest('PUT', update, doNothing);
         restRequest('PUT', {'index':'core_agent', "paw": value[0], "trusted": status}, reloadLocation, '/plugin/chain/agents/trust');
     });
+}
+
+function parseSleep(sleep){
+    let patt = new RegExp("\\d+\\/\\d+");
+    if (patt.test(sleep)){
+        let result = sleep.split("/");
+        if (result[0] <= result[1]){
+            return result;
+        }
+        return result.reverse();
+    }
+    return [];
 }
 
 function reloadLocation(data){ location.reload(true); }
