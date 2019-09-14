@@ -100,13 +100,20 @@ function agent_table_refresh(){
 function saveGroups(){
     let data = $('#netTbl').DataTable().rows().data();
     data.each(function (value, index) {
-        let group = document.getElementById(value['paw']+'-group').value;
-        let status = document.getElementById(value['paw']+'-status').value;
-        let sleep = document.getElementById(value['paw']+'-sleep').value;
-        restRequest('PUT', {"index":"core_agent", "paw": value['paw'], "host_group": group, "sleep": sleep}, doNothing);
-        restRequest('PUT', {'index':'core_agent', "paw": value['paw'], "trusted": status}, saveGroupsCallback, '/plugin/chain/agents/trust');
+        let group = document.getElementById(value[0]+'-group').value;
+        let status = document.getElementById(value[0]+'-status').value;
+        let sleep = document.getElementById(value[0]+'-sleep').value;
+        let update = {"index":"core_agent", "paw": value[0], "host_group": group};
+        let sleepArr = parseSleep(sleep);
+        if (sleepArr.length !== 0) {
+            update["sleep_min"] = sleepArr[0];
+            update["sleep_max"] = sleepArr[1];
+        }
+        restRequest('PUT', update, doNothing);
+        restRequest('PUT', {'index':'core_agent', "paw": value[0], "trusted": status}, saveGroupsCallback, '/plugin/chain/agents/trust');
     });
 }
+
 
 function saveGroupsCallback(data) {
     restRequest('POST', {"index":"core_agent"}, reloadGroupElements);
@@ -124,7 +131,17 @@ function reloadGroupElements(data) {
     });
 }
 
-function doNothing() {}
+function parseSleep(sleep){
+    let patt = new RegExp("\\d+\\/\\d+");
+    if (patt.test(sleep)){
+        let result = sleep.split("/");
+        if (result[0] <= result[1]){
+            return result;
+        }
+        return result.reverse();
+    }
+    return [];
+}
 
 function reloadLocation(data){
     window.location.reload();
