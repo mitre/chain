@@ -643,7 +643,7 @@ function addAttackBreakdown(phases, steps) {
     plans.forEach(p => {
         steps.forEach(s => {
             if(p.tactic == s.attack.tactic && p.technique_id == s.attack.technique_id && p.technique_name == s.attack.technique_name) {
-                if(s.score > 0) {
+                if(s.status > 0) {
                     p['failure'] += 1;
                 } else {
                     p['success'] += 1;
