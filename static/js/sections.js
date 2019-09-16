@@ -1,29 +1,140 @@
 /** GROUPS **/
 
 $(document).ready(function () {
-    $('#netTbl').DataTable({})
+    $('#netTbl').DataTable({
+        ajax: {
+            url: '/plugin/chain/rest',
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: function ( d ) {
+                return JSON.stringify({'index':'core_agent'});
+            },
+            dataSrc: ''
+        },
+        deferRender: true,
+        rowId: 'paw',
+        stateSave: true,
+        columnDefs: [
+            {
+                targets: 0,
+                data: null,
+                render: {
+                    _: 'paw'
+                }
+            },
+            {
+                targets: 1,
+                data: null,
+                render: function ( data, type, row, meta ){
+                    let str = "<select id=\""+data['paw']+"-status\">";
+                    if ( data['trusted'] == 1 ){
+                        str += "<option value=\"1\" selected>trusted</option>\n" +
+                               "<option value=\"0\">untrusted</option>";
+                    } else {
+                        str += "<option value=\"1\">trusted</option>\n" +
+                               "<option value=\"0\" selected>untrusted</option>";
+                    }
+                    str += "</select>";
+                    return str;
+                }
+            },
+            {
+                targets: 2,
+                data: null,
+                render: {
+                    _:'platform'
+                }
+            },
+            {
+                targets: 3,
+                data: null,
+                render: function ( data, type, row, meta ) {
+                    let str = "";
+                    data['executors'].forEach(function(e) {
+                        str += e.executor + "<br/>"
+                    });
+                    return str;
+                }
+            },
+            {
+                targets: 4,
+                data: null,
+                render: {
+                    _:'last_seen'
+                }
+            },
+            {
+                targets: 5,
+                data: null,
+                render: function ( data, type, row, meta ){
+                    return "<input id=\""+data['paw']+"-sleep\" type=\"text\" value=\""+data['sleep']+"\">";
+                }
+            },
+            {
+                targets: 6,
+                data: null,
+                render: {
+                    _:'pid'
+                }
+            },
+            {
+                targets: 7,
+                data: null,
+                orderDataType: 'dom-text',
+                type: 'string',
+                render: function ( data, type, row, meta ) {
+                    return "<input id=\""+data['paw']+"-group\" type=\"text\" value=\""+data['host_group']+"\">";
+                }
+            }
+        ],
+        errMode: 'throw'
+    });
 });
+
+
+function agent_table_refresh(){
+    $('#netTbl').DataTable().ajax.reload();
+}
 
 function saveGroups(){
     let data = $('#netTbl').DataTable().rows().data();
     data.each(function (value, index) {
-        let group = document.getElementById(value[0]+'-group').value;
-        let status = document.getElementById(value[0]+'-status').value;
-        let sleep = document.getElementById(value[0]+'-sleep').value;
-        restRequest('PUT', {"index":"core_agent", "paw": value[0], "host_group": group, "sleep": sleep}, doNothing);
-        restRequest('PUT', {'index':'core_agent', "paw": value[0], "trusted": status}, reloadLocation, '/plugin/chain/agents/trust');
+        let group = document.getElementById(value['paw']+'-group').value;
+        let status = document.getElementById(value['paw']+'-status').value;
+        let sleep = document.getElementById(value['paw']+'-sleep').value;
+        restRequest('PUT', {"index":"core_agent", "paw": value['paw'], "host_group": group, "sleep": sleep}, doNothing);
+        restRequest('PUT', {'index':'core_agent', "paw": value['paw'], "trusted": status}, saveGroupsCallback, '/plugin/chain/agents/trust');
     });
 }
 
-function reloadLocation(data){ location.reload(true); }
+function saveGroupsCallback(data) {
+    restRequest('POST', {"index":"core_agent"}, reloadGroupElements);
+    agent_table_refresh();
+}
 
-function doNothing(data){ }
+function reloadGroupElements(data) {
+    let gp_elem = $("#queueGroup");
+    gp_elem.empty();
+    gp_elem.append("<option value=\"\" disabled selected>Group</option>");
+    $.each(data, function(index, agent) {
+        if(!gp_elem.find('option[value="'+ agent['host_group'] +'"]').length > 0) {
+            gp_elem.append("<option id='qgroup-" + agent['host_group'] + "' value='" + agent['host_group'] + "'>" + agent['host_group'] + "</option>");
+        }
+    });
+}
+
+function doNothing() {}
+
+function reloadLocation(data){
+    window.location.reload();
+}
 
 /** FACTS **/
 
 $(document).ready(function () {
     $('#factTbl').DataTable({
-    })
+    });
 });
 
 function handleFactAdd(){
@@ -323,8 +434,38 @@ function saveAdversary() {
         abilities.push({"id": $(this).attr('id'),"phase":$(this).data('phase')})
     });
 
-    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"core_adversary", 'i': identifier}, doNothing);
-    location.reload(true);
+    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"core_adversary", 'i': identifier}, saveAdversaryCallback);
+}
+
+function saveAdversaryCallback(data) {
+    flashy('adv-flashy-holder', 'Adversary saved!');
+    restRequest('POST', {"index":"core_adversary"}, reloadAdversaryElements);
+}
+
+function reloadAdversaryElements(data) {
+    let adv_view_elem = $("#profile-existing-name");
+    let adv_op_elem = $("#queueFlow");
+    adv_view_elem.empty();
+    adv_view_elem.append("<option value=\"\" disabled selected>Select an existing adversary</option>");
+    adv_op_elem.empty();
+    adv_op_elem.append("<option value=\"\" disabled selected>Adversary</option>");
+    $.each(data, function(index, adv) {
+        if(!adv_view_elem.find('option[value="'+ adv['adversary_id'] +'"]').length > 0) {
+            adv_view_elem.append("<option value='" + adv['adversary_id'] + "'>" + adv['name'] + "</option>");
+        }
+        if(!adv_op_elem.find('option[value="'+ adv['adversary_id'] +'"]').length > 0) {
+            adv_op_elem.append("<option id=\"qflow-" + adv['adversary_id'] + "\" value=\""+adv['id']+"\">"+ adv['name']+"</option>");
+        }
+    });
+}
+
+function flashy(elem, message) {
+    let flash = $('#'+elem);
+    flash.find('#message').text(message);
+    flash.delay(100).fadeIn('normal', function() {
+        $(this).delay(3000).fadeOut();
+    });
+    flash.find('#message').text(message);
 }
 
 function loadAdversary() {

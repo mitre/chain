@@ -90,6 +90,7 @@
               <p class="section-description">
                   Groups are collections of agents so hosts can be compromised simultaneously.
               </p>
+              <button type="button" class="button-embedded atomic-button" onclick="saveGroupsCallback()">Refresh agent table</button>
               <button id="addGroupBtn" type="button" class="button-success atomic-button" onclick="saveGroups()">Save changes</button>
             </div>
             <div class="column" style="flex:75%">
@@ -99,37 +100,13 @@
                   <th>Host <i style="font-size:11px">paw print</i></th>
                   <th>Status</th>
                   <th>Platform</th>
-                  <th>Executor</th>
+                  <th>Executors</th>
                   <th>Last seen</th>
                   <th>Sleep</th>
                   <th>PID</th>
                   <th>Group</th>
                 </tr>
                 </thead>
-                <tbody>
-                  {% for a in agents %}
-                      <tr>
-                        <td>{{ a.paw }}</td>
-                        <td style="width:125px">
-                            <select id="{{a.paw}}-status">
-                                {% if a.trusted == 1 %}
-                                    <option value="1" selected>trusted</option>
-                                    <option value="0">untrusted</option>
-                                {% else %}
-                                    <option value="1">trusted</option>
-                                    <option value="0" selected>untrusted</option>
-                                {% endif %}
-                            </select>
-                        </td>
-                        <td>{{ a.platform }}</td>
-                        <td>{% for e in a.executors  %}{{ e.executor }}<br />{% endfor %}</td>
-                        <td>{{ a.last_seen }}</td>
-                        <td><input id="{{ a.paw }}-sleep" type="text" value="{{ a.sleep }}"></td>
-                        <td>{{ a.pid }}</td>
-                        <td><input id="{{a.paw}}-group" type="text" value="{{ a.host_group }}"></td>
-                      </tr>
-                  {% endfor %}
-                </tbody>
               </table>
             </div>
           </div>
@@ -265,6 +242,9 @@
                     {% endfor %}
               </select>
               <button id="advNewBtn" type="button" class="button-success atomic-button" onclick="saveAdversary()">Save</button>
+              <div id="adv-flashy-holder">
+                  <span id="message"></span>
+              </div>
             </div>
             <div id="phases" class="column adversary-header" style="flex:75%;text-align: left">
                 <input id="profile-goal" type="text" class="advGoal" placeholder="enter an adversary name">
@@ -327,7 +307,7 @@
                   <select name="work" id="queueFlow" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
                     <option value="" disabled selected>Adversary</option>
                     {% for adv in adversaries %}
-                      <option id="qflow-{{ adv }}" value="{{ adv.id }}">{{ adv.name }}</option>
+                      <option id="qflow-{{ adv.adversary_id }}" value="{{ adv.id }}">{{ adv.name }}</option>
                     {% endfor %}
                   </select>
                   <select name="host" id="queueGroup" class="queueOption" style="opacity:0.5" disabled="true" onchange="checkOpformValid()">
