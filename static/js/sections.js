@@ -68,7 +68,7 @@ $(document).ready(function () {
                 targets: 5,
                 data: null,
                 render: function ( data, type, row, meta ){
-                    return "<input id=\""+data['paw']+"-sleep\" type=\"text\" value=\""+data['sleep']+"\">";
+                    return "<input id=\""+data['paw']+"-sleep\" type=\"text\" value=\""+data['sleep_min']+"/"+data['sleep_max']+"\">";
                 }
             },
             {
@@ -103,7 +103,13 @@ function saveGroups(){
         let group = document.getElementById(value['paw']+'-group').value;
         let status = document.getElementById(value['paw']+'-status').value;
         let sleep = document.getElementById(value['paw']+'-sleep').value;
-        restRequest('PUT', {"index":"core_agent", "paw": value['paw'], "host_group": group, "sleep": sleep}, doNothing);
+        let update = {"index":"core_agent", "paw": value['paw'], "host_group": group};
+        let sleepArr = parseSleep(sleep);
+        if (sleepArr.length !== 0) {
+            update["sleep_min"] = sleepArr[0];
+            update["sleep_max"] = sleepArr[1];
+        }
+        restRequest('PUT', update, doNothing);
         restRequest('PUT', {'index':'core_agent', "paw": value['paw'], "trusted": status}, saveGroupsCallback, '/plugin/chain/agents/trust');
     });
 }
@@ -122,6 +128,18 @@ function reloadGroupElements(data) {
             gp_elem.append("<option id='qgroup-" + agent['host_group'] + "' value='" + agent['host_group'] + "'>" + agent['host_group'] + "</option>");
         }
     });
+}
+
+function parseSleep(sleep){
+    let patt = new RegExp("\\d+\\/\\d+");
+    if (patt.test(sleep)){
+        let result = sleep.split("/");
+        if (parseInt(result[0]) <= parseInt(result[1])){
+            return result;
+        }
+        return result.reverse();
+    }
+    return [];
 }
 
 function doNothing() {}
