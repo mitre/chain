@@ -68,7 +68,7 @@ $(document).ready(function () {
                 targets: 5,
                 data: null,
                 render: function ( data, type, row, meta ){
-                    return "<input id=\""+data['paw']+"-sleep\" type=\"text\" value=\""+data['sleep']+"\">";
+                    return "<input id=\""+data['paw']+"-sleep\" type=\"text\" value=\""+data['sleep_min']+"/"+data['sleep_max']+"\">";
                 }
             },
             {
