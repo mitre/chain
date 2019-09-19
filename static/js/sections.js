@@ -19,8 +19,9 @@ $(document).ready(function () {
             {
                 targets: 0,
                 data: null,
-                render: {
-                    _: 'paw'
+                render: function ( data, type, row, meta ) {
+                    let name = data['paw'].split('$');
+                    return name[0]+'$'+name[1];
                 }
             },
             {
