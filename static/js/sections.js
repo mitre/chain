@@ -315,12 +315,13 @@ function operationCallback(data){
             if(operation.chain[i].cleanup) {
                 title = title + " (CLEANUP)"
             }
+            let splitPaw = operation.chain[i].paw.split('$');
             template.find('#link-technique').html(ability.technique_id + '<span class="tooltiptext">' + ability.technique_name + '</span>');
             template.attr("id", "op_id_" + operation.chain[i].id);
             template.attr("operation", operation.chain[i].op_id);
             template.attr("data-date", operation.chain[i].decide.split('.')[0]);
             template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100" ' +
-            'onclick="rollup('+operation.chain[i].id+')">'+ operation.chain[i].paw + '... ' +
+            'onclick="rollup('+operation.chain[i].id+')">'+ splitPaw[0]+'$'+splitPaw[1] + '... ' +
                 title + '<span style="font-size:14px;float:right" ' +
             'onclick="findResults(this, '+operation.chain[i].id+')"' +
             'data-encoded-cmd="'+operation.chain[i].command+'"'+'>&#9733;</span></div>');
