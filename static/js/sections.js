@@ -371,6 +371,9 @@ function refreshUpdatableFields(chain, div){
     } else if (chain.status === 1) {
         div.removeClass('grey');
         div.addClass('red');
+    } else if (chain.status === 124) {
+        div.removeClass('grey');
+        div.addClass('orange');
     } else {
         div.addClass('grey');
     }
