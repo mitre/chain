@@ -253,7 +253,6 @@ function handleStartAction(){
         "adversary_id":document.getElementById("queueFlow").value,
         "state":document.getElementById("queueState").value,
         "planner":document.getElementById("queuePlanner").value,
-        "stealth":document.getElementById("queueStealth").value,
         "autonomous":document.getElementById("queueAuto").value,
         "jitter":jitter,
         "sources":[document.getElementById("queueSource").value],
