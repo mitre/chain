@@ -77,6 +77,9 @@ a:hover {
 .timeline .green:after {
   box-shadow: 0 0 0 0.2em rgb(28, 202, 0);
 }
+.timeline .orange:after {
+  box-shadow: 0 0 0 0.2em rgb(255, 165, 0);
+}
 .timeline .event .member-location,
 .timeline .event .member-parameters {
   display: none;
