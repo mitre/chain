@@ -871,4 +871,5 @@ function submitHilChanges(status){
     let command = $('#hil-command').val();
     let data = {'index':'core_chain', 'key': 'id', 'value': linkId, 'data': {'status': status, 'command': btoa(command)}};
     restRequest('PUT', data, doNothing);
+    return false;
 }
