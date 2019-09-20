@@ -20,8 +20,7 @@ $(document).ready(function () {
                 targets: 0,
                 data: null,
                 render: function ( data, type, row, meta ) {
-                    let name = data['paw'].split('$');
-                    return name[0]+'$'+name[1];
+                    return trimPaw(data['paw']);
                 }
             },
             {
@@ -93,6 +92,10 @@ $(document).ready(function () {
     });
 });
 
+function trimPaw(paw) {
+    let name = paw.split('$');
+    return name[0]+'$'+name[1];
+}
 
 function agent_table_refresh(){
     $('#netTbl').DataTable().ajax.reload();
@@ -310,7 +313,7 @@ function operationCallback(data){
     for(let i=0;i<operation.chain.length;i++){
         if(operation.chain[i].status === -1) {
             $('#hil-linkId').html(operation.chain[i].id);
-            $('#hil-paw').html(operation.chain[i].paw);
+            $('#hil-paw').html(trimPaw(operation.chain[i].paw));
             $('#hil-command').html(atob(operation.chain[i].command));
             document.getElementById("loop-modal").style.display = "block";
         } else if(operation.chain[i].status === -2) {
