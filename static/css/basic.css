@@ -345,3 +345,15 @@ table.dataTable input[type=text] {
 .op-control button:hover {
     cursor: pointer;
 }
+.codearea textarea {
+    text-align: left;
+    background-color: var(--primary-background);
+    color:var(--font-color);
+    border:none;
+    display:inline-block;
+    width: 100%;
+    min-height: 400px;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 8px;
+}

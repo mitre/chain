@@ -181,7 +181,7 @@ function deleteFact(identifier) {
 /** ABILITIES **/
 
 function saveAbility(){
-    let abilityDisplay = $('#displayAbility').find('#ability-file').html();
+    let abilityDisplay = $('#displayAbility').find('#ability-file').val();
     const v4 = new RegExp(/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/gm);
     let identifier = v4.exec(abilityDisplay)[0];
     if(identifier != null) {
@@ -239,6 +239,7 @@ function handleStartAction(){
         "state":document.getElementById("queueState").value,
         "planner":document.getElementById("queuePlanner").value,
         "stealth":document.getElementById("queueStealth").value,
+        "autonomous":document.getElementById("queueAuto").value,
         "jitter":jitter,
         "sources":[document.getElementById("queueSource").value],
         "allow_untrusted":document.getElementById("queueUntrusted").value
@@ -307,7 +308,14 @@ function operationCallback(data){
 
     clearTimeline();
     for(let i=0;i<operation.chain.length;i++){
-        if($("#op_id_" + operation.chain[i].id).length === 0) {
+        if(operation.chain[i].status === -1) {
+            $('#hil-linkId').html(operation.chain[i].id);
+            $('#hil-paw').html(operation.chain[i].paw);
+            $('#hil-command').html(atob(operation.chain[i].command));
+            document.getElementById("loop-modal").style.display = "block";
+        } else if(operation.chain[i].status === -2) {
+            //link was discarded
+        } else if($("#op_id_" + operation.chain[i].id).length === 0) {
             let template = $("#link-template").clone();
             let ability = operation.abilities.filter(item => item.id === operation.chain[i].ability)[0];
             template.find('#link-description').html(operation.chain[i].abilityDescription);
@@ -712,7 +720,7 @@ function showAbility(parentId) {
 function showAbilityModal(data) {
     let phaseModal = $('#phase-modal');
     phaseModal.data("ability", data);
-    $('pre[id^="ability-file"]').html(data);
+    $('textarea[id^="ability-file"]').html(data);
     checkAbilitySaveValid();
 }
 
@@ -853,4 +861,15 @@ function openDuk2(){
     $('#duk-text').text('Did you know... you can link abilities together by matching the output property from an ability\'s ' +
         'parser to variables inside another ability\'s command. Variables can be identified by looking for ' +
         '#{variable_name_goes_here} syntax. Also, did you know... abilities can be edited in the middle of an operation.');
+}
+
+/** HUMAN-IN-LOOP */
+
+function submitHilChanges(status){
+    document.getElementById("loop-modal").style.display = "none";
+    let linkId = $('#hil-linkId').html();
+    let command = $('#hil-command').val();
+    let data = {'index':'core_chain', 'key': 'id', 'value': linkId, 'data': {'status': status, 'command': btoa(command)}};
+    restRequest('PUT', data, doNothing);
+    return false;
 }

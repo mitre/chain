@@ -52,8 +52,9 @@ class ChainApi:
                 core_adversary=lambda d: self.data_svc.persist_adversary(**d),
                 core_operation=lambda d: self.data_svc.create_operation(**d),
                 core_fact=lambda d: self.data_svc.create_fact(**d),
-                core_agent=lambda d: self.data_svc.update('core_agent', 'paw', d.pop('paw'), d)
-            ),
+                core_agent=lambda d: self.data_svc.update('core_agent', 'paw', d.pop('paw'), d),
+                core_chain=lambda d: self.data_svc.update(table=index, **d)
+        ),
             POST=dict(
                 core_adversary=lambda d: self.data_svc.explode_adversaries(criteria=d),
                 core_ability=lambda d: self.data_svc.explode_abilities(criteria=d),
