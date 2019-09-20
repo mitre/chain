@@ -198,8 +198,8 @@
               </div>
               <button id="abilityNewBtn" type="button" class="button-notready atomic-button" onclick="saveAbility()">Save</button>
             </div>
-            <div id="displayAbility" class="column" style="flex:75%;text-align: left">
-                <pre id="ability-file" contenteditable="true" spellcheck="false" style="text-align: left; background-color: var(--primary-background);color:var(--font-color);border:none;display:inline-block;"></pre>
+            <div id="displayAbility" class="column codearea" style="flex:75%;text-align: left">
+                <textarea id="ability-file" spellcheck="false"></textarea>
             </div>
           </div>
         </div>
@@ -339,6 +339,10 @@
                   <select name="untrusted" id="queueUntrusted" class="queueOption" style="opacity:0.5" disabled="true">
                     <option value="0" selected>Not allow untrusted agents</option>
                     <option value="1">Allow untrusted agents</option>
+                  </select>
+                  <select name="autonomous" id="queueAuto" class="queueOption" style="opacity:0.5" disabled="true">
+                    <option value="1" selected>Run autonomously</option>
+                    <option value="0">Require manual approval</option>
                   </select>
                   <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max) sec" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo"/>
                   <button id="opBtn" type="button" style="opacity:0.5" disabled="true"
@@ -528,8 +532,8 @@
                         </select>
                         <button id="phaseBtn" type="button" class="button-success atomic-button" onclick="addToPhase()">Add to phase</button>
                     </div>
-                    <div class="column" style="flex:75%;">
-                        <pre id="ability-file" style="text-align: left"></pre>
+                    <div class="column codearea" style="flex:75%;">
+                        <textarea id="ability-file" readonly spellcheck="false"></textarea>
                     </div>
                     <div class="imgcontainer">
                         <span onclick="document.getElementById('phase-modal').style.display='none'" class="close" title="Close Modal">&times;</span>
@@ -548,6 +552,24 @@
                         </div>
                         <div class="column" style="flex:92%">
                             <p id="duk-text" style="color: white"></p>
+                        </div>
+                    </div>
+                </div>
+             </form>
+        </div>
+
+        <div id="loop-modal" class="modal section-profile">
+            <form class="modal-content">
+                <div class="container">
+                    <div class="row duk-modal">
+                        <div class="column" style="flex:25%">
+                            <p id="hil-linkId"></p>
+                            <h5 id="hil-paw"></h5>
+                            <button class="atomic-button button-success" onclick="submitHilChanges(-3)">Approve</button>
+                            <button class="atomic-button button-embedded" onclick="submitHilChanges(-2)">Discard</button>
+                        </div>
+                        <div class="column codearea" style="flex:75%">
+                            <textarea id="hil-command" spellcheck="false"></textarea>
                         </div>
                     </div>
                 </div>
