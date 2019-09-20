@@ -86,10 +86,22 @@ $(document).ready(function () {
                 render: function ( data, type, row, meta ) {
                     return "<input id=\""+data['paw']+"-group\" type=\"text\" value=\""+data['host_group']+"\">";
                 }
+            },
+            {
+                targets: 8,
+                data: null,
+                fnCreatedCell: function (td, cellData, rowData, row , col) {
+                    $(td).addClass('delete-agent');
+                    $(td).attr('id', rowData['id']);
+                },
+                defaultContent: "&#x274C;"
             }
         ],
         errMode: 'throw'
     });
+    $('#netTbl tbody').on('click', 'td.delete-agent', function (e) {
+        restRequest('DELETE', {"index": "core_agent", "id": $(this).attr('id')}, saveGroupsCallback);
+    } );
 });
 
 function trimPaw(paw) {
