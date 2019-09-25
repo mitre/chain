@@ -809,7 +809,6 @@ function reportDuration(start, end) {
 function reportScore(steps) {
     let failed = 0;
     steps.forEach(s => {
-        console.log(s.status);
         if(s.status > 0) {
             failed += 1;
         }
