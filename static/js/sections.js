@@ -339,15 +339,7 @@ function clearTimeline() {
 
 function operationCallback(data){
     let operation = data[0];
-    $("#dash-start").html(operation.start);
-    $("#dash-finish").html(operation.finish);
     $("#op-control-state").html(operation.state);
-    if(operation.host_group.length > 0) {
-        $("#dash-group").html(operation.host_group[0].host_group);
-    } else {
-        $('#dash-group').html('---');
-    }
-    $("#dash-flow").html(operation.adversary.name);
 
     clearTimeline();
     for(let i=0;i<operation.chain.length;i++){
@@ -356,10 +348,6 @@ function operationCallback(data){
             $('#hil-paw').html(trimPaw(operation.chain[i].paw));
             $('#hil-command').html(atob(operation.chain[i].command));
             document.getElementById("loop-modal").style.display = "block";
-            let action = ask();
-            console.log(action);
-        } else if(operation.chain[i].status === -2) {
-            //link was discarded
         } else if($("#op_id_" + operation.chain[i].id).length === 0) {
             let template = $("#link-template").clone();
             let ability = operation.abilities.filter(item => item.id === operation.chain[i].ability)[0];
@@ -374,10 +362,11 @@ function operationCallback(data){
             template.attr("operation", operation.chain[i].op_id);
             template.attr("data-date", operation.chain[i].decide.split('.')[0]);
             template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100" ' +
-            'onclick="rollup('+operation.chain[i].id+')">'+ splitPaw[0]+'$'+splitPaw[1] + '... ' +
-                title + '<span style="font-size:14px;float:right" ' +
-            'onclick="findResults(this, '+operation.chain[i].id+')"' +
-            'data-encoded-cmd="'+operation.chain[i].command+'"'+'>&#9733;</span></div>');
+                'ondblclick="rollup('+operation.chain[i].id+')">'+ splitPaw[0]+'$'+splitPaw[1] + '... ' +
+                title + '<span id="'+operation.chain[i].id+'-rs" style="font-size:14px;float:right;display:none" ' +
+                'onclick="findResults(this, '+operation.chain[i].id+')"' +
+                'data-encoded-cmd="'+operation.chain[i].command+'"'+'>&#9733;</span>' +
+                '<span id="'+operation.chain[i].id+'-rm" style="font-size:11px;float:right" onclick="discard('+operation.chain[i].id+')">&#x274C;</span></div>');
             template.find('#time-action').html(atob(operation.chain[i].command));
             template.find('#time-executor').html(operation.chain[i].executor);
             refreshUpdatableFields(operation.chain[i], template);
@@ -402,23 +391,41 @@ function operationCallback(data){
     }
 }
 
+function discard(linkId) {
+    let data = {'index':'core_chain', 'key': 'id', 'value': linkId, 'data': {'status': -2}};
+    restRequest('PUT', data, doNothing);
+}
+
 function refreshUpdatableFields(chain, div){
-    if(chain.collect)
+    if(chain.collect) {
+        div.find('#'+chain.id+'-rm').remove();
         div.find('#link-collect').html(chain.collect.split('.')[0]);
-    if(chain.finish)
-        div.find('#link-finish').html(chain.finish.split('.')[0]);
-    if(chain.status === 0) {
-        div.removeClass('grey');
-        div.addClass('green');
-    } else if (chain.status === 1) {
-        div.removeClass('grey');
-        div.addClass('red');
-    } else if (chain.status === 124) {
-        div.removeClass('grey');
-        div.addClass('orange');
-    } else {
-        div.addClass('grey');
     }
+    if(chain.finish) {
+        div.find('#'+chain.id+'-rs').css('display', 'block');
+        div.find('#'+chain.id+'-rm').remove();
+        div.find('#link-finish').html(chain.finish.split('.')[0]);
+    }
+    if(chain.status === 0) {
+        applyTimelineColor(div, 'green');
+    } else if (chain.status === -2) {
+        div.find('#'+chain.id+'-rm').remove();
+        applyTimelineColor(div, 'black');
+    } else if (chain.status === 1) {
+        applyTimelineColor(div, 'red');
+    } else if (chain.status === 124) {
+        applyTimelineColor(div, 'orange');
+    } else if (chain.status === -3 && chain.collect) {
+        applyTimelineColor(div, 'pink');
+    } else {
+        applyTimelineColor(div, 'grey');
+    }
+}
+
+function applyTimelineColor(div, color) {
+    div.removeClass('pink');
+    div.removeClass('grey');
+    div.addClass(color);
 }
 
 function rollup(id) {
@@ -911,6 +918,13 @@ function openDuk2(){
         '#{variable_name_goes_here} syntax. Also, did you know... abilities can be edited in the middle of an operation.');
 }
 
+function openDuk3(){
+    document.getElementById("duk-modal").style.display="block";
+    $('#duk-text').text('Did you know... You can click on any row to show the details of the executed step. Click the ' +
+        'star icon to view the standard output and error from the command that was executed. Highlighted text indicates ' +
+        'facts which were learned from executing the step. Click the X to stop the ability from running.');
+}
+
 /** HUMAN-IN-LOOP */
 
 function submitHilChanges(status){
@@ -921,4 +935,3 @@ function submitHilChanges(status){
     restRequest('PUT', data, doNothing);
     return false;
 }
-

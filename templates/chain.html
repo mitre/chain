@@ -284,11 +284,9 @@
                 </label>
               </div>
               <p class="section-description">
-                  Click on any row to show the details of the executed step. Click the &#9733; icon to view the
-                  standard output and error from the command that was executed. Highlighted text indicates
-                  facts which were learned from executing the step.
+                View or start operations from here
               </p>
-              <br>
+              <div class="duk"><img onclick="openDuk3()" class="duk-icon" src="/gui/img/duk.png"></div>
               <div id="viewOperation">
                 <select id="operation-list" style="margin-bottom: 15px;" onchange="refresh()">
                   <option id="operationDefault" value="" disabled selected>Operations</option>
@@ -344,17 +342,15 @@
             <div class="column" style="flex:75%">
               <div class="op-dets">
                 <center>
-                  <table style="border-spacing:15px">
-                    <tr>
-                      <td><img src="/chain/img/group.png"></td>
-                      <td><p id="dash-group"></p></td>
-                      <td><img src="/chain/img/hacker.png"></td>
-                      <td><p id="dash-flow"></p></td>
-                      <td><img src="/chain/img/s.png"></td>
-                      <td><p id="dash-start"></p></td>
-                      <td><img src="/chain/img/f.png"></td>
-                      <td><p id="dash-finish"></p></td>
-                    </tr>
+                  <table class="legend">
+                      <tr>
+                          <td class="grey">queued</td>
+                          <td class="hotpink">collected</td>
+                          <td class="green">success</td>
+                          <td class="red">failure</td>
+                          <td class="orange">timeout</td>
+                          <td class="black">discarded</td>
+                      </tr>
                   </table>
                     <div class="op-control">
                         <span title="Current Operation Status" class="op-control-text" id="op-control-state"></span>
