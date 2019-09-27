@@ -844,7 +844,7 @@ function reportScore(steps) {
             failed += 1;
         }
     });
-    return 100 - (failed/steps.length * 100) + '%';
+    return parseInt(100 - (failed/steps.length * 100)) + '%';
 }
 
 function addAttackBreakdown(phases, steps) {
