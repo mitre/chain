@@ -357,3 +357,30 @@ table.dataTable input[type=text] {
     padding: 10px;
     border-radius: 8px;
 }
+.legend {
+    border-spacing:5px;
+}
+.legend tr,td {
+    padding: 6px;
+    border-radius: 25px;
+    font-size: 11px;
+    color: white;
+}
+.legend .red {
+    background-color: red;
+}
+.legend .green {
+    background-color: green;
+}
+.legend .orange {
+    background-color: orange;
+}
+.legend .hotpink {
+    background-color: hotpink;
+}
+.legend .black {
+    background-color: var(--primary-background);
+}
+.legend .grey {
+    background-color: grey;
+}
