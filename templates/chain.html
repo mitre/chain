@@ -33,32 +33,26 @@
 <div class="column" style="flex:100%;margin-top:0">
   <center>
     <div id="build-workflow-toolbar" class="row-toolbar subnav">
-      <div class="row-toolbar-section" id="section-0">
-        <button class="row-toolbar-button" onclick="clearWorkflow();">
-          <span class="icon"><img src="/chain/img/trash.png"></span>
-          <span class="caption">Clear</span>
-        </button>
-      </div>
       <div class="row-toolbar-section" id="section-1">
-        <button class="row-toolbar-button" onclick="viewSection('group-profile');">
+        <button class="row-toolbar-button" onclick="viewSection('agents');">
           <span class="icon"><img src="/chain/img/group.png"></span>
           <span class="caption">Agents</span>
         </button>
       </div>
       <div class="row-toolbar-section" id="section-4">
-        <button class="row-toolbar-button" onclick="viewSection('fact-profile')">
+        <button class="row-toolbar-button" onclick="viewSection('facts')">
           <span class="icon"><img src="/chain/img/facts.png"></span>
           <span class="caption">Facts</span>
         </button>
       </div>
       <div class="row-toolbar-section" id="section-7">
-        <button class="row-toolbar-button" onclick="viewSection('ability-profile')">
+        <button class="row-toolbar-button" onclick="viewSection('abilities')">
           <span class="icon"><img src="/chain/img/ability.png"></span>
           <span class="caption">Abilities</span>
         </button>
       </div>
       <div class="row-toolbar-section" id="section-3">
-        <button class="row-toolbar-button" onclick="viewSection('adversary-profile')">
+        <button class="row-toolbar-button" onclick="viewSection('adversaries')">
           <span class="icon"><img src="/chain/img/hacker.png"></span>
           <span class="caption">Adversaries</span>
         </button>
@@ -82,7 +76,7 @@
 
         <!-- agents -->
 
-        <div id="group-profile" class="section-profile" style="display: none">
+        <div id="agents" class="section-profile" style="display: none">
           <div class="row">
             <div class="column section-border" style="flex:25%;">
               <img src="/chain/img/group.png">
@@ -115,7 +109,7 @@
 
         <!-- fact sources -->
 
-        <div id="fact-profile" class="section-profile" style="display: none">
+        <div id="facts" class="section-profile" style="display: none">
           <div class="row">
               <div class="column section-border" style="flex:25%">
               <img src="/chain/img/facts.png">
@@ -171,7 +165,7 @@
 
         <!-- abilities -->
 
-        <div id="ability-profile" class="section-profile" style="display: none">
+        <div id="abilities" class="section-profile" style="display: none">
           <div class="row">
             <div class="column section-border" style="flex:25%;">
               <img src="/chain/img/ability.png">
@@ -207,7 +201,7 @@
 
         <!-- adversary -->
 
-        <div id="adversary-profile" class="section-profile" style="display: none">
+        <div id="adversaries" class="section-profile" style="display: none">
           <div class="row">
             <div class="column section-border" style="flex:25%;">
               <img src="/chain/img/hacker.png">
@@ -278,7 +272,7 @@
 
         <!-- operation -->
 
-        <div id="operation-profile" class="section-profile" style="display: none">
+        <div id="operations" class="section-profile" style="display: none">
           <div class="row">
             <div class="column section-border" style="flex:25%">
               <img src="/chain/img/operation.png">
@@ -296,7 +290,7 @@
               </p>
               <br>
               <div id="viewOperation">
-                <select id="operations" style="margin-bottom: 15px;" onchange="refresh()">
+                <select id="operation-list" style="margin-bottom: 15px;" onchange="refresh()">
                   <option id="operationDefault" value="" disabled selected>Operations</option>
                   {% for op in operations %}
                     <option class="operationOption" id="{{ op}}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
@@ -416,7 +410,7 @@
 
         <!-- reports -->
 
-        <div id="reports-profile" class="section-profile" style="display: none">
+        <div id="reports" class="section-profile" style="display: none">
           <div class="row">
             <div class="column section-border" style="flex:25%;">
               <img src="/chain/img/reports.png">
@@ -424,7 +418,7 @@
               <p class="section-description">
                   View an operation report
               </p>
-              <select id="reports" style="margin-bottom: 15px;" onchange="showReports()">
+              <select id="report-list" style="margin-bottom: 15px;" onchange="showReports()">
                   <option id="reportDefault" value="" disabled selected>Operations</option>
                   {% for op in operations %}
                     <option class="operationOption" id="{{ op}}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
@@ -590,6 +584,5 @@
 <script src="/gui/jquery/jquery-ui.js"></script>
 <script src="/gui/jquery/jquery.dataTables.min.js"></script>
 <script src="/gui/jquery/jquery.dataTables.select.min.js"></script>
-<script src="/chain/js/chain.js"></script>
 <script src="/chain/js/sections.js"></script>
 </html>

@@ -1,3 +1,32 @@
+/** VOICE **/
+
+controls = [
+    {
+        'refresh': reloadLocation,
+        'agents': viewSection,
+        'facts': viewSection,
+        'abilities': viewSection,
+        'adversaries': viewSection,
+        'operations': viewSection,
+        'reports': viewSection
+    }
+]
+activate(controls);
+
+/** SECTIONS **/
+
+function viewSection(identifier){
+    let parent = $('#'+identifier);
+    $(parent).insertBefore($('#atomic-blocks-end'));
+    $(parent).css('display', 'block');
+    window.location.hash='#'+identifier;
+}
+
+function showHide(show, hide) {
+    $(show).each(function(){$(this).prop('disabled', false).css('opacity', 1.0)});
+    $(hide).each(function(){$(this).prop('disabled', true).css('opacity', 0.5)});
+}
+
 /** GROUPS **/
 
 $(document).ready(function () {
@@ -219,9 +248,9 @@ function toggleOperationView() {
     $('#addOperation').toggle();
 
     if ($('#togBtnOp').is(':checked')) {
-        showHide('.queueOption,#opBtn', '#operations');
+        showHide('.queueOption,#opBtn', '#operation-list');
     } else {
-        showHide('#operations', '.queueOption,#opBtn');
+        showHide('#operation-list', '.queueOption,#opBtn');
     }
 }
 
@@ -261,7 +290,7 @@ function handleStartAction(){
     restRequest('PUT', queueDetails, handleStartActionCallback);
 }
 function changeCurrentOperationState(newState){
-    let selectedOperationId = $('#operations option:selected').attr('value');
+    let selectedOperationId = $('#operation-list option:selected').attr('value');
     let state = $('#op-control-state').text();
     if(state === 'finished'){
         alert('This operation has finished.');
@@ -277,7 +306,7 @@ function handleStartActionCallback(data){
 }
 
 function reloadOperationsElements(data){
-    let op_elem = $("#operations");
+    let op_elem = $("#operation-list");
     $.each(data, function(index, op) {
         if(!op_elem.find('option[value="'+op.id+'"]').length > 0){
             op_elem.append('<option id="' + op.id + '" class="operationOption" ' +
@@ -288,7 +317,7 @@ function reloadOperationsElements(data){
 }
 
 function refresh() {
-    let selectedOperationId = $('#operations option:selected').attr('value');
+    let selectedOperationId = $('#operation-list option:selected').attr('value');
     let postData = selectedOperationId ? {'index':'core_operation','id': selectedOperationId} : null;
     if (selectedOperationId > 0){
         $('#downloadOperationReport').prop('disabled', false).css('opacity', 1.0);
@@ -299,7 +328,7 @@ function refresh() {
 }
 
 function clearTimeline() {
-    let selectedOperationId = $('#operations option:selected').attr('value');
+    let selectedOperationId = $('#operation-list option:selected').attr('value');
     $('.event').each(function() {
         let opId = $(this).attr('operation');
         if(opId && opId !== selectedOperationId) {
@@ -327,6 +356,8 @@ function operationCallback(data){
             $('#hil-paw').html(trimPaw(operation.chain[i].paw));
             $('#hil-command').html(atob(operation.chain[i].command));
             document.getElementById("loop-modal").style.display = "block";
+            let action = ask();
+            console.log(action);
         } else if(operation.chain[i].status === -2) {
             //link was discarded
         } else if($("#op_id_" + operation.chain[i].id).length === 0) {
@@ -429,7 +460,7 @@ function downloadOperationReport() {
         downloadAnchorNode.remove();
     }
 
-    let selectedOperationId = $('#reports option:selected').attr('value');
+    let selectedOperationId = $('#report-list option:selected').attr('value');
     let postData = selectedOperationId ? {'index':'operation_report', 'op_id': selectedOperationId} : null;
     restRequest('POST', postData, downloadObjectAsJson, '/plugin/chain/rest');
 }
@@ -777,8 +808,8 @@ function resetMoreModal() {
 /** REPORTS **/
 
 function showReports(){
-    validateFormState(($('#reports').prop('selectedIndex') !== 0), '#reportBtn');
-    let selectedOperationId = $('#reports option:selected').attr('value');
+    validateFormState(($('#report-list').prop('selectedIndex') !== 0), '#reportBtn');
+    let selectedOperationId = $('#report-list option:selected').attr('value');
     let postData = selectedOperationId ? {'index':'operation_report', 'op_id': selectedOperationId} : null;
     restRequest('POST', postData, displayReport, '/plugin/chain/rest');
 }
@@ -890,3 +921,4 @@ function submitHilChanges(status){
     restRequest('PUT', data, doNothing);
     return false;
 }
+
