@@ -360,7 +360,7 @@ table.dataTable input[type=text] {
 .legend {
     border-spacing:5px;
 }
-.legend tr,td {
+.legend td {
     padding: 6px;
     border-radius: 25px;
     font-size: 11px;

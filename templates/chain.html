@@ -342,7 +342,14 @@
             <div class="column" style="flex:75%">
               <div class="op-dets">
                 <center>
-                  <table class="legend">
+                    <div class="op-control">
+                        <span title="Current Operation Status" class="op-control-text" id="op-control-state"></span>
+                        <span title="Pause Operation"><button id="op-control-pause" class="op-control" onclick="changeCurrentOperationState('paused')">&#2405;</button></span>
+                        <span title="Run One Step"><button id="run-one-link" class="op-control" onclick="changeCurrentOperationState('run_one_link')">&#9658;&#10072;</button></span>
+                        <span title="Run Operation"><button id="op-control-run" class="op-control" onclick="changeCurrentOperationState('running')">&#9658;</button></span>
+                    </div>
+                    <br>
+                    <table class="legend">
                       <tr>
                           <td class="grey">queued</td>
                           <td class="hotpink">collected</td>
@@ -351,13 +358,7 @@
                           <td class="orange">timeout</td>
                           <td class="black">discarded</td>
                       </tr>
-                  </table>
-                    <div class="op-control">
-                        <span title="Current Operation Status" class="op-control-text" id="op-control-state"></span>
-                        <span title="Pause Operation"><button id="op-control-pause" class="op-control" onclick="changeCurrentOperationState('paused')">&#2405;</button></span>
-                        <span title="Run One Step"><button id="run-one-link" class="op-control" onclick="changeCurrentOperationState('run_one_link')">&#9658;&#10072;</button></span>
-                        <span title="Run Operation"><button id="op-control-run" class="op-control" onclick="changeCurrentOperationState('running')">&#9658;</button></span>
-                    </div>
+                    </table>
                 </center>
               </div>
               <div id="content">
