@@ -1,18 +1,3 @@
-/** VOICE **/
-
-controls = [
-    {
-        'refresh': reloadLocation,
-        'agents': viewSection,
-        'facts': viewSection,
-        'abilities': viewSection,
-        'adversaries': viewSection,
-        'operations': viewSection,
-        'reports': viewSection
-    }
-]
-activate(controls);
-
 /** SECTIONS **/
 
 function viewSection(identifier){
@@ -407,24 +392,24 @@ function refreshUpdatableFields(chain, div){
         div.find('#link-finish').html(chain.finish.split('.')[0]);
     }
     if(chain.status === 0) {
-        applyTimelineColor(div, 'green');
+        applyTimelineColor(div, 'success');
     } else if (chain.status === -2) {
         div.find('#'+chain.id+'-rm').remove();
-        applyTimelineColor(div, 'black');
+        applyTimelineColor(div, 'discarded');
     } else if (chain.status === 1) {
-        applyTimelineColor(div, 'red');
+        applyTimelineColor(div, 'failure');
     } else if (chain.status === 124) {
-        applyTimelineColor(div, 'orange');
+        applyTimelineColor(div, 'timeout');
     } else if (chain.status === -3 && chain.collect) {
-        applyTimelineColor(div, 'pink');
+        applyTimelineColor(div, 'collected');
     } else {
-        applyTimelineColor(div, 'grey');
+        applyTimelineColor(div, 'queued');
     }
 }
 
 function applyTimelineColor(div, color) {
-    div.removeClass('pink');
-    div.removeClass('grey');
+    div.removeClass('collected');
+    div.removeClass('queued');
     div.addClass(color);
 }
 
