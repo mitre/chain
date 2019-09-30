@@ -366,21 +366,21 @@ table.dataTable input[type=text] {
     font-size: 11px;
     color: white;
 }
-.legend .red {
+.legend .failure {
     background-color: red;
 }
-.legend .green {
+.legend .success {
     background-color: green;
 }
-.legend .orange {
+.legend .timeout {
+    background-color: mediumvioletred;
+}
+.legend .collected {
     background-color: orange;
 }
-.legend .hotpink {
-    background-color: hotpink;
-}
-.legend .black {
+.legend .discarded {
     background-color: var(--primary-background);
 }
-.legend .grey {
+.legend .queued {
     background-color: grey;
 }

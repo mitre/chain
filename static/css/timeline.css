@@ -68,22 +68,22 @@ a:hover {
   width: 0.75em;
   content: "";
 }
-.timeline .grey:after {
+.timeline .queued:after {
   box-shadow: 0 0 0 0.2em grey;
 }
-.timeline .red:after {
+.timeline .failure:after {
   box-shadow: 0 0 0 0.2em red;
 }
-.timeline .green:after {
+.timeline .success:after {
   box-shadow: 0 0 0 0.2em rgb(28, 202, 0);
 }
-.timeline .orange:after {
-  box-shadow: 0 0 0 0.2em rgb(255, 165, 0);
+.timeline .timeout:after {
+  box-shadow: 0 0 0 0.2em mediumvioletred;
 }
-.timeline .pink:after {
-  box-shadow: 0 0 0 0.2em deeppink;
+.timeline .collected:after {
+  box-shadow: 0 0 0 0.2em orange;
 }
-.timeline .black:after {}
+.timeline .discarded:after {}
 
 .timeline .event .member-location,
 .timeline .event .member-parameters {
