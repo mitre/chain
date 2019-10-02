@@ -320,7 +320,7 @@
                     {% endfor %}
                   </select>
                   <select name="source" id="queueSource" class="queueOption" style="opacity:0.5" disabled="true">
-                    <option value="" disabled selected>No fact source</option>
+                    <option value="" selected>No fact source</option>
                         {% for s in sources %}
                             <option value="{{ s.id }}">{{ s.name }}</option>
                         {% endfor %}
