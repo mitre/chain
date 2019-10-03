@@ -928,13 +928,15 @@ function submitHilChanges(status){
     return false;
 }
 function toggleHil(){
-    let data = {id: $('#operation-list option:selected').attr('value')};
+    let op_id = $('#operation-list option:selected').attr('value');
+    let data = {};
     if(operation.autonomous){
         data['autonomous'] = 0;
     }else{
         data['autonomous'] = 1;
     }
-    restRequest('PUT', data, function(d){refresh()}, '/plugin/chain/operation/autonomous');
+    restRequest('PUT', data, function(d){refresh()}, `/plugin/chain/operation/${op_id}`);
+    // restRequest('PUT', data, function(d){refresh()}, '/plugin/chain/operation/autonomous');
 }
 function hilApproveAll(){
     document.getElementById("loop-modal").style.display = "none";
