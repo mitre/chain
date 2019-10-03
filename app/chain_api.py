@@ -86,6 +86,11 @@ class ChainApi:
         await self.data_svc.update('core_operation', 'id', body['id'], dict(state=body.get('state')))
         return web.Response()
 
+    async def rest_update_autonomous(self, request):
+        body = await request.json()
+        await self.data_svc.update('core_operation', 'id', body['id'], dict(autonomous=body['autonomous']))
+        return web.Response()
+
     async def rest_reset_trust(self, request):
         await self.auth_svc.check_permissions(request)
         data = dict(await request.json())

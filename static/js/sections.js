@@ -276,8 +276,7 @@ function handleStartAction(){
 }
 function changeCurrentOperationState(newState){
     let selectedOperationId = $('#operation-list option:selected').attr('value');
-    let state = $('#op-control-state').text();
-    if(state === 'finished'){
+    if(operation.state === 'finished'){
         alert('This operation has finished.');
         return;
     }
@@ -322,9 +321,15 @@ function clearTimeline() {
     });
 }
 
+let operation = {};
 function operationCallback(data){
-    let operation = data[0];
+    operation = data[0];
     $("#op-control-state").html(operation.state);
+    if (operation.autonomous) {
+        $("#togBtnHil").prop("checked", true);
+    }else{
+        $("#togBtnHil").prop("checked", false);
+    }
 
     clearTimeline();
     for(let i=0;i<operation.chain.length;i++){
@@ -333,6 +338,7 @@ function operationCallback(data){
             $('#hil-paw').html(trimPaw(operation.chain[i].paw));
             $('#hil-command').html(atob(operation.chain[i].command));
             document.getElementById("loop-modal").style.display = "block";
+            return;
         } else if($("#op_id_" + operation.chain[i].id).length === 0) {
             let template = $("#link-template").clone();
             let ability = operation.abilities.filter(item => item.id === operation.chain[i].ability)[0];
@@ -918,5 +924,29 @@ function submitHilChanges(status){
     let command = $('#hil-command').val();
     let data = {'index':'core_chain', 'key': 'id', 'value': linkId, 'data': {'status': status, 'command': btoa(command)}};
     restRequest('PUT', data, doNothing);
+    refresh();
+    return false;
+}
+function toggleHil(){
+    let data = {id: $('#operation-list option:selected').attr('value')};
+    if(operation.autonomous){
+        data['autonomous'] = 0;
+    }else{
+        data['autonomous'] = 1;
+    }
+    restRequest('PUT', data, function(d){refresh()}, '/plugin/chain/operation/autonomous');
+}
+function hilApproveAll(){
+    document.getElementById("loop-modal").style.display = "none";
+    let currentLinkId = $('#hil-linkId').html();
+    for(let i=0;i<operation.chain.length;i++){
+        nextLink = operation.chain[i];
+        if (nextLink.id >= currentLinkId){
+            let data = {'index':'core_chain', 'key': 'id', 'value': nextLink.id, 'data': {'status': status, 'command': btoa(nextLink.command)}};
+            restRequest('PUT', data, doNothing);
+        }
+    }
+    toggleHil();
+    refresh();
     return false;
 }

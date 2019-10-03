@@ -322,27 +322,50 @@ table.dataTable input[type=text] {
 .watermarked {
   position: relative;
 }
-.op-control-text {
-    text-transform: uppercase;
-    background-color: var(--navbar-background);
-    padding: 5px 5px 5px 5px;
-    height: 30px;
-    text-align: center;
-    font-size: medium;
-    font-weight: bold;
-    width: 5%
+.op-control-container{
+    display: flex;
+    width: 50%;
+    justify-content: center;
 }
-.op-control button {
+.op-control-item{
     background-color: white;
     border: 2px solid var(--theme-color);
     height: 30px;
     border-radius: 10px;
     text-align: center;
     font-size: medium;
+    vertical-align: center;
+    width: 100%;
+    flex-grow: 1;
+    margin: 0 4px;
+}
+.op-control-text{
+    text-transform: uppercase;
+    background-color: var(--navbar-background);
+    padding: 5px 5px 5px 5px;
+    height: 30px;
+    text-align: center;
+    vertical-align: center;
+    font-size: large;
+    font-weight: bold;
     width: 5%
 }
+.op-control-item button {
+    background-color: white;
+    border: 2px solid var(--theme-color);
+    height: 30px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: medium;
+    vertical-align: center;
+    width: 100%;
+    white-space: nowrap;
+}
+.op-control-item .large {
+    flex-grow: 2;
+}
 
-.op-control button:hover {
+.op-control-item button:hover {
     cursor: pointer;
 }
 .codearea textarea {
