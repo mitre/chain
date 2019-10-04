@@ -936,15 +936,14 @@ function toggleHil(){
         data['autonomous'] = 1;
     }
     restRequest('PUT', data, function(d){refresh()}, `/plugin/chain/operation/${op_id}`);
-    // restRequest('PUT', data, function(d){refresh()}, '/plugin/chain/operation/autonomous');
 }
 function hilApproveAll(){
     document.getElementById("loop-modal").style.display = "none";
     let currentLinkId = $('#hil-linkId').html();
     for(let i=0;i<operation.chain.length;i++){
-        nextLink = operation.chain[i];
+        let nextLink = operation.chain[i];
         if (nextLink.id >= currentLinkId){
-            let data = {'index':'core_chain', 'key': 'id', 'value': nextLink.id, 'data': {'status': status, 'command': btoa(nextLink.command)}};
+            let data = {'index':'core_chain', 'key': 'id', 'value': nextLink.id, 'data': {'status': -3, 'command': nextLink.command}};
             restRequest('PUT', data, doNothing);
         }
     }
