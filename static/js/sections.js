@@ -43,11 +43,11 @@ $(document).ready(function () {
                 render: function ( data, type, row, meta ){
                     let str = "<select id=\""+data['paw']+"-status\">";
                     if ( data['trusted'] == 1 ){
-                        str += "<option value=\"1\" selected>trusted</option>\n" +
-                               "<option value=\"0\">untrusted</option>";
+                        str += "<option value=\"1\" selected=\"selected\">trusted</option>\n" +
+                               "<option value=\"0\">untrusted</option>\n";
                     } else {
                         str += "<option value=\"1\">trusted</option>\n" +
-                               "<option value=\"0\" selected>untrusted</option>";
+                               "<option value=\"0\" selected=\"selected\">untrusted</option>";
                     }
                     str += "</select>";
                     return str;
@@ -98,7 +98,8 @@ $(document).ready(function () {
                 orderDataType: 'dom-text',
                 type: 'string',
                 render: function ( data, type, row, meta ) {
-                    return "<input id=\""+data['paw']+"-group\" type=\"text\" value=\""+data['host_group']+"\">";
+                    
+                    return "<input value=\""+data['host_group']+"\" type=\"text\" id=\""+data['paw']+"-group\" name=\""+data['paw']+"-group\"><br>";
                 }
             },
             {
