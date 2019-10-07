@@ -276,7 +276,7 @@ function handleStartAction(){
 }
 function changeCurrentOperationState(newState){
     let selectedOperationId = $('#operation-list option:selected').attr('value');
-    if(operation.state === 'finished'){
+    if(OPERATION.state === 'finished'){
         alert('This operation has finished.');
         return;
     }
@@ -321,56 +321,56 @@ function clearTimeline() {
     });
 }
 
-let operation = {};
+let OPERATION = {};
 function operationCallback(data){
-    operation = data[0];
-    $("#op-control-state").html(operation.state);
-    if (operation.autonomous) {
+    OPERATION = data[0];
+    $("#op-control-state").html(OPERATION.state);
+    if (OPERATION.autonomous) {
         $("#togBtnHil").prop("checked", true);
-    }else{
+    } else {
         $("#togBtnHil").prop("checked", false);
     }
 
     clearTimeline();
-    for(let i=0;i<operation.chain.length;i++){
-        if(operation.chain[i].status === -1) {
-            $('#hil-linkId').html(operation.chain[i].id);
-            $('#hil-paw').html(trimPaw(operation.chain[i].paw));
-            $('#hil-command').html(atob(operation.chain[i].command));
+    for(let i=0; i<OPERATION.chain.length; i++){
+        if(OPERATION.chain[i].status === -1) {
+            $('#hil-linkId').html(OPERATION.chain[i].id);
+            $('#hil-paw').html(trimPaw(OPERATION.chain[i].paw));
+            $('#hil-command').html(atob(OPERATION.chain[i].command));
             document.getElementById("loop-modal").style.display = "block";
             return;
-        } else if($("#op_id_" + operation.chain[i].id).length === 0) {
+        } else if($("#op_id_" + OPERATION.chain[i].id).length === 0) {
             let template = $("#link-template").clone();
-            let ability = operation.abilities.filter(item => item.id === operation.chain[i].ability)[0];
-            template.find('#link-description').html(operation.chain[i].abilityDescription);
-            let title = operation.chain[i].abilityName;
-            if(operation.chain[i].cleanup) {
+            let ability = OPERATION.abilities.filter(item => item.id === OPERATION.chain[i].ability)[0];
+            template.find('#link-description').html(OPERATION.chain[i].abilityDescription);
+            let title = OPERATION.chain[i].abilityName;
+            if(OPERATION.chain[i].cleanup) {
                 title = title + " (CLEANUP)"
             }
-            let splitPaw = operation.chain[i].paw.split('$');
+            let splitPaw = OPERATION.chain[i].paw.split('$');
             template.find('#link-technique').html(ability.technique_id + '<span class="tooltiptext">' + ability.technique_name + '</span>');
-            template.attr("id", "op_id_" + operation.chain[i].id);
-            template.attr("operation", operation.chain[i].op_id);
-            template.attr("data-date", operation.chain[i].decide.split('.')[0]);
+            template.attr("id", "op_id_" + OPERATION.chain[i].id);
+            template.attr("operation", OPERATION.chain[i].op_id);
+            template.attr("data-date", OPERATION.chain[i].decide.split('.')[0]);
             template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100" ' +
-                'ondblclick="rollup('+operation.chain[i].id+')">'+ splitPaw[0]+'$'+splitPaw[1] + '... ' +
-                title + '<span id="'+operation.chain[i].id+'-rs" style="font-size:14px;float:right;display:none" ' +
-                'onclick="findResults(this, '+operation.chain[i].id+')"' +
-                'data-encoded-cmd="'+operation.chain[i].command+'"'+'>&#9733;</span>' +
-                '<span id="'+operation.chain[i].id+'-rm" style="font-size:11px;float:right" onclick="discard('+operation.chain[i].id+')">&#x274C;</span></div>');
-            template.find('#time-action').html(atob(operation.chain[i].command));
-            template.find('#time-executor').html(operation.chain[i].executor);
-            refreshUpdatableFields(operation.chain[i], template);
+                'ondblclick="rollup('+OPERATION.chain[i].id+')">'+ splitPaw[0]+'$'+splitPaw[1] + '... ' +
+                title + '<span id="'+OPERATION.chain[i].id+'-rs" style="font-size:14px;float:right;display:none" ' +
+                'onclick="findResults(this, '+OPERATION.chain[i].id+')"' +
+                'data-encoded-cmd="'+OPERATION.chain[i].command+'"'+'>&#9733;</span>' +
+                '<span id="'+OPERATION.chain[i].id+'-rm" style="font-size:11px;float:right" onclick="discard('+OPERATION.chain[i].id+')">&#x274C;</span></div>');
+            template.find('#time-action').html(atob(OPERATION.chain[i].command));
+            template.find('#time-executor').html(OPERATION.chain[i].executor);
+            refreshUpdatableFields(OPERATION.chain[i], template);
 
             template.insertBefore("#time-start");
             $(template.find("#inner-contents")).slideUp();
             template.show();
         } else {
-            let existing = $("#op_id_"+operation.chain[i].id);
-            refreshUpdatableFields(operation.chain[i], existing);
+            let existing = $("#op_id_"+OPERATION.chain[i].id);
+            refreshUpdatableFields(OPERATION.chain[i], existing);
         }
     }
-    if(operation.finish != null) {
+    if(OPERATION.finish != null) {
         console.log("Turning off refresh interval for page");
         clearInterval(atomic_interval);
         atomic_interval = null;
@@ -930,7 +930,7 @@ function submitHilChanges(status){
 function toggleHil(){
     let op_id = $('#operation-list option:selected').attr('value');
     let data = {};
-    if(operation.autonomous){
+    if(OPERATION.autonomous){
         data['autonomous'] = 0;
     }else{
         data['autonomous'] = 1;
@@ -940,8 +940,8 @@ function toggleHil(){
 function hilApproveAll(){
     document.getElementById("loop-modal").style.display = "none";
     let currentLinkId = $('#hil-linkId').html();
-    for(let i=0;i<operation.chain.length;i++){
-        let nextLink = operation.chain[i];
+    for(let i=0; i<OPERATION.chain.length; i++){
+        let nextLink = OPERATION.chain[i];
         if (nextLink.id >= currentLinkId){
             let data = {'index':'core_chain', 'key': 'id', 'value': nextLink.id, 'data': {'status': -3, 'command': nextLink.command}};
             restRequest('PUT', data, doNothing);
