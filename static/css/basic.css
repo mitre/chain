@@ -139,7 +139,6 @@
     color: var(--font-color);
     text-align: left;
     padding-bottom: 20px;
-    text-transform: lowercase;
 }
 .op-dets img {
     border-radius: 50%;
