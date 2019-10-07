@@ -78,6 +78,15 @@ span.psw {
     font-size: 35px;
     font-weight: bold;
 }
+.modal .approve{
+    background-color: green;
+}
+.modal .discard{
+    background-color: darkorange;
+}
+.modal .approveall{
+    background-color: darkgreen;
+}
 
 .close:hover,
 .close:focus {
