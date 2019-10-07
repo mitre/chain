@@ -69,6 +69,12 @@ class ChainApi:
             self.loop.create_task(self.operation_svc.run(output))
         return output
 
+    async def rest_update_operation(self, request):
+        op_id = int(request.match_info['operation_id'])
+        data = await request.json()
+        await self.data_svc.update(table='core_operation', key='id', value=op_id, data=data)
+        return web.Response()
+
     async def rest_state_control(self, request):
         body = await request.json()
         state = body.get('state')
