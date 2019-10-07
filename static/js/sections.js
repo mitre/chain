@@ -454,7 +454,8 @@ function downloadOperationReport() {
     }
 
     let selectedOperationId = $('#report-list option:selected').attr('value');
-    let postData = selectedOperationId ? {'index':'operation_report', 'op_id': selectedOperationId} : null;
+    let selectedOpOutput = parseInt($('#report-output option:selected').attr('value'), 10);
+    let postData = selectedOperationId ? {'index':'operation_report', 'op_id': selectedOperationId, 'agent_output': selectedOpOutput} : null;
     restRequest('POST', postData, downloadObjectAsJson, '/plugin/chain/rest');
 }
 
