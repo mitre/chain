@@ -421,6 +421,10 @@
                     <option class="operationOption" id="{{ op}}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
                   {% endfor %}
                </select>
+              <select id="report-output" style="">
+                  <option value="0" selected>Exclude Agent Output</option>
+                  <option value="1">Include Agent Output</option>
+               </select>
                <button id="reportBtn" type="button" class="button-notready atomic-button" onclick="downloadOperationReport()">Download</button>
             </div>
             <div class="column" style="flex:75%">
