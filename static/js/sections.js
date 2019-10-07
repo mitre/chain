@@ -948,7 +948,9 @@ function hilApproveAll(){
             restRequest('PUT', data, doNothing);
         }
     }
-    toggleHil();
+    if (!OPERATION.autonomous){
+        toggleHil();
+    }
     refresh();
     return false;
 }
