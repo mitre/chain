@@ -141,6 +141,9 @@
     padding-bottom: 20px;
     text-transform: lowercase;
 }
+.op-selected {
+    visibility: hidden;
+}
 .op-dets img {
     border-radius: 50%;
     height:30px;

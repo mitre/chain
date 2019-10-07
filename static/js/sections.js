@@ -304,6 +304,7 @@ function refresh() {
     let selectedOperationId = $('#operation-list option:selected').attr('value');
     let postData = selectedOperationId ? {'index':'core_operation','id': selectedOperationId} : null;
     if (selectedOperationId > 0){
+        $('.op-selected').css('visibility', 'visible');
         $('#downloadOperationReport').prop('disabled', false).css('opacity', 1.0);
     } else {
         $('#downloadOperationReport').prop('disabled', true).css('opacity', 0.5);
