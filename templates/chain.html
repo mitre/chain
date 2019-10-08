@@ -426,7 +426,7 @@
               <select id="report-list" style="margin-bottom: 15px;" onchange="showReports()">
                   <option id="reportDefault" value="" disabled selected>Operations</option>
                   {% for op in operations %}
-                    <option class="operationOption" id="{{ op}}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
+                    <option class="operationOption" id="{{ op.id }}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
                   {% endfor %}
                </select>
               <select id="report-output" style="">
