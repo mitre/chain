@@ -31,3 +31,11 @@
   padding: 8px;
 }
 
+.report-thin td {
+    text-align: left;
+    padding: 2px;
+}
+
+.report-thin .thin-center {
+    text-align: center;
+}
