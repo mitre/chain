@@ -718,10 +718,8 @@ function searchAbilities(parentId, exploits) {
     if(abilitySearch.val()) {
         exploits = addPlatforms(exploits);
         exploits.forEach(function(ability) {
-            ability['test'] = atob(ability.test);
             ability['cleanup'] = atob(ability.cleanup);
             if(JSON.stringify(ability).toLowerCase().includes(abilitySearch.val().toLowerCase())) {
-                ability['test'] = btoa(ability.test);
                 ability['cleanup'] = btoa(ability.cleanup);
                 appendAbilityToList(parentId, ability);
                 showing += 1;
