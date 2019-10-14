@@ -18,6 +18,7 @@ class ChainApi:
         self.plugin_svc = services.get('plugin_svc')
         self.agent_svc = services.get('agent_svc')
         self.chain_svc = ChainService(services)
+        self.file_svc = services.get('file_svc')
         self.loop = asyncio.get_event_loop()
 
     @template('chain.html')
@@ -58,7 +59,6 @@ class ChainApi:
                 else:
                     await self.data_svc.delete(index, data)
                 return 'Delete action completed'
-
             options = dict(
                 PUT=dict(
                     ability=lambda d: self.chain_svc.persist_ability(**d),
@@ -77,6 +77,7 @@ class ChainApi:
                     agent=lambda d: self.data_svc.locate('agents', match=d),
                     result=lambda d: self.data_svc.explode('result', criteria=d),
                     operation_report=lambda d: self.reporting_svc.generate_operation_report(**d),
+                    payloads=lambda d: self.file_svc.save_file(**d)
                 )
             )
             output = await options[request.method][index](data)
