@@ -60,7 +60,6 @@ class ChainApi:
                 else:
                     await self.data_svc.delete(index, data)
                 return 'Delete action completed'
-
             options = dict(
                 PUT=dict(
                     ability=lambda d: self.chain_svc.persist_ability(**d),
