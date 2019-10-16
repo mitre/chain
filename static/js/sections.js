@@ -556,7 +556,6 @@ function loadAdversaryCallback(data) {
             template.find('#profile-tests').append(abilityBox);
         });
     });
-    refreshColorCodes();
 }
 
 function addPlatforms(abilities) {
@@ -584,7 +583,7 @@ function buildAbility(ability, phase){
     let requirements = buildRequirements(ability.test);
     let template = $("#ability-template").clone();
     template.attr('id', ability.ability_id)
-        .data('parser', ability.parser)
+        .data('parsers', ability.parsers)
         .data('testId', ability.ability_id)
         .data('phase', phase)
         .data('requirements', requirements);
@@ -599,7 +598,7 @@ function buildAbility(ability, phase){
     if(ability.cleanup) {
         template.find('#ability-metadata').append('<td><div id="ability-broom"><div class="tooltip"><span class="tooltiptext">This ability can clean itself up</span>&#128465;</div></div></td>');
     }
-    if(ability.parser.length > 0) {
+    if(ability.parsers.length > 0) {
        template.find('#ability-metadata').append('<td><div id="ability-parser"><div class="tooltip"><span class="tooltiptext">This ability unlocks other abilities</span>&#128273;</div></div></td>');
     }
     if(ability.payload.length > 0) {
@@ -630,35 +629,6 @@ function buildAbility(ability, phase){
     return template;
 }
 
-function refreshColorCodes(){
-    $('.ability-box').each(function() {
-        if($(this).data('parser') != null) {
-            let parser = [];
-            $('.ability-box').each(function () {
-                if ($(this).data('parser') != null) {
-                    $(this).data('parser').forEach(function (item) {
-                        parser.push(item['property']);
-                    });
-                }
-            });
-            if($('#advFactSource').val() != "") {
-                let facts = $('#advFactSource').val();
-                facts = facts.replace(/'/g, '"');
-                JSON.parse(facts).forEach(function(f) {
-                    parser.push(f);
-                });
-            }
-            let difference = $(this).data('requirements').filter(x => !parser.includes(x));
-            $(this).data("facts", parser);
-            if (difference.length) {
-                $(this).css('opacity', '0.4');
-            } else {
-                $(this).css('opacity', '1.0');
-            }
-        }
-    });
-}
-
 function buildRequirements(encodedTest){
     let matchedRequirements = atob(encodedTest).match(/#{([^}]+)}/g);
     if(matchedRequirements) {
@@ -676,7 +646,6 @@ function buildRequirements(encodedTest){
 
 function removeAbility(ability_id){
     $('#'+ability_id).remove();
-    refreshColorCodes();
 }
 
 function populateTechniques(parentId, exploits){
@@ -773,7 +742,6 @@ function addToPhase() {
     let ability = $('#phase-modal').find('#ability-ability-filter').find(":selected").data('ability');
     let abilityBox = buildAbility(ability, phase);
     $('#tempPhase' + phase).find('#profile-tests').append(abilityBox);
-    refreshColorCodes();
 }
 
 function checkOpformValid(){

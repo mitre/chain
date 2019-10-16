@@ -215,8 +215,6 @@
               <br>
               <p class="section-description">
                   Adversaries are collections of ATT&CK TTPs, designed to test specific threats.
-                  Abilities with unmet requirements are faded out to show the adversary cannot use them unless an
-                  unlocking ability is added.
               </p>
               <br>
               <div id="viewAdversary">
@@ -230,12 +228,6 @@
               <div id="addAdversary" style="display: none">
                   <button class="button-embedded" onclick="addPhase(null)">Add phase</button>
               </div>
-              <select id="advFactSource" onchange="refreshColorCodes()">
-                <option value="" selected>Overlay fact source</option>
-                    {% for s in sources %}
-                        <option value="{{ s.facts | map(attribute='property') | list }}">{{ s.name }}</option>
-                    {% endfor %}
-              </select>
               <button id="advNewBtn" type="button" class="button-success atomic-button" onclick="saveAdversary()">Save</button>
               <div id="adv-flashy-holder">
                   <span id="message"></span>
