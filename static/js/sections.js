@@ -536,15 +536,6 @@ function reloadAdversaryElements(data) {
     });
 }
 
-function flashy(elem, message) {
-    let flash = $('#'+elem);
-    flash.find('#message').text(message);
-    flash.delay(100).fadeIn('normal', function() {
-        $(this).delay(3000).fadeOut();
-    });
-    flash.find('#message').text(message);
-}
-
 function loadAdversary() {
     restRequest('POST', {'index':'core_adversary', 'adversary_id': $('#profile-existing-name').val()}, loadAdversaryCallback);
     validateFormState(($('#profile-existing-name').val()), '#advNewBtn');
