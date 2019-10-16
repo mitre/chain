@@ -828,7 +828,6 @@ function displayReport(data) {
     $('#report-planner-desc').html(data.adversary.name + " collected " + data.facts.length + " facts and used them to make decisions");
     addAttackBreakdown(data.adversary.phases, data.steps);
     addFacts(data.facts);
-    addSkippedAbilities(data.skipped_abilities);
 }
 
 function reportDuration(start, end) {
@@ -906,38 +905,6 @@ function addFacts(facts){
     unique.forEach(u => {
         $("#reports-dash-facts").append("<tr><td>"+u.property+"<td><td>"+u.count+"</td></tr>");
     });
-}
-
-function addSkippedAbilities(skipped){
-    let skipped_table = $("#reports-dash-skipped-abilities");
-    skipped_table.find("tr:gt(0)").remove();
-    skipped.forEach(s => {
-        console.log(s);
-        for ( let agent in s ) {
-            let totals = {'platform': 0, 'executor': 0, 'facts': 0, 'running': 0, 'untrusted': 0};
-            s[agent].forEach(function (ability) {
-                if (ability.reason_id === 0) {
-                    totals['platform']++;
-                } else if (ability.reason_id === 1) {
-                    totals['executor']++;
-                } else if (ability.reason_id === 2) {
-                    totals['facts']++;
-                } else if (ability.reason_id === 3) {
-                    totals['running']++;
-                } else {
-                    totals['untrusted']++;
-                }
-            });
-            skipped_table.append("<tr><td class='thin-center'>" + agent + "</td><td><table>" +
-                "<tr><td>Wrong Platform</td><td>"+totals['platform']+"</td></tr>" +
-                "<tr><td>Unavailable Executor</td><td>"+totals['executor']+"</td></tr>" +
-                "<tr><td>Missing Fact Dependency</td><td>"+totals['facts']+"</td></tr>" +
-                "<tr><td>Untrusted Agent</td><td>"+totals['untrusted']+"</td></tr>" +
-                "<tr><td>Operation Running</td><td>"+totals['running']+"</td></tr>" +
-                "</table></td></tr>");
-        }
-    });
-    
 }
 
 /** DUK MODALS */

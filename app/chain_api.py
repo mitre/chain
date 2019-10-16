@@ -9,6 +9,7 @@ class ChainApi:
     def __init__(self, services):
         self.data_svc = services.get('data_svc')
         self.operation_svc = services.get('operation_svc')
+        self.reporting_svc = services.get('reporting_svc')
         self.auth_svc = services.get('auth_svc')
         self.plugin_svc = services.get('plugin_svc')
         self.agent_svc = services.get('agent_svc')
@@ -61,7 +62,7 @@ class ChainApi:
                 core_operation=lambda d: self.data_svc.explode_operation(criteria=d),
                 core_agent=lambda d: self.data_svc.explode_agents(criteria=d),
                 core_result=lambda d: self.data_svc.explode_results(criteria=d),
-                operation_report=lambda d: self.operation_svc.generate_operation_report(**d),
+                operation_report=lambda d: self.reporting_svc.generate_operation_report(**d),
             )
         )
         output = await options[request.method][index](data)
