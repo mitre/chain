@@ -30,9 +30,10 @@ class ChainApi:
         operations = await self.data_svc.explode('operation')
         sources = await self.data_svc.explode('source')
         planners = await self.data_svc.explode('planner')
+        payloads = await self.file_svc.find_payloads()
         plugins = [dict(name=getattr(p, 'name'), address=getattr(p, 'address')) for p in self.plugin_svc.get_plugins()]
         return dict(exploits=abilities, groups=groups, adversaries=adversaries, agents=hosts, operations=operations,
-                    tactics=tactics, sources=sources, planners=planners, plugins=plugins)
+                    tactics=tactics, sources=sources, planners=planners, plugins=plugins, payloads=payloads)
 
     async def rest_full(self, request):
         base = await self.rest_core(request)

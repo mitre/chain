@@ -51,6 +51,12 @@
           <span class="caption">Abilities</span>
         </button>
       </div>
+      <div class="row-toolbar-section" id="section-8">
+        <button class="row-toolbar-button" onclick="viewSection('payloads')">
+          <span class="icon"><img src="/chain/img/payload.png"></span>
+          <span class="caption">Payloads</span>
+        </button>
+      </div>
       <div class="row-toolbar-section" id="section-3">
         <button class="row-toolbar-button" onclick="viewSection('adversaries')">
           <span class="icon"><img src="/chain/img/hacker.png"></span>
@@ -158,6 +164,41 @@
                         {% endfor %}
                     {% endfor %}
                 </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- payloads -->
+        <div id="payloads" class="section-profile" style="display: none">
+          <div class="row">
+            <div class="column section-border" style="flex:25%;">
+              <img src="/chain/img/pload.png">
+              <h4 style="margin-bottom:-5px">Payload</h4>
+              <p class="section-description">
+                  Lists the available payload packages that can be used to augment techniques.
+              </p>
+              <button type="button" class="button-embedded atomic-button" onclick="savePayloadCallback()">Refresh
+                  payload table</button>
+                <input type="file" id="myFile">
+                    <input type="text" id="myFilename" placeholder="Enter Name Here">
+                <div class="toggle">
+                    <label class="switch"><input type="checkbox" id="togBtnPay">
+                    <div class="slider round"><span class="off">Normal</span><span class="on">Armored</span></div>
+                    </label>
+                    </div>
+                    <button id="addPayloadBtn" type="button" class="button-success atomic-button"
+                      onclick="savePayload()">Upload Payload
+                    </button>
+            </div>
+            <div class="column" style="flex:75%">
+              <table id="pTbl" class="display" style="width:100%;" >
+                <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Armored <i style="font-size:11px">xor-encoded</i></th>
+                </tr>
+                </thead>
               </table>
             </div>
           </div>
