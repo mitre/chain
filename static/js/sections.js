@@ -950,3 +950,68 @@ function hilApproveAll(){
     refresh();
     return false;
 }
+
+/** Payloads */
+$(document).ready(function () {
+    $('#pTbl').DataTable({
+        ajax: {
+            url: '/plugin/chain/rest',
+            type: 'PUT',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: function ( d ) {
+                return JSON.stringify({'index':'payloads'});
+            },
+            dataSrc: ''
+        },
+        deferRender: true,
+        rowId: 'paw',
+        stateSave: true,
+        columnDefs: [
+            {
+                targets: 0,
+                data: null,
+                render: function ( data, type, row, meta ) {
+                    return trimName(data);
+                }
+            },
+            {
+                targets: 1,
+                data: null,
+                render: function (data, type, row, meta) {
+                    if (data.endsWith('.xored')) {
+                        return "True";
+                    }
+                    return "False";
+                }
+            }
+        ],
+        errMode: 'throw'
+    });
+});
+
+function payload_table_refresh(){
+    $('#pTbl').DataTable().ajax.reload();
+}
+
+function trimName(data){
+    return data.split('.xored')[0];
+}
+
+function savePayload(){
+        let myUploadedFile = document.getElementById("myFile").files[0];
+        let data = new FormData();
+        data.append("image",myUploadedFile);
+        let armor = document.getElementById("togBtnPay").checked;
+        let name = document.getElementById('myFilename').value;
+        if (name === ""){
+            alert('Please enter a name for this payload!');
+            return
+        }
+        let update = {"index":"payloads", "name": name, "content": data, "xored": armor};
+        restRequest('POST', update, savePayloadCallback);
+}
+
+function savePayloadCallback(data) {
+    payload_table_refresh();
+}
