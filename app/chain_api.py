@@ -59,7 +59,8 @@ class ChainApi:
                 operation=lambda d: self.data_svc.save('operation', d),
                 fact=lambda d: self.data_svc.save('fact', d),
                 agent=lambda d: self.data_svc.update('agent', 'paw', d.pop('paw'), d),
-                chain=lambda d: self.data_svc.update(index, **d)
+                chain=lambda d: self.data_svc.update(index, **d),
+                payloads=lambda d: self.file_svc.find_payloads()
             ),
             POST=dict(
                 adversary=lambda d: self.data_svc.explode('adversary', criteria=d),
