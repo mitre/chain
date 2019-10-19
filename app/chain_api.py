@@ -70,7 +70,8 @@ class ChainApi:
                     agent=lambda d: self.data_svc.store(Agent(paw=d.pop('paw'), group=d.get('group'),
                                                               trusted=d.get('trusted'), sleep_min=d.get('sleep_min'),
                                                               sleep_max=d.get('sleep_max'))),
-                    chain=lambda d: self.data_svc.update(index, **d)
+                    chain=lambda d: self.data_svc.update(index, **d),
+                    payloads=lambda d: self.file_svc.find_payloads()
                 ),
                 POST=dict(
                     adversary=lambda d: self.data_svc.explode('adversary', criteria=d),
@@ -79,7 +80,7 @@ class ChainApi:
                     agent=lambda d: self.data_svc.locate('agents', match=d),
                     result=lambda d: self.data_svc.explode('result', criteria=d),
                     operation_report=lambda d: self.reporting_svc.generate_operation_report(**d),
-                    payloads=lambda d: self.file_svc.save_file(**d),
+                    payloads=lambda d: self.file_svc.save_file(**d)
                 )
             )
             output = await options[request.method][index](data)
