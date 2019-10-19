@@ -469,6 +469,36 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="column report-box" style="flex:100%;">
+                            <p class="reports-dash-header">skipped abilities</p>
+                            <ul id="reports-skipped-abilities" class="skipped-abilities-list">
+                                <li id="skipped-start">
+                            </ul>
+                            <li id="reports-dash-skipped-template" class="agent-skipped reports-dash" style="display: none;">
+                                <div class="reports-skipped-container">
+                                    <div class="column-left">
+                                        <div class="skipped-box">
+                                            <p class="reports-dash-header">agent</p>
+                                            <h4 id="skipped-host-name">Agent</h4>
+                                        </div>
+                                        <div class="skipped-box">
+                                            <p class="reports-dash-header">total skipped</p>
+                                            <h4 id="skipped-host-total"></h4>
+                                        </div>
+                                    </div>
+                                    <div class="column-right">
+                                        <table id="skipped-host-abilities" align="center" border=1 frame=void rules=rows>
+                                            <thead>
+                                                <th>ability</th>
+                                                <th>reason</th>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="column report-box" style="flex:40%;">
                             <p class="reports-dash-header">facts</p>
                             <table id="reports-dash-facts" align="center" border=1 frame=void rules=rows>
@@ -478,6 +508,7 @@
                             </table>
                         </div>
                         <div class="column report-box" style="flex:60%;">
+
                         </div>
                     </div>
                 </div>

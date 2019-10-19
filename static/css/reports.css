@@ -40,3 +40,36 @@
     text-align: center;
 }
 
+.skipped-abilities-list {
+    margin: 0;
+    padding: 0;
+}
+
+.agent-skipped {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #777;
+}
+
+.reports-skipped-container {
+    display: flex;
+    margin: 20px 0;
+}
+
+.reports-skipped-container .column-left {
+    flex: 30%;
+    padding:5px;
+    display: flex;
+    flex-direction: column;
+}
+.reports-skipped-container .column-left .skipped-box {
+    border-radius: 7px;
+    margin: 10px;
+    text-align: center;
+}
+.reports-skipped-container .column-left .skipped-box p {
+    margin: 13px;
+}
+.reports-skipped-container .column-right {
+    flex: 70%;
+}
+
