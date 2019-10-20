@@ -785,6 +785,7 @@ function displayReport(data) {
     $('#report-planner-desc').html(data.adversary.name + " collected " + data.facts.length + " facts and used them to make decisions");
     addAttackBreakdown(data.adversary.phases, data.steps);
     addFacts(data.facts);
+    addSkippedAbilities(data.skipped_abilities);
 }
 
 function reportDuration(start, end) {
@@ -860,7 +861,32 @@ function addFacts(facts){
         }
     });
     unique.forEach(u => {
-        $("#reports-dash-facts").append("<tr><td>"+u.property+"<td><td>"+u.count+"</td></tr>");
+        $("#reports-dash-facts").append("<tr><td>"+u.property+"</td><td>"+u.count+"</td></tr>");
+    });
+}
+
+function addSkippedAbilities(skipped_abilities) {
+    clearSkippedAbilities();
+    skipped_abilities.forEach(s => {
+        for ( let agent in s ) {
+            let template = $("#reports-dash-skipped-template").clone();
+            template.attr('id', 'agent_'+agent);
+            template.find('#skipped-host-name').text(agent);
+            template.find('#skipped-host-total').text(s[agent].length);
+            let skip_table = template.find("#skipped-host-abilities");
+            s[agent].forEach(skipped => {
+                skip_table.append("<tr id='skipped-"+skipped.ability_id+"'><td>"+skipped.ability_name+"</td><td>"+skipped.reason+"</td></tr>");
+            });
+            template.insertBefore("#skipped-start");
+            template.show();
+        }
+    });
+}
+
+function clearSkippedAbilities() {
+    let skipped = $('#reports-skipped-abilities');
+    skipped.find('.agent-skipped').each(function() {
+        $(this).remove();
     });
 }
 
