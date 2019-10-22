@@ -208,23 +208,6 @@ function deleteFact(identifier) {
     restRequest('DELETE', {"index": "core_fact", "id": identifier}, reloadLocation);
 }
 
-/** ABILITIES **/
-
-function saveAbility(){
-    let abilityDisplay = $('#displayAbility').find('#ability-file').val();
-    const v4 = new RegExp(/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/gm);
-    let identifier = v4.exec(abilityDisplay)[0];
-    if(identifier != null) {
-        restRequest('PUT', {"index": "core_ability", "ability_id": identifier, "file_contents": abilityDisplay}, reloadLocation);
-    } else {
-        alert("Ability not saved!");
-    }
-}
-
-function checkAbilitySaveValid() {
-    validateFormState(($('#displayAbility').find('#ability-file').html() != ''), '#abilityNewBtn');
-}
-
 /** OPERATIONS **/
 
 let atomic_interval = null;
@@ -728,7 +711,6 @@ function showAbilityModal(data) {
     let phaseModal = $('#phase-modal');
     phaseModal.data("ability", data);
     $('textarea[id^="ability-file"]').html(data);
-    checkAbilitySaveValid();
 }
 
 function showPhaseModal(phase) {
