@@ -451,18 +451,6 @@ function downloadOperationReport() {
 
 /** ADVERSARIES **/
 
-function toggleAdversaryView() {
-    $('#viewAdversary').toggle();
-    $('#addAdversary').toggle();
-
-    //clear out canvas
-    $('#profile-existing-name option:eq(0)').prop('selected', true);
-    $('#profile-goal').val('');
-    $('#profile-description').val('');
-    $('.tempPhase').remove();
-    $('.phase-headers').remove();
-}
-
 function addPhase(number) {
     let template = $("#phase-template").clone();
     if(number == null) {
@@ -473,33 +461,10 @@ function addPhase(number) {
     template.addClass("tempPhase");
     template.insertBefore('#dummy');
     template.show();
-    let phaseHeader = $('<h4 class="phase-headers">Phase ' + number +'&nbsp&nbsp&nbsp;<span onclick="showPhaseModal('+number+')">&#10010;</span><hr></h4>');
+    let phaseHeader = $('<h4 class="phase-headers">Phase ' + number +'&nbsp&nbsp&nbsp;<hr></h4>');
     phaseHeader.insertBefore("#tempPhase" + number);
     phaseHeader.show();
     return template;
-}
-
-function saveAdversary() {
-    let identifier = $('#profile-existing-name').val();
-    if(!identifier){
-        identifier = uuidv4();
-    }
-    let name = $('#profile-goal').val();
-    if(!name){ alert('Please enter an adversary name!'); return; }
-    let description = $('#profile-description').val();
-    if(!description){ alert('Please enter a description!'); return; }
-
-    let abilities = [];
-    $('#profile-tests li').each(function() {
-        abilities.push({"id": $(this).attr('id'),"phase":$(this).data('phase')})
-    });
-
-    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"core_adversary", 'i': identifier}, saveAdversaryCallback);
-}
-
-function saveAdversaryCallback(data) {
-    flashy('adv-flashy-holder', 'Adversary saved!');
-    restRequest('POST', {"index":"core_adversary"}, reloadAdversaryElements);
 }
 
 function reloadAdversaryElements(data) {
@@ -525,8 +490,8 @@ function loadAdversary() {
 }
 
 function loadAdversaryCallback(data) {
-    $('#profile-goal').val(data[0]['name']);
-    $('#profile-description').val(data[0]['description']);
+    $('#profile-goal').text(data[0]['name']);
+    $('#profile-description').text(data[0]['description']);
 
     $('.tempPhase').remove();
     $('.phase-headers').remove();
@@ -587,11 +552,6 @@ function buildAbility(ability, phase){
     if(ability.payload.length > 0) {
        template.find('#ability-metadata').append('<td><div id="ability-payload"><div class="tooltip"><span class="tooltiptext">This ability uses a payload</span>&#128176;</div></div></td>');
     }
-    template.find('#ability-metadata').append('<td><div id="ability-remove"><div class="tooltip"><span class="tooltiptext">Remove this ability</span>&#x274C;</div></div></td>');
-    template.find('#ability-remove').click(function() {
-        removeAbility(ability.ability_id);
-    });
-    
     ability.platform.forEach(function(p, index) {
         let icon = null;
         let exec = ability.executor[index];
@@ -625,10 +585,6 @@ function buildRequirements(encodedTest){
         });
     }
     return [];
-}
-
-function removeAbility(ability_id){
-    $('#'+ability_id).remove();
 }
 
 function populateTechniques(parentId, exploits){
@@ -711,11 +667,6 @@ function showAbilityModal(data) {
     let phaseModal = $('#phase-modal');
     phaseModal.data("ability", data);
     $('textarea[id^="ability-file"]').html(data);
-}
-
-function showPhaseModal(phase) {
-    $('#phase-modal').data("phase", phase);
-    document.getElementById("phase-modal").style.display="block";
 }
 
 function addToPhase() {
