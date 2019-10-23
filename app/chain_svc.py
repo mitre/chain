@@ -30,7 +30,7 @@ class ChainService(BaseService):
                 p[ability['phase']].append(ability['id'])
             f.write(yaml.dump(dict(id=i, name=name, description=description, phases=dict(p))))
             f.truncate()
-        return await self.data_svc.create_adversary(i, name, description, phases)
+        await self.data_svc.load_data('data')
 
     async def persist_ability(self, ability_id, file_contents):
         """
@@ -47,4 +47,4 @@ class ChainService(BaseService):
             f.seek(0)
             f.write(file_contents)
             f.truncate()
-        await self.data_svc.save_ability_to_database(file_path)
+        await self.data_svc.load_data('data')

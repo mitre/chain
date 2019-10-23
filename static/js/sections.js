@@ -22,7 +22,7 @@ $(document).ready(function () {
             contentType: 'application/json',
             dataType: 'json',
             data: function ( d ) {
-                return JSON.stringify({'index':'core_agent'});
+                return JSON.stringify({'index':'agent'});
             },
             dataSrc: ''
         },
@@ -115,7 +115,7 @@ $(document).ready(function () {
         errMode: 'throw'
     });
     $('#netTbl tbody').on('click', 'td.delete-agent', function (e) {
-        restRequest('DELETE', {"index": "core_agent", "id": $(this).attr('id')}, saveGroupsCallback);
+        restRequest('DELETE', {"index": "agent", "id": $(this).attr('id')}, saveGroupsCallback);
     } );
 });
 
@@ -134,19 +134,19 @@ function saveGroups(){
         let group = document.getElementById(value['paw']+'-group').value;
         let status = document.getElementById(value['paw']+'-status').value;
         let sleep = document.getElementById(value['paw']+'-sleep').value;
-        let update = {"index":"core_agent", "paw": value['paw'], "host_group": group};
+        let update = {"index":"agent", "paw": value['paw'], "host_group": group};
         let sleepArr = parseSleep(sleep);
         if (sleepArr.length !== 0) {
             update["sleep_min"] = sleepArr[0];
             update["sleep_max"] = sleepArr[1];
         }
         restRequest('PUT', update, doNothing);
-        restRequest('PUT', {'index':'core_agent', "paw": value['paw'], "trusted": status}, saveGroupsCallback, '/plugin/chain/agents/trust');
+        restRequest('PUT', {'index':'agent', "paw": value['paw'], "trusted": status}, saveGroupsCallback, '/plugin/chain/agents/trust');
     });
 }
 
 function saveGroupsCallback(data) {
-    restRequest('POST', {"index":"core_agent"}, reloadGroupElements);
+    restRequest('POST', {"index":"agent"}, reloadGroupElements);
     agent_table_refresh();
 }
 
@@ -195,7 +195,7 @@ function handleFactAdd(){
     if(!source){alert('Please enter a source'); return; }
 
     let facts = {
-        "index":"core_fact",
+        "index":"fact",
         "property":property,
         "value":value,
         "source_id":source,
@@ -205,7 +205,7 @@ function handleFactAdd(){
 }
 
 function deleteFact(identifier) {
-    restRequest('DELETE', {"index": "core_fact", "id": identifier}, reloadLocation);
+    restRequest('DELETE', {"index": "fact", "id": identifier}, reloadLocation);
 }
 
 /** ABILITIES **/
@@ -215,7 +215,7 @@ function saveAbility(){
     const v4 = new RegExp(/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/gm);
     let identifier = v4.exec(abilityDisplay)[0];
     if(identifier != null) {
-        restRequest('PUT', {"index": "core_ability", "ability_id": identifier, "file_contents": abilityDisplay}, reloadLocation);
+        restRequest('PUT', {"index": "ability", "ability_id": identifier, "file_contents": abilityDisplay}, reloadLocation);
     } else {
         alert("Ability not saved!");
     }
@@ -262,7 +262,7 @@ function handleStartAction(){
     }
 
     let queueDetails = {
-        "index":"core_operation",
+        "index":"operation",
         "name":name,
         "group":document.getElementById("queueGroup").value,
         "adversary_id":document.getElementById("queueFlow").value,
@@ -287,7 +287,7 @@ function changeCurrentOperationState(newState){
 
 function handleStartActionCallback(data){
     $("#togBtnOp").prop("checked", false).change();
-    restRequest('POST', {'index':'core_operation'}, reloadOperationsElements);
+    restRequest('POST', {'index':'operation'}, reloadOperationsElements);
 }
 
 function reloadOperationsElements(data){
@@ -303,7 +303,7 @@ function reloadOperationsElements(data){
 
 function refresh() {
     let selectedOperationId = $('#operation-list option:selected').attr('value');
-    let postData = selectedOperationId ? {'index':'core_operation','id': selectedOperationId} : null;
+    let postData = selectedOperationId ? {'index':'operation','id': selectedOperationId} : null;
     if (selectedOperationId > 0){
         $('.op-selected').css('visibility', 'visible');
         $('#downloadOperationReport').prop('disabled', false).css('opacity', 1.0);
@@ -385,7 +385,7 @@ function operationCallback(data){
 }
 
 function discard(linkId) {
-    let data = {'index':'core_chain', 'key': 'id', 'value': linkId, 'data': {'status': -2}};
+    let data = {'index':'chain', 'key': 'id', 'value': linkId, 'data': {'status': -2}};
     restRequest('PUT', data, doNothing);
 }
 
@@ -433,7 +433,7 @@ function rollup(id) {
 function findResults(elem, link_id){
     document.getElementById('more-modal').style.display='block';
     $('#resultCmd').html(atob($(elem).attr('data-encoded-cmd')));
-    restRequest('POST', {'index':'core_result','link_id':link_id}, loadResults);
+    restRequest('POST', {'index':'result','link_id':link_id}, loadResults);
 }
 
 function loadResults(data){
@@ -511,12 +511,12 @@ function saveAdversary() {
         abilities.push({"id": $(this).attr('id'),"phase":$(this).data('phase')})
     });
 
-    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"core_adversary", 'i': identifier}, saveAdversaryCallback);
+    restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"adversary", 'i': identifier}, saveAdversaryCallback);
 }
 
 function saveAdversaryCallback(data) {
     flashy('adv-flashy-holder', 'Adversary saved!');
-    restRequest('POST', {"index":"core_adversary"}, reloadAdversaryElements);
+    restRequest('POST', {"index":"adversary"}, reloadAdversaryElements);
 }
 
 function reloadAdversaryElements(data) {
@@ -537,7 +537,7 @@ function reloadAdversaryElements(data) {
 }
 
 function loadAdversary() {
-    restRequest('POST', {'index':'core_adversary', 'adversary_id': $('#profile-existing-name').val()}, loadAdversaryCallback);
+    restRequest('POST', {'index':'adversary', 'adversary_id': $('#profile-existing-name').val()}, loadAdversaryCallback);
     validateFormState(($('#profile-existing-name').val()), '#advNewBtn');
 }
 
@@ -920,7 +920,7 @@ function submitHilChanges(status){
     document.getElementById("loop-modal").style.display = "none";
     let linkId = $('#hil-linkId').html();
     let command = $('#hil-command').val();
-    let data = {'index':'core_chain', 'key': 'id', 'value': linkId, 'data': {'status': status, 'command': btoa(command)}};
+    let data = {'index':'chain', 'key': 'id', 'value': linkId, 'data': {'status': status, 'command': btoa(command)}};
     restRequest('PUT', data, doNothing);
     refresh();
     return false;
@@ -941,7 +941,7 @@ function hilApproveAll(){
     for(let i=0; i<OPERATION.chain.length; i++){
         let nextLink = OPERATION.chain[i];
         if (nextLink.id >= currentLinkId){
-            let data = {'index':'core_chain', 'key': 'id', 'value': nextLink.id, 'data': {'status': -3, 'command': nextLink.command}};
+            let data = {'index':'chain', 'key': 'id', 'value': nextLink.id, 'data': {'status': -3, 'command': nextLink.command}};
             restRequest('PUT', data, doNothing);
         }
     }
