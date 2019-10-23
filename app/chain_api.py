@@ -21,21 +21,21 @@ class ChainApi:
     @template('chain.html')
     async def landing(self, request):
         await self.auth_svc.check_permissions(request)
-        abilities = await self.data_svc.explode_abilities()
+        abilities = await self.data_svc.explode('ability')
         tactics = set([a['tactic'].lower() for a in abilities])
-        hosts = await self.data_svc.explode_agents()
+        hosts = await self.data_svc.explode('agent')
         groups = list(set(([h['host_group'] for h in hosts])))
-        adversaries = await self.data_svc.explode_adversaries()
-        operations = await self.data_svc.explode_operation()
-        sources = await self.data_svc.explode_sources()
-        planners = await self.data_svc.explode_planners()
+        adversaries = await self.data_svc.explode('adversary')
+        operations = await self.data_svc.explode('operation')
+        sources = await self.data_svc.explode('source')
+        planners = await self.data_svc.explode('planner')
         plugins = [dict(name=getattr(p, 'name'), address=getattr(p, 'address')) for p in self.plugin_svc.get_plugins()]
         return dict(exploits=abilities, groups=groups, adversaries=adversaries, agents=hosts, operations=operations,
                     tactics=tactics, sources=sources, planners=planners, plugins=plugins)
 
     async def rest_full(self, request):
         base = await self.rest_core(request)
-        base[0]['abilities'] = await self.data_svc.explode_abilities()
+        base[0]['abilities'] = await self.data_svc.explode('ability')
         return web.json_response(base)
 
     async def rest_api(self, request):
@@ -52,31 +52,31 @@ class ChainApi:
 
         options = dict(
             PUT=dict(
-                core_ability=lambda d: self.chain_svc.persist_ability(**d),
-                core_adversary=lambda d: self.chain_svc.persist_adversary(**d),
-                core_operation=lambda d: self.data_svc.create_operation(**d),
-                core_fact=lambda d: self.data_svc.create('core_fact', d),
-                core_agent=lambda d: self.data_svc.update('core_agent', 'paw', d.pop('paw'), d),
-                core_chain=lambda d: self.data_svc.update(table=index, **d)
+                ability=lambda d: self.chain_svc.persist_ability(**d),
+                adversary=lambda d: self.chain_svc.persist_adversary(**d),
+                operation=lambda d: self.data_svc.save('operation', d),
+                fact=lambda d: self.data_svc.save('fact', d),
+                agent=lambda d: self.data_svc.update('agent', 'paw', d.pop('paw'), d),
+                chain=lambda d: self.data_svc.update(index, **d)
             ),
             POST=dict(
-                core_adversary=lambda d: self.data_svc.explode_adversaries(criteria=d),
-                core_ability=lambda d: self.data_svc.explode_abilities(criteria=d),
-                core_operation=lambda d: self.data_svc.explode_operation(criteria=d),
-                core_agent=lambda d: self.data_svc.explode_agents(criteria=d),
-                core_result=lambda d: self.data_svc.explode_results(criteria=d),
+                adversary=lambda d: self.data_svc.explode('adversary', criteria=d),
+                ability=lambda d: self.data_svc.explode('ability', criteria=d),
+                operation=lambda d: self.data_svc.explode('operation', criteria=d),
+                agent=lambda d: self.data_svc.explode('agent', criteria=d),
+                result=lambda d: self.data_svc.explode('result', criteria=d),
                 operation_report=lambda d: self.reporting_svc.generate_operation_report(**d),
             )
         )
         output = await options[request.method][index](data)
-        if request.method == 'PUT' and index == 'core_operation':
+        if request.method == 'PUT' and index == 'operation':
             self.loop.create_task(self.operation_svc.run(output))
         return output
 
     async def rest_update_operation(self, request):
         op_id = int(request.match_info['operation_id'])
         data = await request.json()
-        await self.data_svc.update(table='core_operation', key='id', value=op_id, data=data)
+        await self.data_svc.update('operation', key='id', value=op_id, data=data)
         return web.Response()
 
     async def rest_state_control(self, request):
@@ -84,7 +84,7 @@ class ChainApi:
         state = body.get('state')
 
         async def _validate_request():
-            op = await self.data_svc.dao.get('core_operation', dict(id=body['id']))
+            op = await self.data_svc.get('operation', dict(id=body['id']))
             if not len(op):
                 raise web.HTTPNotFound
             elif op[0]['state'] == self.operation_svc.op_states['FINISHED']:
@@ -93,7 +93,7 @@ class ChainApi:
                 raise web.HTTPBadRequest(body='state must be one of {}'.format(self.operation_svc.op_states.values()))
 
         await _validate_request()
-        await self.data_svc.update('core_operation', 'id', body['id'], dict(state=body.get('state')))
+        await self.data_svc.update('operation', 'id', body['id'], dict(state=body.get('state')))
         return web.Response()
 
     async def rest_reset_trust(self, request):
