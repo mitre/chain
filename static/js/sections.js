@@ -998,10 +998,7 @@ function trimName(data){
     return data.split('.xored')[0];
 }
 
-function savePayload(){
-        let myUploadedFile = document.getElementById("myFile").files[0];
-        let data = new FormData();
-        data.append("image",myUploadedFile);
+function savePayloadLauncher(data){
         let armor = document.getElementById("togBtnPay").checked;
         let name = document.getElementById('myFilename').value;
         if (name === ""){
@@ -1010,6 +1007,16 @@ function savePayload(){
         }
         let update = {"index":"payloads", "name": name, "content": data, "xored": armor};
         restRequest('POST', update, savePayloadCallback);
+}
+
+function savePayload(){
+        let file = document.getElementById("myFile").files[0];
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            data = e.target.result;
+            savePayloadLauncher(data);
+        };
+        reader.readAsBinaryString(file);
 }
 
 function savePayloadCallback(data) {
