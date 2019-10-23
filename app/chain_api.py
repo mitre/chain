@@ -3,6 +3,8 @@ import asyncio
 from aiohttp import web
 from aiohttp_jinja2 import template
 
+from plugins.chain.app.chain_svc import ChainService
+
 
 class ChainApi:
 
@@ -13,6 +15,7 @@ class ChainApi:
         self.auth_svc = services.get('auth_svc')
         self.plugin_svc = services.get('plugin_svc')
         self.agent_svc = services.get('agent_svc')
+        self.chain_svc = ChainService(services)
         self.loop = asyncio.get_event_loop()
 
     @template('chain.html')
@@ -49,6 +52,8 @@ class ChainApi:
 
         options = dict(
             PUT=dict(
+                core_ability=lambda d: self.chain_svc.persist_ability(**d),
+                core_adversary=lambda d: self.chain_svc.persist_adversary(**d),
                 core_operation=lambda d: self.data_svc.create_operation(**d),
                 core_fact=lambda d: self.data_svc.create('core_fact', d),
                 core_agent=lambda d: self.data_svc.update('core_agent', 'paw', d.pop('paw'), d),
