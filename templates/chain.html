@@ -191,9 +191,10 @@
                       <option disabled selected>0 abilities</option>
                   </select>
               </div>
+                <button id="abilityNewBtn" type="button" class="button-notready atomic-button" onclick="saveAbility()">Save</button>
             </div>
             <div id="displayAbility" class="column codearea" style="flex:75%;text-align: left">
-                <textarea id="ability-file" spellcheck="false" disabled></textarea>
+                <textarea id="ability-file" spellcheck="false"></textarea>
             </div>
           </div>
         </div>
@@ -205,6 +206,12 @@
             <div class="column section-border" style="flex:25%;">
               <img src="/chain/img/hacker.png">
               <h4>Adversaries</h4>
+              <br>
+              <div class="toggle">
+                <label class="switch"><input type="checkbox" id="togBtnAdv" onchange="toggleAdversaryView()">
+                  <div class="slider round"><span class="on">ADD</span><span class="off">VIEW</span></div>
+                </label>
+              </div>
               <br>
               <p class="section-description">
                   Adversaries are collections of ATT&CK TTPs, designed to test specific threats.
@@ -218,10 +225,17 @@
                     {% endfor %}}
                   </select>
               </div>
+              <div id="addAdversary" style="display: none">
+                  <button class="button-embedded" onclick="addPhase(null)">Add phase</button>
+              </div>
+              <button id="advNewBtn" type="button" class="button-success atomic-button" onclick="saveAdversary()">Save</button>
+              <div id="adv-flashy-holder">
+                  <span id="message"></span>
+              </div>
             </div>
             <div id="phases" class="column adversary-header" style="flex:75%;text-align: left">
-                <h3 id="profile-goal"></h3>
-                <h4 id="profile-description"></h4>
+                <input id="profile-goal" type="text" class="advGoal" placeholder="enter an adversary name">
+                <input id="profile-description" type="text" placeholder="enter an adversary description">
                 <br><br>
                 <div id="dummy"></div>
             </div>
@@ -513,6 +527,40 @@
                     <code id="resultCmd" style="color:black"></code>
                     <hr>
                     <pre id="resultView" style="text-align: left;max-width:800px;color:black"></pre>
+                </div>
+             </form>
+        </div>
+
+        <div id="phase-modal" class="modal">
+            <form class="modal-content">
+                <div class="container section-profile row ability-viewer">
+                    <div class="column" style="flex:25%;">
+                        <img src="/chain/img/ability.png">
+                        <h4 style="text-align: center">Ability Finder</h4>
+                        <br>
+                        <input id="ability-search" placeholder="Search for anything" onkeypress="searchAbilities('phase-modal', {{ exploits }})"/>
+                        <h4 style="margin-top:10px;text-align:center;font-size:14px;">OR FILTER:</h4>
+                        <select id="ability-tactic-filter" onchange="populateTechniques('phase-modal', {{ exploits }});">
+                            <option disabled selected>Choose a tactic</option>
+                            {% for tactic in tactics %}
+                                <option value={{ tactic }} data-tactic={{ tactic }}>{{ tactic }}</option>
+                            {% endfor %}}
+                        </select>
+                        <select id="ability-technique-filter" onchange="populateAbilities('phase-modal', {{ exploits }});">
+                            <option disabled selected>Choose a technique</option>
+                        </select>
+                        <br><br><hr><br>
+                        <select id="ability-ability-filter" onchange="showAbility('phase-modal')">
+                            <option disabled selected>0 abilities</option>
+                        </select>
+                        <button id="phaseBtn" type="button" class="button-success atomic-button" onclick="addToPhase()">Add to phase</button>
+                    </div>
+                    <div class="column codearea" style="flex:75%;">
+                        <textarea id="ability-file" readonly spellcheck="false"></textarea>
+                    </div>
+                    <div class="imgcontainer">
+                        <span onclick="document.getElementById('phase-modal').style.display='none'" class="close" title="Close Modal">&times;</span>
+                    </div>
                 </div>
              </form>
         </div>
