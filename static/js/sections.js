@@ -66,7 +66,7 @@ $(document).ready(function () {
                 render: function ( data, type, row, meta ) {
                     let str = "";
                     data['executors'].forEach(function(e) {
-                        str += e.executor + "<br/>"
+                        str += e + "<br/>"
                     });
                     return str;
                 }
@@ -99,7 +99,7 @@ $(document).ready(function () {
                 type: 'string',
                 render: function ( data, type, row, meta ) {
 
-                    return "<input value=\""+data['host_group']+"\" type=\"text\" id=\""+data['paw']+"-group\" name=\""+data['paw']+"-group\"><br>";
+                    return "<input value=\""+data['group']+"\" type=\"text\" id=\""+data['paw']+"-group\" name=\""+data['paw']+"-group\"><br>";
                 }
             },
             {
@@ -134,14 +134,13 @@ function saveGroups(){
         let group = document.getElementById(value['paw']+'-group').value;
         let status = document.getElementById(value['paw']+'-status').value;
         let sleep = document.getElementById(value['paw']+'-sleep').value;
-        let update = {"index":"agent", "paw": value['paw'], "host_group": group};
+        let update = {"index":"agent", "paw": value['paw'], "group": group, "trusted": status};
         let sleepArr = parseSleep(sleep);
         if (sleepArr.length !== 0) {
             update["sleep_min"] = sleepArr[0];
             update["sleep_max"] = sleepArr[1];
         }
         restRequest('PUT', update, doNothing);
-        restRequest('PUT', {'index':'agent', "paw": value['paw'], "trusted": status}, saveGroupsCallback, '/plugin/chain/agents/trust');
     });
 }
 
@@ -155,8 +154,8 @@ function reloadGroupElements(data) {
     gp_elem.empty();
     gp_elem.append("<option value=\"\" disabled selected>Group</option>");
     $.each(data, function(index, agent) {
-        if(!gp_elem.find('option[value="'+ agent['host_group'] +'"]').length > 0) {
-            gp_elem.append("<option id='qgroup-" + agent['host_group'] + "' value='" + agent['host_group'] + "'>" + agent['host_group'] + "</option>");
+        if(!gp_elem.find('option[value="'+ agent['group'] +'"]').length > 0) {
+            gp_elem.append("<option id='qgroup-" + agent['group'] + "' value='" + agent['group'] + "'>" + agent['group'] + "</option>");
         }
     });
 }

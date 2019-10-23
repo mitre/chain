@@ -1,8 +1,10 @@
 import asyncio
+import logging
 
 from aiohttp import web
 from aiohttp_jinja2 import template
 
+from app.objects.c_agent import Agent
 from plugins.chain.app.chain_svc import ChainService
 
 
@@ -21,17 +23,20 @@ class ChainApi:
     @template('chain.html')
     async def landing(self, request):
         await self.auth_svc.check_permissions(request)
-        abilities = await self.data_svc.explode('ability')
-        tactics = set([a['tactic'].lower() for a in abilities])
-        hosts = await self.data_svc.explode('agent')
-        groups = list(set(([h['host_group'] for h in hosts])))
-        adversaries = await self.data_svc.explode('adversary')
-        operations = await self.data_svc.explode('operation')
-        sources = await self.data_svc.explode('source')
-        planners = await self.data_svc.explode('planner')
-        plugins = [dict(name=getattr(p, 'name'), address=getattr(p, 'address')) for p in self.plugin_svc.get_plugins()]
-        return dict(exploits=abilities, groups=groups, adversaries=adversaries, agents=hosts, operations=operations,
-                    tactics=tactics, sources=sources, planners=planners, plugins=plugins)
+        try:
+            abilities = await self.data_svc.explode('ability')
+            tactics = set([a['tactic'].lower() for a in abilities])
+            hosts = [h.display for h in await self.data_svc.locate('agents')]
+            groups = list(set(([h['group'] for h in hosts])))
+            adversaries = await self.data_svc.explode('adversary')
+            operations = await self.data_svc.explode('operation')
+            sources = await self.data_svc.explode('source')
+            planners = await self.data_svc.explode('planner')
+            plugins = [dict(name=getattr(p, 'name'), address=getattr(p, 'address')) for p in self.plugin_svc.get_plugins()]
+            return dict(exploits=abilities, groups=groups, adversaries=adversaries, agents=hosts, operations=operations,
+                        tactics=tactics, sources=sources, planners=planners, plugins=plugins)
+        except Exception as e:
+            logging.debug('[!] landing: %s' % e)
 
     async def rest_full(self, request):
         base = await self.rest_core(request)
@@ -44,34 +49,51 @@ class ChainApi:
 
     async def rest_core(self, request):
         await self.auth_svc.check_permissions(request)
-        data = dict(await request.json())
-        index = data.pop('index')
-        if request.method == 'DELETE':
-            await self.data_svc.delete(index, data)
-            return 'Delete action completed'
+        try:
+            data = dict(await request.json())
+            index = data.pop('index')
+            if request.method == 'DELETE':
+                if index == 'agent':
+                    await self.data_svc.remove('agents', data)
+                else:
+                    await self.data_svc.delete(index, data)
+                return 'Delete action completed'
 
-        options = dict(
-            PUT=dict(
-                ability=lambda d: self.chain_svc.persist_ability(**d),
-                adversary=lambda d: self.chain_svc.persist_adversary(**d),
-                operation=lambda d: self.data_svc.save('operation', d),
-                fact=lambda d: self.data_svc.save('fact', d),
-                agent=lambda d: self.data_svc.update('agent', 'paw', d.pop('paw'), d),
-                chain=lambda d: self.data_svc.update(index, **d)
-            ),
-            POST=dict(
-                adversary=lambda d: self.data_svc.explode('adversary', criteria=d),
-                ability=lambda d: self.data_svc.explode('ability', criteria=d),
-                operation=lambda d: self.data_svc.explode('operation', criteria=d),
-                agent=lambda d: self.data_svc.explode('agent', criteria=d),
-                result=lambda d: self.data_svc.explode('result', criteria=d),
-                operation_report=lambda d: self.reporting_svc.generate_operation_report(**d),
+            options = dict(
+                PUT=dict(
+                    ability=lambda d: self.chain_svc.persist_ability(**d),
+                    adversary=lambda d: self.chain_svc.persist_adversary(**d),
+                    operation=lambda d: self.data_svc.save('operation', d),
+                    fact=lambda d: self.data_svc.save('fact', d),
+                    agent=lambda d: self.data_svc.store(Agent(paw=d.pop('paw'), group=d.get('group'),
+                                                              trusted=d.get('trusted'), sleep_min=d.get('sleep_min'),
+                                                              sleep_max=d.get('sleep_max'))),
+                    chain=lambda d: self.data_svc.update(index, **d)
+                ),
+                POST=dict(
+                    adversary=lambda d: self.data_svc.explode('adversary', criteria=d),
+                    ability=lambda d: self.data_svc.explode('ability', criteria=d),
+                    operation=lambda d: self.data_svc.explode('operation', criteria=d),
+                    agent=lambda d: self.data_svc.locate('agents', match=d),
+                    result=lambda d: self.data_svc.explode('result', criteria=d),
+                    operation_report=lambda d: self.reporting_svc.generate_operation_report(**d),
+                )
             )
-        )
-        output = await options[request.method][index](data)
-        if request.method == 'PUT' and index == 'operation':
-            self.loop.create_task(self.operation_svc.run(output))
-        return output
+            output = await options[request.method][index](data)
+            if index == 'operation':
+                if request.method == 'PUT':
+                    self.loop.create_task(self.operation_svc.run(output))
+                elif request.method == 'POST':
+                    for op in output:
+                        op['host_group'] = [a.display for a in op['host_group']]
+            if index == 'agent':
+                if request.method == 'PUT':
+                    output = output.display
+                elif request.method == 'POST':
+                    output = [a.display for a in output]
+            return output
+        except Exception as e:
+            logging.debug('[!] rest_core: %s' % e)
 
     async def rest_update_operation(self, request):
         op_id = int(request.match_info['operation_id'])
@@ -94,10 +116,4 @@ class ChainApi:
 
         await _validate_request()
         await self.data_svc.update('operation', 'id', body['id'], dict(state=body.get('state')))
-        return web.Response()
-
-    async def rest_reset_trust(self, request):
-        await self.auth_svc.check_permissions(request)
-        data = dict(await request.json())
-        await self.agent_svc.update_trust(paw=data['paw'], trusted=data['trusted'])
         return web.Response()
