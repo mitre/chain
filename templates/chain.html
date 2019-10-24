@@ -308,7 +308,7 @@
                   </select>
                   <select name="planner" id="queuePlanner" class="queueOption" style="opacity:0.5" disabled="true">
                     {% for p in planners %}
-                        <option value="{{ p.id }}">Use {{ p.name }} planner</option>
+                        <option value="{{ p.name }}">Use {{ p.name }} planner</option>
                     {% endfor %}
                   </select>
                   <select name="source" id="queueSource" class="queueOption" style="opacity:0.5" disabled="true">

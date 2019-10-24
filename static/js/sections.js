@@ -776,7 +776,7 @@ function displayReport(data) {
     $('#report-name-duration').html("The operation lasted " + reportDuration(data.start, data.finish) + " with a random "+data.jitter + " second pause between steps");
     $('#report-adversary').html(data.adversary.name);
     $('#report-adversary-desc').html(data.adversary.description);
-    $('#report-group').html(data.host_group[0]['host_group']);
+    $('#report-group').html(data.host_group[0]['group']);
     $('#report-group-cnt').html(data.host_group.length + ' hosts were included');
     $('#report-steps').html(reportStepLength(data.steps));
     $('#report-steps-attack').html(data.adversary.name + " was " + reportScore(data.steps) + " successful in the attack");
