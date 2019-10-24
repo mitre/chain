@@ -31,7 +31,7 @@ class ChainApi:
             adversaries = await self.data_svc.explode('adversary')
             operations = await self.data_svc.explode('operation')
             sources = await self.data_svc.explode('source')
-            planners = await self.data_svc.explode('planner')
+            planners = [p.display for p in await self.data_svc.locate('planners')]
             plugins = [dict(name=getattr(p, 'name'), address=getattr(p, 'address')) for p in self.plugin_svc.get_plugins()]
             return dict(exploits=abilities, groups=groups, adversaries=adversaries, agents=hosts, operations=operations,
                         tactics=tactics, sources=sources, planners=planners, plugins=plugins)
