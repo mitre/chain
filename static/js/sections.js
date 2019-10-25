@@ -1018,7 +1018,6 @@ function savePayloadLauncher(data){
            success: function(data) { savePayloadCallback(data); },
            error: function (xhr, ajaxOptions, thrownError) { console.log(thrownError) }
         });
-        //restRequest('POST', update, savePayloadCallback, '/plugin/chain/payload');
 }
 
 function savePayload(){
@@ -1026,9 +1025,10 @@ function savePayload(){
         var reader = new FileReader();
         reader.onload = function(e) {
             data = e.target.result;
+            data = data.split('base64,')[1];
             savePayloadLauncher(data);
         };
-        reader.readAsBinaryString(file);
+        reader.readAsDataURL(file);
 }
 
 function savePayloadCallback(data) {
