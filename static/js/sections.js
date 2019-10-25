@@ -1005,8 +1005,20 @@ function savePayloadLauncher(data){
             alert('Please enter a name for this payload!');
             return
         }
-        let update = {"index":"payloads", "name": name, "content": data, "xored": armor};
-        restRequest('POST', update, savePayloadCallback);
+        fd = new FormData();
+        fd.append('file-0', data);
+       $.ajax({
+           url: '/plugin/chain/payload',
+           type: 'POST',
+           enctype: 'multipart/form-data',
+           headers: {"x-name": name, "x-xored": armor},
+           contentType: false,
+           processData: false,
+           data: fd,
+           success: function(data) { savePayloadCallback(data); },
+           error: function (xhr, ajaxOptions, thrownError) { console.log(thrownError) }
+        });
+        //restRequest('POST', update, savePayloadCallback, '/plugin/chain/payload');
 }
 
 function savePayload(){

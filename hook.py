@@ -13,3 +13,4 @@ async def initialize(app, services):
     app.router.add_route('*', '/plugin/chain/rest', chain_api.rest_api)
     app.router.add_route('PUT', '/plugin/chain/operation/state', chain_api.rest_state_control)
     app.router.add_route('PUT', '/plugin/chain/operation/{operation_id}', chain_api.rest_update_operation)
+    app.router.add_route('POST', '/plugin/chain/payload', chain_api.file_svc.save_file)
