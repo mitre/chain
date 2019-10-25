@@ -78,8 +78,7 @@ class ChainApi:
                     operation=lambda d: self.data_svc.explode('operation', criteria=d),
                     agent=lambda d: self.data_svc.locate('agents', match=d),
                     result=lambda d: self.data_svc.explode('result', criteria=d),
-                    operation_report=lambda d: self.reporting_svc.generate_operation_report(**d),
-                    payloads=lambda d: self.file_svc.save_file(**d)
+                    operation_report=lambda d: self.reporting_svc.generate_operation_report(**d)
                 )
             )
             output = await options[request.method][index](data)
