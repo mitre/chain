@@ -28,7 +28,7 @@ class ChainApi:
             tactics = set([a['tactic'].lower() for a in abilities])
             hosts = [h.display for h in await self.data_svc.locate('agents')]
             groups = list(set(([h['group'] for h in hosts])))
-            adversaries = await self.data_svc.explode('adversary')
+            adversaries = [a.display for a in await self.data_svc.locate('adversaries')]
             operations = await self.data_svc.explode('operation')
             sources = await self.data_svc.explode('source')
             planners = [p.display for p in await self.data_svc.locate('planners')]
@@ -48,6 +48,11 @@ class ChainApi:
         return web.json_response(base)
 
     async def rest_core(self, request):
+        """
+        This function is under construction until all objects have been converted from SQL tables
+        :param request:
+        :return:
+        """
         await self.auth_svc.check_permissions(request)
         try:
             data = dict(await request.json())
@@ -71,7 +76,7 @@ class ChainApi:
                     chain=lambda d: self.data_svc.update(index, **d)
                 ),
                 POST=dict(
-                    adversary=lambda d: self.data_svc.explode('adversary', criteria=d),
+                    adversary=lambda d: self.data_svc.locate('adversaries', match=d),
                     ability=lambda d: self.data_svc.explode('ability', criteria=d),
                     operation=lambda d: self.data_svc.explode('operation', criteria=d),
                     agent=lambda d: self.data_svc.locate('agents', match=d),
@@ -86,10 +91,14 @@ class ChainApi:
                 elif request.method == 'POST':
                     for op in output:
                         op['host_group'] = [a.display for a in op['host_group']]
+                        op['adversary'] = op['adversary'].display
             if index == 'agent':
                 if request.method == 'PUT':
                     output = output.display
                 elif request.method == 'POST':
+                    output = [a.display for a in output]
+            if index == 'adversary':
+                if request.method == 'POST':
                     output = [a.display for a in output]
             return output
         except Exception as e:
