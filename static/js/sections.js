@@ -95,6 +95,13 @@ $(document).ready(function () {
             {
                 targets: 7,
                 data: null,
+                render: {
+                    _:'privilege'
+                }
+            },
+            {
+                targets: 8,
+                data: null,
                 orderDataType: 'dom-text',
                 type: 'string',
                 render: function ( data, type, row, meta ) {
@@ -103,7 +110,7 @@ $(document).ready(function () {
                 }
             },
             {
-                targets: 8,
+                targets: 9,
                 data: null,
                 fnCreatedCell: function (td, cellData, rowData, row , col) {
                     $(td).addClass('delete-agent');
