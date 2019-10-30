@@ -742,7 +742,6 @@ function showAbilityModal(data) {
     let phaseModal = $('#phase-modal');
     phaseModal.data("ability", data);
     $('textarea[id^="ability-file"]').html(data);
-    checkAbilitySaveValid();
 }
 
 function showPhaseModal(phase) {
