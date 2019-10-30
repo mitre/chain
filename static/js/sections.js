@@ -12,6 +12,31 @@ function showHide(show, hide) {
     $(hide).each(function(){$(this).prop('disabled', true).css('opacity', 0.5)});
 }
 
+/** ALL DROPDOWNS **/
+
+function alphabetize_dropdown(obj) {
+    let selected_val = $(obj).children("option:selected").val();
+    let disabled = $(obj).find('option:disabled');
+    let opts_list = $(obj).find('option:enabled').clone(true);
+    opts_list.sort(function (a, b) {
+        return a.text.toLowerCase() == b.text.toLowerCase() ? 0 : a.text.toLowerCase() < b.text.toLowerCase() ? -1 : 1;
+    });
+    $(obj).empty().append(opts_list).prepend(disabled);
+    obj.val(selected_val);
+}
+
+$(document).ready(function () {
+    $(document).find("select").each(function () {
+        alphabetize_dropdown($(this));
+        var observer = new MutationObserver(function(mutations, obs) {
+            obs.disconnect();
+            alphabetize_dropdown($(mutations[0].target));
+            obs.observe(mutations[0].target, {childList:true});
+        });
+        observer.observe(this, {childList:true});
+    });
+})
+
 /** GROUPS **/
 
 $(document).ready(function () {
