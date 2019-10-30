@@ -24,8 +24,8 @@ class ChainApi:
     async def landing(self, request):
         await self.auth_svc.check_permissions(request)
         try:
-            abilities = await self.data_svc.explode('ability')
-            tactics = set([a['tactic'].lower() for a in abilities])
+            abilities = await self.data_svc.locate('abilities')
+            tactics = set([a.tactic.lower() for a in abilities])
             hosts = [h.display for h in await self.data_svc.locate('agents')]
             groups = list(set(([h['group'] for h in hosts])))
             adversaries = [a.display for a in await self.data_svc.locate('adversaries')]
@@ -33,14 +33,14 @@ class ChainApi:
             sources = await self.data_svc.explode('source')
             planners = [p.display for p in await self.data_svc.locate('planners')]
             plugins = [dict(name=getattr(p, 'name'), address=getattr(p, 'address')) for p in self.plugin_svc.get_plugins()]
-            return dict(exploits=abilities, groups=groups, adversaries=adversaries, agents=hosts, operations=operations,
-                        tactics=tactics, sources=sources, planners=planners, plugins=plugins)
+            return dict(exploits=[a.display for a in abilities], groups=groups, adversaries=adversaries, agents=hosts,
+                        operations=operations, tactics=tactics, sources=sources, planners=planners, plugins=plugins)
         except Exception as e:
             logging.debug('[!] landing: %s' % e)
 
     async def rest_full(self, request):
         base = await self.rest_core(request)
-        base[0]['abilities'] = await self.data_svc.explode('ability')
+        base[0]['abilities'] = [a.display for a in await self.data_svc.locate('abilities')]
         return web.json_response(base)
 
     async def rest_api(self, request):
@@ -66,7 +66,6 @@ class ChainApi:
 
             options = dict(
                 PUT=dict(
-                    ability=lambda d: self.chain_svc.persist_ability(**d),
                     adversary=lambda d: self.chain_svc.persist_adversary(**d),
                     operation=lambda d: self.data_svc.save('operation', d),
                     fact=lambda d: self.data_svc.save('fact', d),
@@ -77,7 +76,7 @@ class ChainApi:
                 ),
                 POST=dict(
                     adversary=lambda d: self.data_svc.locate('adversaries', match=d),
-                    ability=lambda d: self.data_svc.explode('ability', criteria=d),
+                    ability=lambda d: self.data_svc.locate('abilities', match=d),
                     operation=lambda d: self.data_svc.explode('operation', criteria=d),
                     agent=lambda d: self.data_svc.locate('agents', match=d),
                     result=lambda d: self.data_svc.explode('result', criteria=d),
@@ -98,6 +97,9 @@ class ChainApi:
                 elif request.method == 'POST':
                     output = [a.display for a in output]
             if index == 'adversary':
+                if request.method == 'POST':
+                    output = [a.display for a in output]
+            if index == 'ability':
                 if request.method == 'POST':
                     output = [a.display for a in output]
             return output

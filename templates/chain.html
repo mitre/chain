@@ -192,10 +192,9 @@
                       <option disabled selected>0 abilities</option>
                   </select>
               </div>
-                <button id="abilityNewBtn" type="button" class="button-notready atomic-button" onclick="saveAbility()">Save</button>
             </div>
             <div id="displayAbility" class="column codearea" style="flex:75%;text-align: left">
-                <textarea id="ability-file" spellcheck="false"></textarea>
+                <textarea id="ability-file" spellcheck="false" disabled></textarea>
             </div>
           </div>
         </div>
@@ -228,10 +227,10 @@
               </div>
               <div id="addAdversary" style="display: none">
                   <button class="button-embedded" onclick="addPhase(null)">Add phase</button>
-              </div>
-              <button id="advNewBtn" type="button" class="button-success atomic-button" onclick="saveAdversary()">Save</button>
-              <div id="adv-flashy-holder">
-                  <span id="message"></span>
+                  <button id="advNewBtn" type="button" class="button-success atomic-button" onclick="saveAdversary()">Save</button>
+                  <div id="adv-flashy-holder">
+                      <span id="message"></span>
+                  </div>
               </div>
             </div>
             <div id="phases" class="column adversary-header" style="flex:75%;text-align: left">
