@@ -139,7 +139,7 @@ $(document).ready(function () {
                 data: null,
                 fnCreatedCell: function (td, cellData, rowData, row , col) {
                     $(td).addClass('delete-agent');
-                    $(td).attr('id', rowData['id']);
+                    $(td).attr('paw', rowData['paw']);
                 },
                 defaultContent: "&#x274C;"
             }
@@ -147,7 +147,7 @@ $(document).ready(function () {
         errMode: 'throw'
     });
     $('#netTbl tbody').on('click', 'td.delete-agent', function (e) {
-        restRequest('DELETE', {"index": "agent", "id": $(this).attr('id')}, saveGroupsCallback);
+        restRequest('DELETE', {"index": "agent", "paw": $(this).attr('paw')}, saveGroupsCallback);
     } );
 });
 
