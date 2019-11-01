@@ -235,10 +235,6 @@ function handleFactAdd(){
     restRequest('PUT', facts, reloadLocation);
 }
 
-function deleteFact(identifier) {
-    restRequest('DELETE', {"index": "fact", "id": identifier}, reloadLocation);
-}
-
 /** OPERATIONS **/
 
 let atomic_interval = null;
@@ -327,7 +323,7 @@ function refresh() {
 function clearTimeline() {
     let selectedOperationId = $('#operation-list option:selected').attr('value');
     $('.event').each(function() {
-        let opId = $(this).attr('name');
+        let opId = $(this).attr('operation');
         if(opId && opId !== selectedOperationId) {
             $(this).remove();
         }
@@ -363,7 +359,7 @@ function operationCallback(data){
             let splitPaw = OPERATION.chain[i].paw.split('$');
             template.find('#link-technique').html(ability.technique_id + '<span class="tooltiptext">' + ability.technique_name + '</span>');
             template.attr("id", "op_id_" + OPERATION.chain[i].id);
-            template.attr("operation", OPERATION.chain[i].op_id);
+            template.attr("operation", OPERATION.name);
             template.attr("data-date", OPERATION.chain[i].decide.split('.')[0]);
             template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100" ' +
                 'ondblclick="rollup('+OPERATION.chain[i].id+')">'+ splitPaw[0]+'$'+splitPaw[1] + '... ' +

@@ -62,8 +62,6 @@ class ChainApi:
             if request.method == 'DELETE':
                 if index == 'agent':
                     await self.data_svc.remove('agents', data)
-                else:
-                    await self.data_svc.delete(index, data)
                 return 'Delete action completed'
 
             if request.method == 'PUT':
@@ -76,7 +74,7 @@ class ChainApi:
                     await self.data_svc.store(
                         Operation(name=name, planner=planner[0], agents=agents, adversary=adversary[0],
                                   jitter=data.pop('jitter'), source=next(iter(sources), None), state=data.pop('state'),
-                                  allow_untrusted=data.pop('allow_untrusted'), autonomous=data.pop('autonomous'))
+                                  allow_untrusted=int(data.pop('allow_untrusted')), autonomous=int(data.pop('autonomous')))
                     )
                     self.loop.create_task(self.operation_svc.run(name=name))
             if request.method == 'POST':
