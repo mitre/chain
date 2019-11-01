@@ -125,7 +125,7 @@
               <input id="factValue" class="factOption" placeholder="Value"/>
               <select id="factSource" class="factOption">
                   {% for s in sources %}
-                      <option value={{ s.id }} >{{ s.name }}</option>
+                      <option value={{ s.name }} >{{ s.name }}</option>
                   {% endfor %}
               </select>
               <select id="factScore" class="factOption">
@@ -150,9 +150,9 @@
                     {% for s in sources %}
                         {% for f in s.facts %}
                         <tr style="padding:5px">
-                            <td onclick="deleteFact({{ f.id }})">&#x274C;</td>
+                            <td onclick="deleteFact({{ f.unique }})">&#x274C;</td>
                             <td>{{ s.name }}</td>
-                            <td>{{ f.property }}</td>
+                            <td>{{ f.prop }}</td>
                             <td>{{ f.score }}</td>
                             <td>{{ f.value }}</td>
                         </tr>
@@ -283,7 +283,7 @@
                 <select id="operation-list" style="margin-bottom: 15px;" onchange="refresh()">
                   <option id="operationDefault" value="" disabled selected>Operations</option>
                   {% for op in operations %}
-                    <option class="operationOption" id="{{ op}}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
+                      <option class="operationOption" id="{{ op.name }}" value="{{ op.name }}">{{ op.name }} - {{ op.start }}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -314,7 +314,7 @@
                   <select name="source" id="queueSource" class="queueOption" style="opacity:0.5" disabled="true">
                     <option value="" selected>No fact source</option>
                         {% for s in sources %}
-                            <option value="{{ s.id }}">{{ s.name }}</option>
+                            <option value="{{ s.name }}">{{ s.name }}</option>
                         {% endfor %}
                   </select>
                   <select name="untrusted" id="queueUntrusted" class="queueOption" style="opacity:0.5" disabled="true">
