@@ -898,14 +898,6 @@ function clearSkippedAbilities() {
 
 /** DUK MODALS */
 
-function openDuk1(){
-    document.getElementById("duk-modal").style.display="block";
-    $('#duk-text').text('Did you know... you can add or remove facts during a running operation. Also fact scores ' +
-        'are used to determine the importance of a given fact. The higher the score, the more often it will be ' +
-        'used inside an operation. A score of 0 means it is blacklisted - meaning the fact cannot be used during ' +
-        'an operation.');
-}
-
 function openDuk2(){
     document.getElementById("duk-modal").style.display="block";
     $('#duk-text').text('Did you know... you can link abilities together by matching the output property from an ability\'s ' +
@@ -926,21 +918,23 @@ function submitHilChanges(status){
     document.getElementById("loop-modal").style.display = "none";
     let linkId = $('#hil-linkId').html();
     let command = $('#hil-command').val();
-    let data = {'index':'chain', 'link_id': linkId, 'status': status};
+    let data = {'index':'chain', 'link_id': linkId, 'status': status, 'command': command};
     restRequest('PUT', data, doNothing);
     refresh();
     return false;
 }
+
 function toggleHil(){
     let op_id = $('#operation-list option:selected').attr('value');
     let data = {};
     if(OPERATION.autonomous){
         data['autonomous'] = 0;
-    }else{
+    } else{
         data['autonomous'] = 1;
     }
     restRequest('PUT', data, function(d){refresh()}, `/plugin/chain/operation/${op_id}`);
 }
+
 function hilApproveAll(){
     document.getElementById("loop-modal").style.display = "none";
     let currentLinkId = $('#hil-linkId').html();
