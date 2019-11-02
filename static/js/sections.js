@@ -343,7 +343,7 @@ function operationCallback(data){
     clearTimeline();
     for(let i=0; i<OPERATION.chain.length; i++){
         if(OPERATION.chain[i].status === -1) {
-            $('#hil-linkId').html(OPERATION.chain[i].id);
+            $('#hil-linkId').html(OPERATION.chain[i].unique);
             $('#hil-paw').html(trimPaw(OPERATION.chain[i].paw));
             $('#hil-command').html(atob(OPERATION.chain[i].command));
             document.getElementById("loop-modal").style.display = "block";
@@ -364,9 +364,9 @@ function operationCallback(data){
             template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100" ' +
                 'ondblclick="rollup('+OPERATION.chain[i].id+')">'+ splitPaw[0]+'$'+splitPaw[1] + '... ' +
                 title + '<span id="'+OPERATION.chain[i].id+'-rs" style="font-size:14px;float:right;display:none" ' +
-                'onclick="findResults(this, '+OPERATION.chain[i].id+')"' +
+                'onclick="findResults(this, OPERATION.chain['+i+'].unique)"' +
                 'data-encoded-cmd="'+OPERATION.chain[i].command+'"'+'>&#9733;</span>' +
-                '<span id="'+OPERATION.chain[i].id+'-rm" style="font-size:11px;float:right" onclick="discard('+OPERATION.chain[i].id+')">&#x274C;</span></div>');
+                '<span id="'+OPERATION.chain[i].id+'-rm" style="font-size:11px;float:right" onclick="discard(OPERATION.chain['+i+'].unique)">&#x274C;</span></div>');
             template.find('#time-action').html(atob(OPERATION.chain[i].command));
             template.find('#time-executor').html(OPERATION.chain[i].executor);
             refreshUpdatableFields(OPERATION.chain[i], template);
@@ -941,11 +941,12 @@ function toggleHil(){
 function hilApproveAll(){
     document.getElementById("loop-modal").style.display = "none";
     let operation = $('#operation-list option:selected').attr('value');
-    let currentLinkId = $('#hil-linkId').html();
+    let currentLinkUnique = $('#hil-linkId').html();
+    let currentLinkId = currentLinkUnique.split('-')[1];
     for(let i=0; i<OPERATION.chain.length; i++){
         let nextLink = OPERATION.chain[i];
         if (nextLink.id >= currentLinkId){
-            let data = {'index':'chain', 'operation':operation, 'link_id': nextLink.id, 'status': -3};
+            let data = {'index':'chain', 'operation':operation, 'link_id': nextLink.unique, 'status': -3};
             restRequest('PUT', data, doNothing);
         }
     }
