@@ -34,7 +34,7 @@ class ChainApi:
             operations = [o.display for o in await self.data_svc.locate('operations')]
             sources = [s.display for s in await self.data_svc.locate('sources')]
             planners = [p.display for p in await self.data_svc.locate('planners')]
-            plugins = [dict(name=getattr(p, 'name'), address=getattr(p, 'address')) for p in self.plugin_svc.get_plugins()]
+            plugins = [dict(name=getattr(p, 'name'), address=getattr(p, 'address')) for p in self.app_svc.get_plugins()]
             return dict(exploits=[a.display for a in abilities], groups=groups, adversaries=adversaries, agents=hosts,
                         operations=operations, tactics=tactics, sources=sources, planners=planners, plugins=plugins)
         except Exception as e:
