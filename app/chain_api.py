@@ -143,10 +143,10 @@ class ChainApi:
             op = await self.data_svc.locate('operations', dict(name=body['name']))
             if not len(op):
                 raise web.HTTPNotFound
-            elif op[0].state == self.operation_svc.op_states['FINISHED']:
+            elif op[0].state == op.states['FINISHED']:
                 raise web.HTTPBadRequest(body='This operation has already finished.')
-            elif state not in self.operation_svc.op_states.values():
-                raise web.HTTPBadRequest(body='state must be one of {}'.format(self.operation_svc.op_states.values()))
+            elif state not in op.states.values():
+                raise web.HTTPBadRequest(body='state must be one of {}'.format(op.states.values()))
 
         await _validate_request()
         operation = await self.data_svc.locate('operations', match=dict(name=body['name']))
