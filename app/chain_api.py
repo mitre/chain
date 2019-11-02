@@ -82,11 +82,10 @@ class ChainApi:
             if request.method == 'POST':
                 if index == 'result':
                     link_id = data.pop('link_id')
-                    for op in await self.data_svc.locate('operations'):
-                        link = next((link for link in op.chain if link.id == link_id), None)
-                        if link:
-                            _, content = await self.file_svc.read_file(name='%s-%s-%s' % (op.id, op.name, link_id), location='data/results')
-                            return dict(link=link.display, output=content.decode('utf-8'))
+                    link = await self.app_svc.find_link(link_id)
+                    if link:
+                        _, content = await self.file_svc.read_file(name='%s' % link_id, location='data/results')
+                        return dict(link=link.display, output=content.decode('utf-8'))
                 elif index == 'operation_report':
                     op_id = data.pop('op_id')
                     op = (await self.data_svc.locate('operations', match=dict(name=op_id)))[0]
@@ -94,14 +93,11 @@ class ChainApi:
 
             if request.method == 'PUT':
                 if index == 'chain':
-                    operation = data.pop('operation')
-                    link_id = int(data.pop('link_id'))
-                    for op in await self.data_svc.locate('operations', match=dict(name=operation)):
-                        link = next((link for link in op.chain if link.id == link_id), None)
-                        link.status = data.get('status')
-                        if data.get('command'):
-                            link.command = data.get('command')
-                        return ''
+                    link = await self.app_svc.find_link(data.pop('link_id'))
+                    link.status = data.get('status')
+                    if data.get('command'):
+                        link.command = data.get('command')
+                    return ''
 
             options = dict(
                 PUT=dict(
