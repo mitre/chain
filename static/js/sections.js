@@ -304,8 +304,8 @@ function reloadOperationsElements(data){
     let op_elem = $("#operation-list");
     $.each(data, function(index, op) {
         if(!op_elem.find('option[value="'+op.name+'"]').length > 0){
-            op_elem.append('<option id="' + op.id + '-' + op.name + '" class="operationOption" ' +
-                'value="' + op.id +'" >' + op.name + ' - ' + op.start + '</option>');
+            op_elem.append('<option id="' + op.name + '" class="operationOption" ' +
+                'value="' + op.name +'" >' + op.name + ' - ' + op.start + '</option>');
         }
     });
     op_elem.prop('selectedIndex', op_elem.find('option').length-1).change();
