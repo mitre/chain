@@ -2,14 +2,11 @@ from collections import defaultdict
 
 import yaml
 
-from app.service.base_service import BaseService
 
-
-class ChainService(BaseService):
+class ChainService:
 
     def __init__(self, services):
-        self.log = self.add_service('chain_svc', self)
-        self.data_svc = services.get('data_svc')
+        self.services = services
 
     async def persist_adversary(self, i, name, description, phases):
         """
@@ -20,7 +17,7 @@ class ChainService(BaseService):
         :param phases:
         :return: the ID of the created adversary
         """
-        _, file_path = await self.get_service('file_svc').find_file_path('%s.yml' % i, location='data')
+        _, file_path = await self.services.get('file_svc').find_file_path('%s.yml' % i, location='data')
         if not file_path:
             file_path = 'data/adversaries/%s.yml' % i
         with open(file_path, 'w+') as f:
@@ -30,4 +27,4 @@ class ChainService(BaseService):
                 p[ability['phase']].append(ability['id'])
             f.write(yaml.dump(dict(id=i, name=name, description=description, phases=dict(p))))
             f.truncate()
-        await self.data_svc.load_data('data')
+        await self.services.get('data_svc').load_data('data')

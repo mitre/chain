@@ -139,7 +139,7 @@ $(document).ready(function () {
                 data: null,
                 fnCreatedCell: function (td, cellData, rowData, row , col) {
                     $(td).addClass('delete-agent');
-                    $(td).attr('id', rowData['id']);
+                    $(td).attr('paw', rowData['paw']);
                 },
                 defaultContent: "&#x274C;"
             }
@@ -147,7 +147,7 @@ $(document).ready(function () {
         errMode: 'throw'
     });
     $('#netTbl tbody').on('click', 'td.delete-agent', function (e) {
-        restRequest('DELETE', {"index": "agent", "id": $(this).attr('id')}, saveGroupsCallback);
+        restRequest('DELETE', {"index": "agent", "paw": $(this).attr('paw')}, saveGroupsCallback);
     } );
 });
 
@@ -235,10 +235,6 @@ function handleFactAdd(){
     restRequest('PUT', facts, reloadLocation);
 }
 
-function deleteFact(identifier) {
-    restRequest('DELETE', {"index": "fact", "id": identifier}, reloadLocation);
-}
-
 /** OPERATIONS **/
 
 let atomic_interval = null;
@@ -284,7 +280,7 @@ function handleStartAction(){
         "planner":document.getElementById("queuePlanner").value,
         "autonomous":document.getElementById("queueAuto").value,
         "jitter":jitter,
-        "sources":[document.getElementById("queueSource").value],
+        "source":document.getElementById("queueSource").value,
         "allow_untrusted":document.getElementById("queueUntrusted").value
     };
     restRequest('PUT', queueDetails, handleStartActionCallback);
@@ -295,7 +291,7 @@ function changeCurrentOperationState(newState){
         alert('This operation has finished.');
         return;
     }
-    let data = {'id': selectedOperationId, 'state': newState};
+    let data = {'name': selectedOperationId, 'state': newState};
     restRequest('PUT', data, function(d){refresh()}, '/plugin/chain/operation/state');
 }
 
@@ -307,9 +303,9 @@ function handleStartActionCallback(data){
 function reloadOperationsElements(data){
     let op_elem = $("#operation-list");
     $.each(data, function(index, op) {
-        if(!op_elem.find('option[value="'+op.id+'"]').length > 0){
-            op_elem.append('<option id="' + op.id + '" class="operationOption" ' +
-                'value="' + op.id +'" >' + op.name + ' - ' + op.start + '</option>');
+        if(!op_elem.find('option[value="'+op.name+'"]').length > 0){
+            op_elem.append('<option id="' + op.name + '" class="operationOption" ' +
+                'value="' + op.name +'" >' + op.name + ' - ' + op.start + '</option>');
         }
     });
     op_elem.prop('selectedIndex', op_elem.find('option').length-1).change();
@@ -317,12 +313,9 @@ function reloadOperationsElements(data){
 
 function refresh() {
     let selectedOperationId = $('#operation-list option:selected').attr('value');
-    let postData = selectedOperationId ? {'index':'operation','id': selectedOperationId} : null;
-    if (selectedOperationId > 0){
+    let postData = selectedOperationId ? {'index':'operation','name': selectedOperationId} : null;
+    if (selectedOperationId != null){
         $('.op-selected').css('visibility', 'visible');
-        $('#downloadOperationReport').prop('disabled', false).css('opacity', 1.0);
-    } else {
-        $('#downloadOperationReport').prop('disabled', true).css('opacity', 0.5);
     }
     restRequest('POST', postData, operationCallback, '/plugin/chain/full');
 }
@@ -357,16 +350,16 @@ function operationCallback(data){
             return;
         } else if($("#op_id_" + OPERATION.chain[i].id).length === 0) {
             let template = $("#link-template").clone();
-            let ability = OPERATION.abilities.filter(item => item.id === OPERATION.chain[i].ability)[0];
-            template.find('#link-description').html(OPERATION.chain[i].abilityDescription);
-            let title = OPERATION.chain[i].abilityName;
+            let ability = OPERATION.abilities.filter(item => item.unique === OPERATION.chain[i].ability.unique)[0];
+            template.find('#link-description').html(OPERATION.chain[i].ability.description);
+            let title = OPERATION.chain[i].ability.name;
             if(OPERATION.chain[i].cleanup) {
                 title = title + " (CLEANUP)"
             }
             let splitPaw = OPERATION.chain[i].paw.split('$');
             template.find('#link-technique').html(ability.technique_id + '<span class="tooltiptext">' + ability.technique_name + '</span>');
             template.attr("id", "op_id_" + OPERATION.chain[i].id);
-            template.attr("operation", OPERATION.chain[i].op_id);
+            template.attr("operation", OPERATION.name);
             template.attr("data-date", OPERATION.chain[i].decide.split('.')[0]);
             template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100" ' +
                 'ondblclick="rollup('+OPERATION.chain[i].id+')">'+ splitPaw[0]+'$'+splitPaw[1] + '... ' +
@@ -386,7 +379,7 @@ function operationCallback(data){
             refreshUpdatableFields(OPERATION.chain[i], existing);
         }
     }
-    if(OPERATION.finish != null) {
+    if(OPERATION.finish !== '') {
         console.log("Turning off refresh interval for page");
         clearInterval(atomic_interval);
         atomic_interval = null;
@@ -399,7 +392,7 @@ function operationCallback(data){
 }
 
 function discard(linkId) {
-    let data = {'index':'chain', 'key': 'id', 'value': linkId, 'data': {'status': -2}};
+    let data = {'index':'chain', 'link_id': linkId, 'status': -2};
     restRequest('PUT', data, doNothing);
 }
 
@@ -451,9 +444,9 @@ function findResults(elem, link_id){
 }
 
 function loadResults(data){
-    if (data[0]) {
-        let res = atob(data[0].output);
-        $.each(data[0].link.facts, function (k, v) {
+    if (data) {
+        let res = atob(data.output);
+        $.each(data.link.facts, function (k, v) {
             let regex = new RegExp(v.value, "g");
             res = res.replace(regex, "<span class='highlight'>" + v.value + "</span>");
         });
@@ -863,14 +856,14 @@ function addFacts(facts){
     facts.forEach(f => {
         let found = false;
         for(let i in unique){
-            if(unique[i].property == f.property) {
+            if(unique[i].prop == f.prop) {
                 unique[i].count += 1;
                 found = true;
                 break;
             }
         }
         if(!found) {
-            unique.push({'property':f.property, 'count':1});
+            unique.push({'property':f.prop, 'count':1});
         }
     });
     unique.forEach(u => {
@@ -905,14 +898,6 @@ function clearSkippedAbilities() {
 
 /** DUK MODALS */
 
-function openDuk1(){
-    document.getElementById("duk-modal").style.display="block";
-    $('#duk-text').text('Did you know... you can add or remove facts during a running operation. Also fact scores ' +
-        'are used to determine the importance of a given fact. The higher the score, the more often it will be ' +
-        'used inside an operation. A score of 0 means it is blacklisted - meaning the fact cannot be used during ' +
-        'an operation.');
-}
-
 function openDuk2(){
     document.getElementById("duk-modal").style.display="block";
     $('#duk-text').text('Did you know... you can link abilities together by matching the output property from an ability\'s ' +
@@ -933,28 +918,30 @@ function submitHilChanges(status){
     document.getElementById("loop-modal").style.display = "none";
     let linkId = $('#hil-linkId').html();
     let command = $('#hil-command').val();
-    let data = {'index':'chain', 'key': 'id', 'value': linkId, 'data': {'status': status, 'command': btoa(command)}};
+    let data = {'index':'chain', 'link_id': linkId, 'status': status, 'command': btoa(command)};
     restRequest('PUT', data, doNothing);
     refresh();
     return false;
 }
+
 function toggleHil(){
     let op_id = $('#operation-list option:selected').attr('value');
     let data = {};
     if(OPERATION.autonomous){
         data['autonomous'] = 0;
-    }else{
+    } else{
         data['autonomous'] = 1;
     }
     restRequest('PUT', data, function(d){refresh()}, `/plugin/chain/operation/${op_id}`);
 }
+
 function hilApproveAll(){
     document.getElementById("loop-modal").style.display = "none";
     let currentLinkId = $('#hil-linkId').html();
     for(let i=0; i<OPERATION.chain.length; i++){
         let nextLink = OPERATION.chain[i];
         if (nextLink.id >= currentLinkId){
-            let data = {'index':'chain', 'key': 'id', 'value': nextLink.id, 'data': {'status': -3, 'command': nextLink.command}};
+            let data = {'index':'chain', 'link_id': nextLink.id, 'status': -3};
             restRequest('PUT', data, doNothing);
         }
     }
