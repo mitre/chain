@@ -89,7 +89,7 @@ class ChainApi:
                             return dict(link=link.display, output=content.decode('utf-8'))
                 elif index == 'operation_report':
                     op_id = data.pop('op_id')
-                    op = (await self.data_svc.locate('operations', match=dict(id=int(op_id))))[0]
+                    op = (await self.data_svc.locate('operations', match=dict(name=op_id)))[0]
                     return op.report
 
             if request.method == 'PUT':
@@ -147,13 +147,16 @@ class ChainApi:
         state = body.get('state')
 
         async def _validate_request():
-            op = await self.data_svc.locate('operations', dict(name=body['name']))
-            if not len(op):
-                raise web.HTTPNotFound
-            elif op[0].state == op.states['FINISHED']:
-                raise web.HTTPBadRequest(body='This operation has already finished.')
-            elif state not in op.states.values():
-                raise web.HTTPBadRequest(body='state must be one of {}'.format(op.states.values()))
+            try:
+                op = await self.data_svc.locate('operations', dict(name=body['name']))
+                if not len(op):
+                    raise web.HTTPNotFound
+                elif op[0].state == op[0].states['FINISHED']:
+                    raise web.HTTPBadRequest(body='This operation has already finished.')
+                elif state not in op[0].states.values():
+                    raise web.HTTPBadRequest(body='state must be one of {}'.format(op[0].states.values()))
+            except Exception as e:
+                print(e)
 
         await _validate_request()
         operation = await self.data_svc.locate('operations', match=dict(name=body['name']))
