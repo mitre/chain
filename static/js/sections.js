@@ -350,7 +350,7 @@ function operationCallback(data){
             return;
         } else if($("#op_id_" + OPERATION.chain[i].id).length === 0) {
             let template = $("#link-template").clone();
-            let ability = OPERATION.abilities.filter(item => item.id === OPERATION.chain[i].ability.unique)[0];
+            let ability = OPERATION.abilities.filter(item => item.unique === OPERATION.chain[i].ability.unique)[0];
             template.find('#link-description').html(OPERATION.chain[i].ability.description);
             let title = OPERATION.chain[i].ability.name;
             if(OPERATION.chain[i].cleanup) {

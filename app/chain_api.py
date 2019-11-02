@@ -78,6 +78,7 @@ class ChainApi:
                                   allow_untrusted=int(data.pop('allow_untrusted')), autonomous=int(data.pop('autonomous')))
                     )
                     self.loop.create_task(self.app_svc.run_operation(o))
+                    return list(o.display)
             if request.method == 'POST':
                 if index == 'result':
                     link_id = data.pop('link_id')
