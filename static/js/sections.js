@@ -918,7 +918,7 @@ function submitHilChanges(status){
     document.getElementById("loop-modal").style.display = "none";
     let linkId = $('#hil-linkId').html();
     let command = $('#hil-command').val();
-    let data = {'index':'chain', 'link_id': linkId, 'status': status, 'command': command};
+    let data = {'index':'chain', 'link_id': linkId, 'status': status, 'command': btoa(command)};
     restRequest('PUT', data, doNothing);
     refresh();
     return false;
