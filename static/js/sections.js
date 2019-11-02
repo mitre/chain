@@ -392,7 +392,8 @@ function operationCallback(data){
 }
 
 function discard(linkId) {
-    let data = {'index':'chain', 'link_id': linkId, 'status': -2};
+    let operation = $('#operation-list option:selected').attr('value');
+    let data = {'index':'chain', 'operation': operation, 'link_id': linkId, 'status': -2};
     restRequest('PUT', data, doNothing);
 }
 
@@ -918,7 +919,9 @@ function submitHilChanges(status){
     document.getElementById("loop-modal").style.display = "none";
     let linkId = $('#hil-linkId').html();
     let command = $('#hil-command').val();
-    let data = {'index':'chain', 'link_id': linkId, 'status': status, 'command': btoa(command)};
+    let operation = $('#operation-list option:selected').attr('value');
+
+    let data = {'index':'chain', 'operation': operation, 'link_id': linkId, 'status': status, 'command': btoa(command)};
     restRequest('PUT', data, doNothing);
     refresh();
     return false;
@@ -937,11 +940,12 @@ function toggleHil(){
 
 function hilApproveAll(){
     document.getElementById("loop-modal").style.display = "none";
+    let operation = $('#operation-list option:selected').attr('value');
     let currentLinkId = $('#hil-linkId').html();
     for(let i=0; i<OPERATION.chain.length; i++){
         let nextLink = OPERATION.chain[i];
         if (nextLink.id >= currentLinkId){
-            let data = {'index':'chain', 'link_id': nextLink.id, 'status': -3};
+            let data = {'index':'chain', 'operation':operation, 'link_id': nextLink.id, 'status': -3};
             restRequest('PUT', data, doNothing);
         }
     }

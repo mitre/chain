@@ -94,8 +94,9 @@ class ChainApi:
 
             if request.method == 'PUT':
                 if index == 'chain':
+                    operation = data.pop('operation')
                     link_id = int(data.pop('link_id'))
-                    for op in await self.data_svc.locate('operations', match=dict(finish=None)):
+                    for op in await self.data_svc.locate('operations', match=dict(name=operation)):
                         link = next((link for link in op.chain if link.id == link_id), None)
                         link.status = data.get('status')
                         if data.get('command'):
