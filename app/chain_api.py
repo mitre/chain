@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import json
 
 from aiohttp import web
 from aiohttp_jinja2 import template
@@ -71,8 +72,9 @@ class ChainApi:
                     adversary = await self.data_svc.locate('adversaries', match=dict(adversary_id=data.pop('adversary_id')))
                     agents = await self.data_svc.locate('agents', match=dict(group=data.pop('group')))
                     sources = await self.data_svc.locate('sources', match=dict(name=data.pop('source')))
+                    operations = await self.data_svc.locate('operations')
                     await self.data_svc.store(
-                        Operation(name=name, planner=planner[0], agents=agents, adversary=adversary[0],
+                        Operation(op_id=len(operations)+1, name=name, planner=planner[0], agents=agents, adversary=adversary[0],
                                   jitter=data.pop('jitter'), source=next(iter(sources), None), state=data.pop('state'),
                                   allow_untrusted=int(data.pop('allow_untrusted')), autonomous=int(data.pop('autonomous')))
                     )
@@ -83,7 +85,7 @@ class ChainApi:
                     for op in await self.data_svc.locate('operations'):
                         link = next((link for link in op.chain if link.id == link_id), None)
                         _, content = await self.file_svc.read_file(name=str(link_id), location='data/results')
-                        return dict(link=link.display, output=content)
+                        return dict(link=link.display, output=content.decode('utf-8'))
 
             if request.method == 'PUT':
                 if index == 'chain':
