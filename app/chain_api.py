@@ -14,7 +14,7 @@ class ChainApi:
 
     def __init__(self, services):
         self.data_svc = services.get('data_svc')
-        self.operation_svc = services.get('operation_svc')
+        self.app_svc = services.get('app_svc')
         self.reporting_svc = services.get('reporting_svc')
         self.auth_svc = services.get('auth_svc')
         self.plugin_svc = services.get('plugin_svc')
@@ -73,12 +73,12 @@ class ChainApi:
                     agents = await self.data_svc.locate('agents', match=dict(group=data.pop('group')))
                     sources = await self.data_svc.locate('sources', match=dict(name=data.pop('source')))
                     operations = await self.data_svc.locate('operations')
-                    await self.data_svc.store(
+                    o = await self.data_svc.store(
                         Operation(op_id=len(operations)+1, name=name, planner=planner[0], agents=agents, adversary=adversary[0],
                                   jitter=data.pop('jitter'), source=next(iter(sources), None), state=data.pop('state'),
                                   allow_untrusted=int(data.pop('allow_untrusted')), autonomous=int(data.pop('autonomous')))
                     )
-                    self.loop.create_task(self.operation_svc.run(name=name))
+                    self.loop.create_task(self.app_svc.run_operation(o))
             if request.method == 'POST':
                 if index == 'result':
                     link_id = data.pop('link_id')
