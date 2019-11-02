@@ -267,7 +267,7 @@
                 <select id="operation-list" style="margin-bottom: 15px;" onchange="refresh()">
                   <option id="operationDefault" value="" disabled selected>Operations</option>
                   {% for op in operations %}
-                      <option class="operationOption" id="{{ op.name }}" value="{{ op.name }}">{{ op.name }} - {{ op.start }}</option>
+                      <option class="operationOption" id="{{ op.id }}-{{ op.name }}" value="{{ op.name }}">{{ op.name }} - {{ op.start }}</option>
                   {% endfor %}
                 </select>
               </div>

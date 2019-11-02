@@ -304,8 +304,8 @@ function reloadOperationsElements(data){
     let op_elem = $("#operation-list");
     $.each(data, function(index, op) {
         if(!op_elem.find('option[value="'+op.name+'"]').length > 0){
-            op_elem.append('<option id="' + op.name + '" class="operationOption" ' +
-                'value="' + op.name +'" >' + op.name + ' - ' + op.start + '</option>');
+            op_elem.append('<option id="' + op.id + '-' + op.name + '" class="operationOption" ' +
+                'value="' + op.id +'" >' + op.name + ' - ' + op.start + '</option>');
         }
     });
     op_elem.prop('selectedIndex', op_elem.find('option').length-1).change();
@@ -856,14 +856,14 @@ function addFacts(facts){
     facts.forEach(f => {
         let found = false;
         for(let i in unique){
-            if(unique[i].property == f.property) {
+            if(unique[i].prop == f.prop) {
                 unique[i].count += 1;
                 found = true;
                 break;
             }
         }
         if(!found) {
-            unique.push({'property':f.property, 'count':1});
+            unique.push({'property':f.prop, 'count':1});
         }
     });
     unique.forEach(u => {

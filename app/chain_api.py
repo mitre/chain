@@ -84,8 +84,12 @@ class ChainApi:
                     for op in await self.data_svc.locate('operations'):
                         link = next((link for link in op.chain if link.id == link_id), None)
                         if link:
-                            _, content = await self.file_svc.read_file(name='%s-%s' % (op.name, link_id), location='data/results')
+                            _, content = await self.file_svc.read_file(name='%s-%s-%s' % (op.id, op.name, link_id), location='data/results')
                             return dict(link=link.display, output=content.decode('utf-8'))
+                elif index == 'operation_report':
+                    op_id = data.pop('op_id')
+                    op = (await self.data_svc.locate('operations', match=dict(id=int(op_id))))[0]
+                    return op.report
 
             if request.method == 'PUT':
                 if index == 'chain':
@@ -109,7 +113,6 @@ class ChainApi:
                     ability=lambda d: self.data_svc.locate('abilities', match=d),
                     operation=lambda d: self.data_svc.locate('operations', match=d),
                     agent=lambda d: self.data_svc.locate('agents', match=d),
-                    operation_report=lambda d: self.reporting_svc.generate_operation_report(**d),
                 )
             )
             output = await options[request.method][index](data)
