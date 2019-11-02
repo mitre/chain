@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import json
 
 from aiohttp import web
 from aiohttp_jinja2 import template
@@ -84,8 +83,9 @@ class ChainApi:
                     link_id = data.pop('link_id')
                     for op in await self.data_svc.locate('operations'):
                         link = next((link for link in op.chain if link.id == link_id), None)
-                        _, content = await self.file_svc.read_file(name=str(link_id), location='data/results')
-                        return dict(link=link.display, output=content.decode('utf-8'))
+                        if link:
+                            _, content = await self.file_svc.read_file(name='%s-%s' % (op.name, link_id), location='data/results')
+                            return dict(link=link.display, output=content.decode('utf-8'))
 
             if request.method == 'PUT':
                 if index == 'chain':
