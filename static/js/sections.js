@@ -857,18 +857,18 @@ function addFacts(facts){
     facts.forEach(f => {
         let found = false;
         for(let i in unique){
-            if(unique[i].prop == f.prop) {
+            if(unique[i].trait == f.trait) {
                 unique[i].count += 1;
                 found = true;
                 break;
             }
         }
         if(!found) {
-            unique.push({'property':f.prop, 'count':1});
+            unique.push({'trait':f.trait, 'count':1});
         }
     });
     unique.forEach(u => {
-        $("#reports-dash-facts").append("<tr><td>"+u.property+"</td><td>"+u.count+"</td></tr>");
+        $("#reports-dash-facts").append("<tr><td>"+u.trait+"</td><td>"+u.count+"</td></tr>");
     });
 }
 
