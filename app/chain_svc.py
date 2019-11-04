@@ -29,7 +29,7 @@ class ChainService:
         with open(file_path, 'w+') as f:
             f.seek(0)
             p = defaultdict(list)
-            for ability in data.get('phases'):
+            for ability in data.pop('phases'):
                 p[ability['phase']].append(ability['id'])
             f.write(yaml.dump(dict(id=i, name=data.pop('name'), description=data.pop('description'), phases=dict(p))))
             f.truncate()
