@@ -1,11 +1,9 @@
-import asyncio
+
 import logging
 
 from aiohttp import web
 from aiohttp_jinja2 import template
 
-from app.objects.c_agent import Agent
-from app.objects.c_operation import Operation
 from plugins.chain.app.chain_svc import ChainService
 
 
@@ -20,7 +18,6 @@ class ChainApi:
         self.agent_svc = services.get('agent_svc')
         self.file_svc = services.get('file_svc')
         self.chain_svc = ChainService(services)
-        self.loop = asyncio.get_event_loop()
 
     @template('chain.html')
     async def landing(self, request):
@@ -59,75 +56,26 @@ class ChainApi:
         try:
             data = dict(await request.json())
             index = data.pop('index')
-            if request.method == 'DELETE':
-                if index == 'agent':
-                    await self.data_svc.remove('agents', data)
-                return 'Delete action completed'
-
-            if request.method == 'PUT':
-                if index == 'operation':
-                    name = data.pop('name')
-                    planner = await self.data_svc.locate('planners', match=dict(name=data.pop('planner')))
-                    adversary = await self.data_svc.locate('adversaries', match=dict(adversary_id=data.pop('adversary_id')))
-                    agents = await self.data_svc.locate('agents', match=dict(group=data.pop('group')))
-                    sources = await self.data_svc.locate('sources', match=dict(name=data.pop('source')))
-                    operations = await self.data_svc.locate('operations')
-                    o = await self.data_svc.store(
-                        Operation(op_id=len(operations)+1, name=name, planner=planner[0], agents=agents, adversary=adversary[0],
-                                  jitter=data.pop('jitter'), source=next(iter(sources), None), state=data.pop('state'),
-                                  allow_untrusted=int(data.pop('allow_untrusted')), autonomous=int(data.pop('autonomous')))
-                    )
-                    self.loop.create_task(self.app_svc.run_operation(o))
-                    return [o.display]
-            if request.method == 'POST':
-                if index == 'result':
-                    link_id = data.pop('link_id')
-                    link = await self.app_svc.find_link(link_id)
-                    if link:
-                        _, content = await self.file_svc.read_file(name='%s' % link_id, location='data/results')
-                        return dict(link=link.display, output=content.decode('utf-8'))
-                elif index == 'operation_report':
-                    op_id = data.pop('op_id')
-                    op = (await self.data_svc.locate('operations', match=dict(name=op_id)))[0]
-                    return op.report
-
-            if request.method == 'PUT':
-                if index == 'chain':
-                    link = await self.app_svc.find_link(data.pop('link_id'))
-                    link.status = data.get('status')
-                    if data.get('command'):
-                        link.command = data.get('command')
-                    return ''
-
             options = dict(
+                DELETE=dict(
+                    agent=lambda d: self.chain_svc.delete_agent(d),
+                ),
                 PUT=dict(
-                    adversary=lambda d: self.chain_svc.persist_adversary(**d),
-                    agent=lambda d: self.data_svc.store(Agent(paw=d.pop('paw'), group=d.get('group'),
-                                                              trusted=d.get('trusted'), sleep_min=d.get('sleep_min'),
-                                                              sleep_max=d.get('sleep_max'))),
+                    adversary=lambda d: self.chain_svc.persist_adversary(d),
+                    agent=lambda d: self.chain_svc.update_agent_data(d),
+                    chain=lambda d: self.chain_svc.update_chain_data(d),
+                    operation=lambda d: self.chain_svc.create_operation(d),
                 ),
                 POST=dict(
-                    adversary=lambda d: self.data_svc.locate('adversaries', match=d),
-                    ability=lambda d: self.data_svc.locate('abilities', match=d),
-                    operation=lambda d: self.data_svc.locate('operations', match=d),
-                    agent=lambda d: self.data_svc.locate('agents', match=d),
+                    ability=lambda d: self.chain_svc.display_objects('abilities', d),
+                    adversary=lambda d: self.chain_svc.display_objects('adversaries', d),
+                    agent=lambda d: self.chain_svc.display_objects('agents', d),
+                    operation=lambda d: self.chain_svc.display_objects('operations', d),
+                    operation_report=lambda d: self.chain_svc.display_operation_report(d),
+                    result=lambda d: self.chain_svc.display_result(d),
                 )
             )
             output = await options[request.method][index](data)
-            if index == 'operation':
-                if request.method == 'POST':
-                    output = [o.display for o in output]
-            if index == 'agent':
-                if request.method == 'PUT':
-                    output = output.display
-                elif request.method == 'POST':
-                    output = [a.display for a in output]
-            if index == 'adversary':
-                if request.method == 'POST':
-                    output = [a.display for a in output]
-            if index == 'ability':
-                if request.method == 'POST':
-                    output = [a.display for a in output]
             return output
         except Exception as e:
             logging.error('[!] rest_core: %s' % e)
@@ -159,3 +107,4 @@ class ChainApi:
         operation = await self.data_svc.locate('operations', match=dict(name=body['name']))
         operation[0].state = body.get('state')
         return web.Response()
+
