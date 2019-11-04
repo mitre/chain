@@ -46,8 +46,11 @@ class ChainService:
         link_id = data.pop('link_id')
         link = await self.app_svc.find_link(link_id)
         if link:
-            _, content = await self.file_svc.read_file(name='%s' % link_id, location='data/results')
-            return dict(link=link.display, output=content.decode('utf-8'))
+            try:
+                _, content = await self.file_svc.read_file(name='%s' % link_id, location='data/results')
+                return dict(link=link.display, output=content.decode('utf-8'))
+            except FileNotFoundError:
+                return ''
         return ''
 
     async def display_operation_report(self, data):
