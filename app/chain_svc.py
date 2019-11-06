@@ -58,7 +58,7 @@ class ChainService:
 
     async def display_operation_report(self, data):
         op_id = data.pop('op_id')
-        op = (await self.data_svc.locate('operations', match=dict(name=op_id)))[0]
+        op = (await self.data_svc.locate('operations', match=dict(id=int(op_id))))[0]
         return op.report
 
     async def update_agent_data(self, data):

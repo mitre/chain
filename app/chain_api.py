@@ -1,5 +1,5 @@
-
 import logging
+import traceback
 
 from aiohttp import web
 from aiohttp_jinja2 import template
@@ -79,7 +79,7 @@ class ChainApi:
             output = await options[request.method][index](data)
             return output
         except Exception as e:
-            logging.error('[!] rest_core: %s' % e)
+            traceback.print_exc()
 
     async def rest_update_operation(self, request):
         i = request.match_info['operation_id']
