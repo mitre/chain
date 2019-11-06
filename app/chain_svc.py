@@ -1,10 +1,12 @@
 import asyncio
 import yaml
+import datetime
 
 from collections import defaultdict
 
 from app.objects.c_agent import Agent
 from app.objects.c_operation import Operation
+from app.objects.c_schedule import Schedule
 
 
 class ChainService:
@@ -14,6 +16,7 @@ class ChainService:
         self.app_svc = services.get('app_svc')
         self.data_svc = services.get('data_svc')
         self.file_svc = services.get('file_svc')
+        self.log = self.app_svc.add_service('chain_svc', self)
         self.loop = asyncio.get_event_loop()
 
     async def persist_adversary(self, data):
@@ -73,16 +76,28 @@ class ChainService:
         return ''
 
     async def create_operation(self, data):
+        operation = await self._build_operation_object(data)
+        await self.data_svc.store(operation)
+        self.loop.create_task(self.app_svc.run_operation(operation))
+        return [operation.display]
+
+    async def create_schedule(self, data):
+        operation = await self._build_operation_object(data)
+        scheduled = await self.data_svc.store(
+            Schedule(name=operation.name,
+                     schedule=datetime.time(16, 56, 0),
+                     task=operation)
+        )
+        self.log.debug('Scheduled new operation for %s' % scheduled.schedule)
+
+    """ PRIVATE """
+
+    async def _build_operation_object(self, data):
         name = data.pop('name')
         planner = await self.data_svc.locate('planners', match=dict(name=data.pop('planner')))
         adversary = await self.data_svc.locate('adversaries', match=dict(adversary_id=data.pop('adversary_id')))
         agents = await self.data_svc.locate('agents', match=dict(group=data.pop('group')))
         sources = await self.data_svc.locate('sources', match=dict(name=data.pop('source')))
-        operations = await self.data_svc.locate('operations')
-        o = await self.data_svc.store(
-            Operation(op_id=len(operations) + 1, name=name, planner=planner[0], agents=agents, adversary=adversary[0],
-                      jitter=data.pop('jitter'), source=next(iter(sources), None), state=data.pop('state'),
-                      allow_untrusted=int(data.pop('allow_untrusted')), autonomous=int(data.pop('autonomous')))
-        )
-        self.loop.create_task(self.app_svc.run_operation(o))
-        return [o.display]
+        return Operation(name=name, planner=planner[0], agents=agents, adversary=adversary[0],
+                         jitter=data.pop('jitter'), source=next(iter(sources), None), state=data.pop('state'),
+                         allow_untrusted=int(data.pop('allow_untrusted')), autonomous=int(data.pop('autonomous')))

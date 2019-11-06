@@ -217,24 +217,6 @@ $(document).ready(function () {
     });
 });
 
-function handleFactAdd(){
-    let property = document.getElementById("factProperty").value;
-    if(!property){alert('Please enter a property'); return; }
-    let value = document.getElementById("factValue").value;
-    if(!value){alert('Please enter a value'); return; }
-    let source = document.getElementById("factSource").value;
-    if(!source){alert('Please enter a source'); return; }
-
-    let facts = {
-        "index":"fact",
-        "property":property,
-        "value":value,
-        "source_id":source,
-        "score":document.getElementById("factScore").value
-    };
-    restRequest('PUT', facts, reloadLocation);
-}
-
 /** OPERATIONS **/
 
 let atomic_interval = null;
@@ -244,15 +226,28 @@ function toggleOperationView() {
     $('#addOperation').toggle();
 
     if ($('#togBtnOp').is(':checked')) {
-        showHide('.queueOption,#opBtn', '#operation-list');
+        showHide('.queueOption,#opBtn,#scheduleBtn', '#operation-list');
     } else {
-        showHide('#operation-list', '.queueOption,#opBtn');
+        showHide('#operation-list', '.queueOption,#opBtn,#scheduleBtn');
     }
 }
 
 function handleStartAction(){
+    let op = buildOperationObject();
+    op['index'] = 'operation';
+    restRequest('PUT', op, handleStartActionCallback);
+}
+
+function handleScheduleAction(){
+    let op = buildOperationObject();
+    op['index'] = 'schedule';
+    restRequest('PUT', op, doNothing);
+    flashy('operation-flash', 'Operation scheduled!');
+}
+
+function buildOperationObject() {
     let name = document.getElementById("queueName").value;
-    if(!name){alert('Please enter an operation name'); return; }
+    if(!name){ alert('Please enter an operation name'); return; }
 
     let jitter = document.getElementById("queueJitter").value || "4/8";
     try {
@@ -270,9 +265,7 @@ function handleStartAction(){
         alert('Jitter must be of the form "min/max" (e.x. 4/8)');
         return;
     }
-
-    let queueDetails = {
-        "index":"operation",
+    return {
         "name":name,
         "group":document.getElementById("queueGroup").value,
         "adversary_id":document.getElementById("queueFlow").value,
@@ -283,8 +276,8 @@ function handleStartAction(){
         "source":document.getElementById("queueSource").value,
         "allow_untrusted":document.getElementById("queueUntrusted").value
     };
-    restRequest('PUT', queueDetails, handleStartActionCallback);
 }
+
 function changeCurrentOperationState(newState){
     let selectedOperationId = $('#operation-list option:selected').attr('value');
     if(OPERATION.state === 'finished'){
@@ -303,9 +296,9 @@ function handleStartActionCallback(data){
 function reloadOperationsElements(data){
     let op_elem = $("#operation-list");
     $.each(data, function(index, op) {
-        if(!op_elem.find('option[value="'+op.name+'"]').length > 0){
-            op_elem.append('<option id="' + op.name + '" class="operationOption" ' +
-                'value="' + op.name +'" >' + op.name + ' - ' + op.start + '</option>');
+        if(!op_elem.find('option[value="'+op.id+'"]').length > 0){
+            op_elem.append('<option id="' + op.id + '" class="operationOption" ' +
+                'value="' + op.id +'" >' + op.name + ' - ' + op.start + '</option>');
         }
     });
     op_elem.prop('selectedIndex', op_elem.find('option').length-1).change();
@@ -313,7 +306,7 @@ function reloadOperationsElements(data){
 
 function refresh() {
     let selectedOperationId = $('#operation-list option:selected').attr('value');
-    let postData = selectedOperationId ? {'index':'operation','name': selectedOperationId} : null;
+    let postData = selectedOperationId ? {'index':'operation','id': parseInt(selectedOperationId)} : null;
     if (selectedOperationId != null){
         $('.op-selected').css('visibility', 'visible');
     }
@@ -359,7 +352,7 @@ function operationCallback(data){
             let splitPaw = OPERATION.chain[i].paw.split('$');
             template.find('#link-technique').html(ability.technique_id + '<span class="tooltiptext">' + ability.technique_name + '</span>');
             template.attr("id", "op_id_" + OPERATION.chain[i].id);
-            template.attr("operation", OPERATION.name);
+            template.attr("operation", OPERATION.id);
             template.attr("data-date", OPERATION.chain[i].decide.split('.')[0]);
             template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100" ' +
                 'ondblclick="rollup('+OPERATION.chain[i].id+')">'+ splitPaw[0]+'$'+splitPaw[1] + '... ' +
@@ -759,6 +752,8 @@ function addToPhase() {
 function checkOpformValid(){
     validateFormState(($('#queueName').val()) && ($('#queueFlow').prop('selectedIndex') !== 0) && ($('#queueGroup').prop('selectedIndex') !== 0),
         '#opBtn');
+    validateFormState(($('#queueName').val()) && ($('#queueFlow').prop('selectedIndex') !== 0) && ($('#queueGroup').prop('selectedIndex') !== 0),
+        '#scheduleBtn');
 }
 
 function uuidv4() {
@@ -945,13 +940,12 @@ function toggleHil(){
 
 function hilApproveAll(){
     document.getElementById("loop-modal").style.display = "none";
-    let operation = $('#operation-list option:selected').attr('value');
     let currentLinkUnique = $('#hil-linkId').html();
     let currentLinkId = currentLinkUnique.split('-')[1];
     for(let i=0; i<OPERATION.chain.length; i++){
         let nextLink = OPERATION.chain[i];
         if (nextLink.id >= currentLinkId){
-            let data = {'index':'chain', 'operation':operation, 'link_id': nextLink.unique, 'status': -3};
+            let data = {'index':'chain','link_id': nextLink.unique, 'status': -3};
             restRequest('PUT', data, doNothing);
         }
     }

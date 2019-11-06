@@ -65,6 +65,7 @@ class ChainApi:
                     agent=lambda d: self.chain_svc.update_agent_data(d),
                     chain=lambda d: self.chain_svc.update_chain_data(d),
                     operation=lambda d: self.chain_svc.create_operation(d),
+                    schedule=lambda d: self.chain_svc.create_schedule(d),
                 ),
                 POST=dict(
                     ability=lambda d: self.chain_svc.display_objects('abilities', d),
@@ -81,9 +82,9 @@ class ChainApi:
             logging.error('[!] rest_core: %s' % e)
 
     async def rest_update_operation(self, request):
-        name = request.match_info['operation_id']
+        i = request.match_info['operation_id']
         data = await request.json()
-        operation = await self.data_svc.locate('operations', match=dict(name=name))
+        operation = await self.data_svc.locate('operations', match=dict(id=int(i)))
         operation[0].autonomous = data.get('autonomous')
         return web.Response()
 
