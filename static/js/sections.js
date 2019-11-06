@@ -371,7 +371,7 @@ function operationCallback(data){
             template.find('#time-executor').html(OPERATION.chain[i].executor);
             refreshUpdatableFields(OPERATION.chain[i], template);
 
-            template.insertBefore("#time-start");
+            template.insertAfter("#time-start");
             $(template.find("#inner-contents")).slideUp();
             template.show();
         } else {
