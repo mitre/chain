@@ -270,7 +270,9 @@
                 <select id="operation-list" style="margin-bottom: 15px;" onchange="refresh()">
                   <option id="operationDefault" value="" disabled selected>Operations</option>
                   {% for op in operations %}
-                      <option class="operationOption" id="{{ op.id }}-{{ op.name }}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
+                        {%  if op.start|length%}
+                            <option class="operationOption" id="{{ op.id }}-{{ op.name }}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
+                        {% endif %}
                   {% endfor %}
                 </select>
               </div>
@@ -416,7 +418,7 @@
               <select id="report-list" style="margin-bottom: 15px;" onchange="showReports()">
                   <option id="reportDefault" value="" disabled selected>Operations</option>
                   {% for op in operations %}
-                    <option class="operationOption" id="{{ op.name }}" value="{{ op.name }}">{{ op.name }} - {{ op.start }}</option>
+                    <option class="operationOption" id="{{ op.name }}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
                   {% endfor %}
                </select>
               <select id="report-output" style="">
