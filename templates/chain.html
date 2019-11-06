@@ -270,7 +270,7 @@
                 <select id="operation-list" style="margin-bottom: 15px;" onchange="refresh()">
                   <option id="operationDefault" value="" disabled selected>Operations</option>
                   {% for op in operations %}
-                      <option class="operationOption" id="{{ op.id }}-{{ op.name }}" value="{{ op.name }}">{{ op.name }} - {{ op.start }}</option>
+                      <option class="operationOption" id="{{ op.id }}-{{ op.name }}" value="{{ op.id }}">{{ op.name }} - {{ op.start }}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -316,6 +316,14 @@
                   <button id="opBtn" type="button" style="opacity:0.5" disabled="true"
                       class="button-notready atomic-button" onclick="handleStartAction()">Start
                   </button>
+                  <br>
+                  <h2 style="margin:0px">OR</h2>
+                  <button id="scheduleBtn" type="button" style="opacity:0.5" disabled="true"
+                      class="button-notready atomic-button" onclick="handleScheduleAction()">Run every day @ 12am
+                  </button>
+                  <div id="operation-flash">
+                      <span id="message"></span>
+                  </div>
               </div>
             </div>
             <div class="column op-selected" style="flex:75%">
