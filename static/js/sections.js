@@ -339,7 +339,7 @@ function operationCallback(data){
     } else {
         $("#togBtnHil").prop("checked", false);
     }
-
+    changeProgress((OPERATION.phase / Object.keys(OPERATION.adversary.phases).length) * 100);
     clearTimeline();
     for(let i=0; i<OPERATION.chain.length; i++){
         if(OPERATION.chain[i].status === -1) {
@@ -474,6 +474,11 @@ function downloadOperationReport() {
     restRequest('POST', postData, downloadObjectAsJson, '/plugin/chain/rest');
 }
 
+function changeProgress(percent) {
+    let elem = document.getElementById("myBar");
+    elem.style.width = percent + "%";
+    elem.innerHTML = percent + "%";
+}
 /** ADVERSARIES **/
 
 function toggleAdversaryView() {
