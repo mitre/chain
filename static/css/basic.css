@@ -331,7 +331,6 @@ table.dataTable input[type=text] {
 }
 .op-control-item{
     background-color: white;
-    border: 2px solid var(--theme-color);
     height: 30px;
     border-radius: 10px;
     text-align: center;
@@ -354,7 +353,6 @@ table.dataTable input[type=text] {
 }
 .op-control-item button {
     background-color: white;
-    border: 2px solid var(--theme-color);
     height: 30px;
     border-radius: 10px;
     text-align: center;
@@ -417,6 +415,7 @@ table.dataTable input[type=text] {
 #myBar {
   width: 10%;
   height: 30px;
+  padding-left: 5%;
   border-radius: 25px;
   background-color: var(--theme-color);
   text-align: center; /* To center it horizontally (if you want) */
