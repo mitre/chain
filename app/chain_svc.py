@@ -85,7 +85,7 @@ class ChainService:
         operation = await self._build_operation_object(data)
         scheduled = await self.data_svc.store(
             Schedule(name=operation.name,
-                     schedule=datetime.time(16, 56, 0),
+                     schedule=datetime.time(0, 0, 0),
                      task=operation)
         )
         self.log.debug('Scheduled new operation for %s' % scheduled.schedule)
