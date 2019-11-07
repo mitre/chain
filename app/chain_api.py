@@ -65,7 +65,6 @@ class ChainApi:
                     agent=lambda d: self.chain_svc.update_agent_data(d),
                     chain=lambda d: self.chain_svc.update_chain_data(d),
                     operation=lambda d: self.chain_svc.create_operation(d),
-                    schedule=lambda d: self.chain_svc.create_schedule(d),
                 ),
                 POST=dict(
                     ability=lambda d: self.chain_svc.display_objects('abilities', d),
@@ -94,7 +93,7 @@ class ChainApi:
 
         async def _validate_request():
             try:
-                op = await self.data_svc.locate('operations', dict(name=body['name']))
+                op = await self.data_svc.locate('operations', dict(id=body['name']))
                 if not len(op):
                     raise web.HTTPNotFound
                 elif op[0].state == op[0].states['FINISHED']:
@@ -105,7 +104,7 @@ class ChainApi:
                 print(e)
 
         await _validate_request()
-        operation = await self.data_svc.locate('operations', match=dict(name=body['name']))
+        operation = await self.data_svc.locate('operations', match=dict(id=body['name']))
         operation[0].state = body.get('state')
         return web.Response()
 
