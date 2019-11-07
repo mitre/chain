@@ -294,7 +294,6 @@
                   <select name="state" id="queueState" class="queueOption" style="opacity:0.5" disabled="false">
                     <option id="qstate-run" value="running">Run Operation on Start</option>
                     <option id="qstate-paused" value="paused">Start Operation Paused</option>
-                    <option id="qstate-scheduled" value="scheduled">Run daily @ midnight</option>
                   </select>
                   <select name="planner" id="queuePlanner" class="queueOption" style="opacity:0.5" disabled="true">
                     {% for p in planners %}
@@ -318,6 +317,11 @@
                   <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max) sec" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo"/>
                   <button id="opBtn" type="button" style="opacity:0.5" disabled="true"
                       class="button-notready atomic-button" onclick="handleStartAction()">Start
+                  </button>
+                  <br>
+                  <h2 style="margin:0px">OR</h2>
+                  <button id="scheduleBtn" type="button" style="opacity:0.5" disabled="true"
+                      class="button-notready atomic-button" onclick="handleScheduleAction()">Run every day @ 12am
                   </button>
                   <div id="operation-flash">
                       <span id="message"></span>

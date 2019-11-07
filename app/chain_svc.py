@@ -1,10 +1,12 @@
 import asyncio
-from collections import defaultdict
-
 import yaml
+
+from datetime import time
+from collections import defaultdict
 
 from app.objects.c_agent import Agent
 from app.objects.c_operation import Operation
+from app.objects.c_schedule import Schedule
 
 
 class ChainService:
@@ -75,11 +77,19 @@ class ChainService:
 
     async def create_operation(self, data):
         operation = await self._build_operation_object(data)
+        operation.set_start_details()
         await self.data_svc.store(operation)
-        if operation.is_runnable():
-            operation.set_start_details()
-            self.loop.create_task(self.app_svc.run_operation(operation))
+        self.loop.create_task(self.app_svc.run_operation(operation))
         return [operation.display]
+
+    async def create_schedule(self, data):
+        operation = await self._build_operation_object(data)
+        scheduled = await self.data_svc.store(
+            Schedule(name=operation.name,
+                     schedule=time(0, 0, 0),
+                     operation=operation)
+        )
+        self.log.debug('Scheduled new operation for %s' % scheduled.schedule)
 
     """ PRIVATE """
 

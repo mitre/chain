@@ -226,20 +226,23 @@ function toggleOperationView() {
     $('#addOperation').toggle();
 
     if ($('#togBtnOp').is(':checked')) {
-        showHide('.queueOption,#opBtn', '#operation-list');
+        showHide('.queueOption,#opBtn,#scheduleBtn', '#operation-list');
     } else {
-        showHide('#operation-list', '.queueOption,#opBtn');
+        showHide('#operation-list', '.queueOption,#opBtn,#scheduleBtn');
     }
 }
 
 function handleStartAction(){
     let op = buildOperationObject();
-    if(op['state'] === 'scheduled') {
-        restRequest('PUT', op, doNothing);
-        flashy('operation-flash', 'Operation scheduled!');
-    } else {
-        restRequest('PUT', op, handleStartActionCallback);
-    }
+    op['index'] = 'operation';
+    restRequest('PUT', op, handleStartActionCallback);
+}
+
+function handleScheduleAction(){
+    let op = buildOperationObject();
+    op['index'] = 'schedule';
+    restRequest('PUT', op, doNothing);
+    flashy('operation-flash', 'Operation scheduled!');
 }
 
 function buildOperationObject() {
@@ -750,6 +753,8 @@ function addToPhase() {
 function checkOpformValid(){
     validateFormState(($('#queueName').val()) && ($('#queueFlow').prop('selectedIndex') !== 0) && ($('#queueGroup').prop('selectedIndex') !== 0),
         '#opBtn');
+    validateFormState(($('#queueName').val()) && ($('#queueFlow').prop('selectedIndex') !== 0) && ($('#queueGroup').prop('selectedIndex') !== 0),
+        '#scheduleBtn');
 }
 
 function uuidv4() {
