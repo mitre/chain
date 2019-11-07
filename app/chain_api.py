@@ -65,6 +65,7 @@ class ChainApi:
                     agent=lambda d: self.chain_svc.update_agent_data(d),
                     chain=lambda d: self.chain_svc.update_chain_data(d),
                     operation=lambda d: self.chain_svc.create_operation(d),
+                    schedule=lambda d: self.chain_svc.create_schedule(d),
                 ),
                 POST=dict(
                     ability=lambda d: self.chain_svc.display_objects('abilities', d),
