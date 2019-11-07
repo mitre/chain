@@ -59,7 +59,7 @@ $(document).ready(function () {
                 targets: 0,
                 data: null,
                 render: function ( data, type, row, meta ) {
-                    return trimPaw(data['paw']);
+                    return trimAgentName(data['display_name']);
                 }
             },
             {
@@ -151,8 +151,8 @@ $(document).ready(function () {
     } );
 });
 
-function trimPaw(paw) {
-    let name = paw.split('$');
+function trimAgentName(displayName) {
+    let name = displayName.split('$');
     return name[0]+'$'+name[1];
 }
 
@@ -338,7 +338,7 @@ function operationCallback(data){
     for(let i=0; i<OPERATION.chain.length; i++){
         if(OPERATION.chain[i].status === -1) {
             $('#hil-linkId').html(OPERATION.chain[i].unique);
-            $('#hil-paw').html(trimPaw(OPERATION.chain[i].paw));
+            $('#hil-paw').html(trimAgentName(OPERATION.chain[i].agent_name));
             $('#hil-command').html(atob(OPERATION.chain[i].command));
             document.getElementById("loop-modal").style.display = "block";
             return;
@@ -350,19 +350,20 @@ function operationCallback(data){
             if(OPERATION.chain[i].cleanup) {
                 title = title + " (CLEANUP)"
             }
-            let splitPaw = OPERATION.chain[i].paw.split('$');
+            let splitAgentName = OPERATION.chain[i].agent_name.split('$');
             template.find('#link-technique').html(ability.technique_id + '<span class="tooltiptext">' + ability.technique_name + '</span>');
             template.attr("id", "op_id_" + OPERATION.chain[i].id);
             template.attr("operation", OPERATION.id);
             template.attr("data-date", OPERATION.chain[i].decide.split('.')[0]);
             template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100" ' +
-                'ondblclick="rollup('+OPERATION.chain[i].id+')">'+ splitPaw[0]+'$'+splitPaw[1] + '... ' +
+                'ondblclick="rollup('+OPERATION.chain[i].id+')">'+ splitAgentName[0]+'$'+splitAgentName[1] + '... ' +
                 title + '<span id="'+OPERATION.chain[i].id+'-rs" style="font-size:14px;float:right;display:none" ' +
                 'onclick="findResults(this, OPERATION.chain['+i+'].unique)"' +
                 'data-encoded-cmd="'+OPERATION.chain[i].command+'"'+'>&#9733;</span>' +
                 '<span id="'+OPERATION.chain[i].id+'-rm" style="font-size:11px;float:right" onclick="discard(OPERATION.chain['+i+'].unique)">&#x274C;</span></div>');
             template.find('#time-action').html(atob(OPERATION.chain[i].command));
             template.find('#time-executor').html(OPERATION.chain[i].executor);
+            template.find('#paw-id').html(OPERATION.chain[i].paw);
             refreshUpdatableFields(OPERATION.chain[i], template);
 
             template.insertAfter("#time-start");
