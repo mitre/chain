@@ -333,7 +333,7 @@ function operationCallback(data){
     } else {
         $("#togBtnHil").prop("checked", false);
     }
-    changeProgress((OPERATION.phase / Object.keys(OPERATION.adversary.phases).length) * 100);
+    changeProgress(parseInt((OPERATION.phase / Object.keys(OPERATION.adversary.phases).length) * 100));
     clearTimeline();
     for(let i=0; i<OPERATION.chain.length; i++){
         if(OPERATION.chain[i].status === -1) {
