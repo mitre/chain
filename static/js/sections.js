@@ -226,23 +226,20 @@ function toggleOperationView() {
     $('#addOperation').toggle();
 
     if ($('#togBtnOp').is(':checked')) {
-        showHide('.queueOption,#opBtn,#scheduleBtn', '#operation-list');
+        showHide('.queueOption,#opBtn', '#operation-list');
     } else {
-        showHide('#operation-list', '.queueOption,#opBtn,#scheduleBtn');
+        showHide('#operation-list', '.queueOption,#opBtn');
     }
 }
 
 function handleStartAction(){
     let op = buildOperationObject();
-    op['index'] = 'operation';
-    restRequest('PUT', op, handleStartActionCallback);
-}
-
-function handleScheduleAction(){
-    let op = buildOperationObject();
-    op['index'] = 'schedule';
-    restRequest('PUT', op, doNothing);
-    flashy('operation-flash', 'Operation scheduled!');
+    if(op['state'] === 'scheduled') {
+        restRequest('PUT', op, doNothing);
+        flashy('operation-flash', 'Operation scheduled!');
+    } else {
+        restRequest('PUT', op, handleStartActionCallback);
+    }
 }
 
 function buildOperationObject() {
@@ -266,6 +263,7 @@ function buildOperationObject() {
         return;
     }
     return {
+        "index": "operation",
         "name":name,
         "group":document.getElementById("queueGroup").value,
         "adversary_id":document.getElementById("queueFlow").value,
@@ -284,7 +282,7 @@ function changeCurrentOperationState(newState){
         alert('This operation has finished.');
         return;
     }
-    let data = {'name': selectedOperationId, 'state': newState};
+    let data = {'name': parseInt(selectedOperationId), 'state': newState};
     restRequest('PUT', data, function(d){refresh()}, '/plugin/chain/operation/state');
 }
 
@@ -752,8 +750,6 @@ function addToPhase() {
 function checkOpformValid(){
     validateFormState(($('#queueName').val()) && ($('#queueFlow').prop('selectedIndex') !== 0) && ($('#queueGroup').prop('selectedIndex') !== 0),
         '#opBtn');
-    validateFormState(($('#queueName').val()) && ($('#queueFlow').prop('selectedIndex') !== 0) && ($('#queueGroup').prop('selectedIndex') !== 0),
-        '#scheduleBtn');
 }
 
 function uuidv4() {
