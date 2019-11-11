@@ -1,8 +1,8 @@
 import asyncio
-import yaml
-
-from datetime import time
 from collections import defaultdict
+from datetime import time
+
+import yaml
 
 from app.objects.c_agent import Agent
 from app.objects.c_operation import Operation
@@ -87,7 +87,7 @@ class ChainService:
         scheduled = await self.data_svc.store(
             Schedule(name=operation.name,
                      schedule=time(0, 0, 0),
-                     operation=operation)
+                     task=operation)
         )
         self.log.debug('Scheduled new operation for %s' % scheduled.schedule)
 
