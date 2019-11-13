@@ -1,4 +1,5 @@
 import asyncio
+import pathlib
 from collections import defaultdict
 from datetime import time
 
@@ -90,6 +91,11 @@ class ChainService:
                      task=operation)
         )
         self.log.debug('Scheduled new operation (%s) for %s' % (operation.name, scheduled.schedule))
+
+    async def list_payloads(self):
+        payload_dirs = [pathlib.Path.cwd() / 'data' / 'payloads']
+        payload_dirs.extend(pathlib.Path.cwd() / 'plugins' / plugin / 'payloads' for plugin in self.file_svc.plugins)
+        return [p.name for p_dir in payload_dirs for p in p_dir.glob('*') if p.is_file()]
 
     """ PRIVATE """
 

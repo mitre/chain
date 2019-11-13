@@ -75,6 +75,7 @@ class ChainApi:
                     operation=lambda d: self.chain_svc.display_objects('operations', d),
                     operation_report=lambda d: self.chain_svc.display_operation_report(d),
                     result=lambda d: self.chain_svc.display_result(d),
+                    payload=lambda d: self.chain_svc.list_payloads(),
                 )
             )
             output = await options[request.method][index](data)

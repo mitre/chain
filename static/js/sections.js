@@ -980,16 +980,15 @@ $(document).ready(function () {
     $('#pTbl').DataTable({
         ajax: {
             url: '/plugin/chain/rest',
-            type: 'PUT',
+            type: 'POST',
             contentType: 'application/json',
             dataType: 'json',
             data: function ( d ) {
-                return JSON.stringify({'index':'payloads'});
+                return JSON.stringify({'index':'payload'});
             },
             dataSrc: ''
         },
         deferRender: true,
-        rowId: 'paw',
         stateSave: true,
         columnDefs: [
             {
@@ -1023,36 +1022,39 @@ function trimName(data){
 }
 
 function savePayloadLauncher(data){
-        let armor = document.getElementById("togBtnPay").checked;
-        let name = document.getElementById('myFilename').value;
-        if (name === ""){
-            alert('Please enter a name for this payload!');
-            return
-        }
-        fd = new FormData();
-        fd.append('file-0', data);
-       $.ajax({
-           url: '/plugin/chain/payload',
-           type: 'POST',
-           enctype: 'multipart/form-data',
-           headers: {"x-name": name, "x-xored": armor},
-           contentType: false,
-           processData: false,
-           data: fd,
-           success: function(data) { savePayloadCallback(data); },
-           error: function (xhr, ajaxOptions, thrownError) { console.log(thrownError) }
-        });
+    let name = document.getElementById('myFilename').value;
+    if (name === ""){
+        alert('Please enter a name for this payload!');
+        return
+    }
+    let fd = new FormData();
+    fd.append('file-0', data);
+    $.ajax({
+        url: '/plugin/chain/payload',
+        type: 'POST',
+        enctype: 'multipart/form-data',
+        headers: {"x-name": name},
+        contentType: false,
+        processData: false,
+        data: fd,
+        success: function(data) { savePayloadCallback(data); },
+        error: function (xhr, ajaxOptions, thrownError) { console.log(thrownError) }
+    });
+}
+function togglePayloadView() {
+    $('#viewPayload').toggle();
+    $('#addPayload').toggle();
 }
 
 function savePayload(){
-        let file = document.getElementById("myFile").files[0];
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            data = e.target.result;
-            data = data.split('base64,')[1];
-            savePayloadLauncher(data);
-        };
-        reader.readAsDataURL(file);
+    let file = document.getElementById("myFile").files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        data = e.target.result;
+        data = data.split('base64,')[1];
+        savePayloadLauncher(data);
+    };
+    reader.readAsDataURL(file);
 }
 
 function savePayloadCallback(data) {

@@ -170,22 +170,29 @@
             <div class="column section-border" style="flex:25%;">
               <img src="/chain/img/payload.png">
               <h4 style="margin-bottom:-5px">Payload</h4>
-              <p class="section-description">
+              <br>
+              <div class="toggle">
+                <label class="switch"><input type="checkbox" id="togBtnPayload" onchange="togglePayloadView()">
+                    <div class="slider round"><span class="on">ADD</span><span class="off">VIEW</span></div>
+                </label>
+              </div>
+              <div id="viewPayload">
+                <p class="section-description">
                   Lists the available payload packages that can be used to augment techniques.
-              </p>
+                </p>
               <button type="button" class="button-embedded atomic-button" onclick="savePayloadCallback()">Refresh
                   payload table</button>
-                <input type="file" id="myFile">
+              </div>
+                <div id="addPayload" style="display: none">
+                    <p class="section-description">
+                        Upload a new payload to the caldera server.
+                    </p>
+                    <input type="file" id="myFile">
                     <input type="text" id="myFilename" placeholder="Enter Name Here">
-                <div class="toggle">
-                    <label class="switch"><input type="checkbox" id="togBtnPay">
-                    <div class="slider round"><span class="off">Normal</span><span class="on">Armored</span></div>
-                    </label>
-                    <br>
-                    </div>
                     <button id="addPayloadBtn" type="button" class="button-success atomic-button"
-                      onclick="savePayload()">Upload Payload
+                            onclick="savePayload()">Upload Payload
                     </button>
+                </div>
             </div>
             <div class="column" style="flex:75%">
               <table id="pTbl" class="display" style="width:100%;" >
