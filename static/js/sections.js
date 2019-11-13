@@ -59,7 +59,7 @@ $(document).ready(function () {
                 targets: 0,
                 data: null,
                 render: function ( data, type, row, meta ) {
-                    return trimAgentName(data['display_name']);
+                    return data['display_name'];
                 }
             },
             {
@@ -150,11 +150,6 @@ $(document).ready(function () {
         restRequest('DELETE', {"index": "agent", "paw": $(this).attr('paw')}, saveGroupsCallback);
     } );
 });
-
-function trimAgentName(displayName) {
-    let name = displayName.split('$');
-    return name[0]+'$'+name[1];
-}
 
 function agent_table_refresh(){
     $('#netTbl').DataTable().ajax.reload();
