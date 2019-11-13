@@ -35,7 +35,7 @@ $(document).ready(function () {
         });
         observer.observe(this, {childList:true});
     });
-})
+});
 
 /** GROUPS **/
 
@@ -338,7 +338,7 @@ function operationCallback(data){
     for(let i=0; i<OPERATION.chain.length; i++){
         if(OPERATION.chain[i].status === -1) {
             $('#hil-linkId').html(OPERATION.chain[i].unique);
-            $('#hil-paw').html(trimAgentName(OPERATION.chain[i].agent_name));
+            $('#hil-paw').html(OPERATION.chain[i].paw);
             $('#hil-command').html(atob(OPERATION.chain[i].command));
             document.getElementById("loop-modal").style.display = "block";
             return;
@@ -350,13 +350,13 @@ function operationCallback(data){
             if(OPERATION.chain[i].cleanup) {
                 title = title + " (CLEANUP)"
             }
-            let splitAgentName = OPERATION.chain[i].agent_name.split('$');
+            let agentPaw = OPERATION.chain[i].paw;
             template.find('#link-technique').html(ability.technique_id + '<span class="tooltiptext">' + ability.technique_name + '</span>');
             template.attr("id", "op_id_" + OPERATION.chain[i].id);
             template.attr("operation", OPERATION.id);
             template.attr("data-date", OPERATION.chain[i].decide.split('.')[0]);
             template.find('#time-tactic').html('<div style="font-size: 13px;font-weight:100" ' +
-                'ondblclick="rollup('+OPERATION.chain[i].id+')">'+ splitAgentName[0]+'$'+splitAgentName[1] + '... ' +
+                'ondblclick="rollup('+OPERATION.chain[i].id+')">agent#'+ agentPaw + '... ' +
                 title + '<span id="'+OPERATION.chain[i].id+'-rs" style="font-size:14px;float:right;display:none" ' +
                 'onclick="findResults(this, OPERATION.chain['+i+'].unique)"' +
                 'data-encoded-cmd="'+OPERATION.chain[i].command+'"'+'>&#9733;</span>' +
@@ -787,7 +787,7 @@ function displayReport(data) {
     $('#report-adversary').html(data.adversary.name);
     $('#report-adversary-desc').html(data.adversary.description);
     $('#report-group').html(data.host_group[0]['group']);
-    $('#report-group-cnt').html(data.host_group.length + ' hosts were included');
+    $('#report-group-cnt').html(data.host_group.length + ' agents were included');
     $('#report-steps').html(reportStepLength(data.steps));
     $('#report-steps-attack').html(data.adversary.name + " was " + reportScore(data.steps) + " successful in the attack");
     $('#report-planner').html(data.planner.name);
