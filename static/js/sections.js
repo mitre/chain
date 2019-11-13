@@ -974,3 +974,87 @@ function hilApproveAll(){
     refresh();
     return false;
 }
+
+/** Payloads */
+$(document).ready(function () {
+    $('#pTbl').DataTable({
+        ajax: {
+            url: '/plugin/chain/rest',
+            type: 'PUT',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: function ( d ) {
+                return JSON.stringify({'index':'payloads'});
+            },
+            dataSrc: ''
+        },
+        deferRender: true,
+        rowId: 'paw',
+        stateSave: true,
+        columnDefs: [
+            {
+                targets: 0,
+                data: null,
+                render: function ( data, type, row, meta ) {
+                    return trimName(data);
+                }
+            },
+            {
+                targets: 1,
+                data: null,
+                render: function (data, type, row, meta) {
+                    if (data.endsWith('.xored')) {
+                        return "True";
+                    }
+                    return "False";
+                }
+            }
+        ],
+        errMode: 'throw'
+    });
+});
+
+function payload_table_refresh(){
+    $('#pTbl').DataTable().ajax.reload();
+}
+
+function trimName(data){
+    return data.split('.xored')[0];
+}
+
+function savePayloadLauncher(data){
+        let armor = document.getElementById("togBtnPay").checked;
+        let name = document.getElementById('myFilename').value;
+        if (name === ""){
+            alert('Please enter a name for this payload!');
+            return
+        }
+        fd = new FormData();
+        fd.append('file-0', data);
+       $.ajax({
+           url: '/plugin/chain/payload',
+           type: 'POST',
+           enctype: 'multipart/form-data',
+           headers: {"x-name": name, "x-xored": armor},
+           contentType: false,
+           processData: false,
+           data: fd,
+           success: function(data) { savePayloadCallback(data); },
+           error: function (xhr, ajaxOptions, thrownError) { console.log(thrownError) }
+        });
+}
+
+function savePayload(){
+        let file = document.getElementById("myFile").files[0];
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            data = e.target.result;
+            data = data.split('base64,')[1];
+            savePayloadLauncher(data);
+        };
+        reader.readAsDataURL(file);
+}
+
+function savePayloadCallback(data) {
+    payload_table_refresh();
+}

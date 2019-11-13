@@ -93,3 +93,11 @@ span.psw {
     color: #7a1f1f;
     cursor: pointer;
 }
+
+input#myFile {
+    height: auto;
+    background-color: var(--navbar-background);
+}
+input#myFilename {
+    width: 80%;
+}
