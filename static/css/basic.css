@@ -415,7 +415,6 @@ table.dataTable input[type=text] {
 #myBar {
   width: 10%;
   height: 30px;
-  padding-left: 5%;
   border-radius: 25px;
   background-color: var(--theme-color);
   text-align: center; /* To center it horizontally (if you want) */
