@@ -995,7 +995,7 @@ $(document).ready(function () {
                 targets: 0,
                 data: null,
                 render: function ( data, type, row, meta ) {
-                    return trimName(data);
+                    return data.split('.xored')[0];
                 }
             },
             {
@@ -1013,50 +1013,6 @@ $(document).ready(function () {
     });
 });
 
-function payload_table_refresh(){
+function payloadTableRefresh(){
     $('#pTbl').DataTable().ajax.reload();
-}
-
-function trimName(data){
-    return data.split('.xored')[0];
-}
-
-function savePayloadLauncher(data){
-    let name = document.getElementById('myFilename').value;
-    if (name === ""){
-        alert('Please enter a name for this payload!');
-        return
-    }
-    let fd = new FormData();
-    fd.append('file-0', data);
-    $.ajax({
-        url: '/plugin/chain/payload',
-        type: 'POST',
-        enctype: 'multipart/form-data',
-        headers: {"x-name": name},
-        contentType: false,
-        processData: false,
-        data: fd,
-        success: function(data) { savePayloadCallback(data); },
-        error: function (xhr, ajaxOptions, thrownError) { console.log(thrownError) }
-    });
-}
-function togglePayloadView() {
-    $('#viewPayload').toggle();
-    $('#addPayload').toggle();
-}
-
-function savePayload(){
-    let file = document.getElementById("myFile").files[0];
-    var reader = new FileReader();
-    reader.onload = function(e) {
-        data = e.target.result;
-        data = data.split('base64,')[1];
-        savePayloadLauncher(data);
-    };
-    reader.readAsDataURL(file);
-}
-
-function savePayloadCallback(data) {
-    payload_table_refresh();
 }
