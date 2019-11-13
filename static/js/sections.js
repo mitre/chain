@@ -904,12 +904,12 @@ function openDuk2(){
     document.getElementById("duk-modal").style.display="block";
     $('#duk-text').text('Did you know... you can link abilities together by matching the output property from an ability\'s ' +
         'parser to variables inside another ability\'s command. Variables can be identified by looking for ' +
-        '#{variable_name_goes_here} syntax. Also, did you know... abilities can be edited in the middle of an operation.');
+        '#{variable_name_goes_here} syntax.');
 }
 
 function openDuk3(){
     document.getElementById("duk-modal").style.display="block";
-    $('#duk-text').text('Did you know... You can click on any row to show the details of the executed step. Click the ' +
+    $('#duk-text').text('Did you know... You can double-click on any row to show the details of the executed step. Click the ' +
         'star icon to view the standard output and error from the command that was executed. Highlighted text indicates ' +
         'facts which were learned from executing the step. Click the X to stop the ability from running.');
 }
