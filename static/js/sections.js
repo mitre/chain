@@ -201,10 +201,6 @@ function parseSleep(sleep){
 
 function doNothing() {}
 
-function reloadLocation(data){
-    window.location.reload();
-}
-
 /** FACTS **/
 
 $(document).ready(function () {
@@ -469,6 +465,18 @@ function changeProgress(percent) {
     elem.style.width = percent + "%";
     elem.innerHTML = percent + "%";
 }
+
+$(document).ready(function(){
+  $("#optional").click(function(){
+    $("#optional-options").slideToggle("slow");
+  });
+});
+$(document).ready(function(){
+  $("#schedules").click(function(){
+    $("#schedules-options").slideToggle("slow");
+  });
+});
+
 /** ADVERSARIES **/
 
 function toggleAdversaryView() {

@@ -290,42 +290,55 @@
                         <option id="qgroup-{{ g }}" value="{{ g }}">{{ g }}</option>
                     {% endfor %}
                   </select>
-                  <h4 style="margin-top:10px;">OPTIONAL:</h4>
-                  <select name="state" id="queueState" class="queueOption" style="opacity:0.5" disabled="false">
-                    <option id="qstate-run" value="running">Run Operation on Start</option>
-                    <option id="qstate-paused" value="paused">Start Operation Paused</option>
-                  </select>
-                  <select name="planner" id="queuePlanner" class="queueOption" style="opacity:0.5" disabled="true">
-                    {% for p in planners %}
-                        <option value="{{ p.name }}">Use {{ p.name }} planner</option>
-                    {% endfor %}
-                  </select>
-                  <select name="source" id="queueSource" class="queueOption" style="opacity:0.5" disabled="true">
-                    <option value="" selected>No fact source</option>
-                        {% for s in sources %}
-                            <option value="{{ s.name }}">{{ s.name }}</option>
+                  <br>
+                  <div id="optional" class="column sidebar-cutout" style="border-bottom: 1px solid white">
+                      <h5>OPTIONAL &#8595;</h5>
+                  </div>
+                  <div id="optional-options" class="column sidebar-cutout" style="display: none">
+                      <select name="state" id="queueState" class="queueOption" style="opacity:0.5" disabled="false">
+                        <option id="qstate-run" value="running">Run immediately</option>
+                        <option id="qstate-paused" value="paused">Pause on start</option>
+                      </select>
+                      <select name="planner" id="queuePlanner" class="queueOption" style="opacity:0.5" disabled="true">
+                        {% for p in planners %}
+                            <option value="{{ p.name }}">Use {{ p.name }} planner</option>
                         {% endfor %}
-                  </select>
-                  <select name="untrusted" id="queueUntrusted" class="queueOption" style="opacity:0.5" disabled="true">
-                    <option value="0" selected>Not allow untrusted agents</option>
-                    <option value="1">Allow untrusted agents</option>
-                  </select>
-                  <select name="autonomous" id="queueAuto" class="queueOption" style="opacity:0.5" disabled="true">
-                    <option value="1" selected>Run autonomously</option>
-                    <option value="0">Require manual approval</option>
-                  </select>
-                  <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max) sec" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo"/>
+                      </select>
+                      <select name="source" id="queueSource" class="queueOption" style="opacity:0.5" disabled="true">
+                        <option value="" selected>No fact source</option>
+                            {% for s in sources %}
+                                <option value="{{ s.name }}">{{ s.name }}</option>
+                            {% endfor %}
+                      </select>
+                      <select name="untrusted" id="queueUntrusted" class="queueOption" style="opacity:0.5" disabled="true">
+                        <option value="0" selected>Block untrusted agents</option>
+                        <option value="1">Allow untrusted agents</option>
+                      </select>
+                      <select name="autonomous" id="queueAuto" class="queueOption" style="opacity:0.5" disabled="true">
+                        <option value="1" selected>Run autonomously</option>
+                        <option value="0">Require manual approval</option>
+                      </select>
+                      <input name="jitter" id="queueJitter" class="queueOption" placeholder="Jitter (min/max) sec" style="opacity:0.5;" disabled="true" helpinfo="jitterInfo"/>
+                  </div>
+
+                  <div id="schedules" class="column sidebar-cutout" style="border-bottom: 1px solid white">
+                      <h5>SCHEDULE &#8595;</h5>
+                  </div>
+                  <div id="schedules-options" class="column sidebar-cutout" style="display: none;">
+                      <p>
+                          You can schedule this operation to run every day at midnight.
+                      </p>
+                      <button id="scheduleBtn" type="button" style="opacity:0.5;width:40%;border-radius:0;" disabled="true"
+                      class="button-notready atomic-button" onclick="handleScheduleAction()">Schedule
+                        </button>
+                      <div id="operation-flash">
+                          <span id="message"></span>
+                      </div>
+                  </div>
+                  <br>
                   <button id="opBtn" type="button" style="opacity:0.5" disabled="true"
                       class="button-notready atomic-button" onclick="handleStartAction()">Start
                   </button>
-                  <br>
-                  <h2 style="margin:0px">OR</h2>
-                  <button id="scheduleBtn" type="button" style="opacity:0.5" disabled="true"
-                      class="button-notready atomic-button" onclick="handleScheduleAction()">Run every day @ 12am
-                  </button>
-                  <div id="operation-flash">
-                      <span id="message"></span>
-                  </div>
               </div>
             </div>
             <div class="column op-selected" style="flex:75%">
