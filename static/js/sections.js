@@ -61,7 +61,7 @@ $(document).ready(function () {
                 targets: 0,
                 data: null,
                 render: function ( data, type, row, meta ) {
-                    return data['display_name'];
+                    return data['paw'];
                 }
             },
             {
