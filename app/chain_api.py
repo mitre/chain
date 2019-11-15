@@ -110,3 +110,6 @@ class ChainApi:
         operation = await self.data_svc.locate('operations', match=dict(id=body['name']))
         operation[0].state = body.get('state')
         return web.Response()
+
+    async def upload_payload(self, request):
+        return await self.file_svc.save_multipart_file_upload(request, 'data/payloads/')

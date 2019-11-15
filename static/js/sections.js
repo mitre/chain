@@ -1016,3 +1016,25 @@ $(document).ready(function () {
 function payloadTableRefresh(){
     $('#pTbl').DataTable().ajax.reload();
 }
+
+function togglePayloadView() {
+    $('#viewPayload').toggle();
+    $('#addPayload').toggle();
+}
+
+function uploadPayload() {
+    let file = document.getElementById('uploadPayloadFile').files[0];
+    let fd = new FormData();
+    fd.append('file', file);
+
+    $.ajax({
+        type: 'POST',
+        url: '/plugin/chain/payload',
+        data: fd,
+        processData: false,
+        contentType: false
+    }).done(function (){
+        payloadTableRefresh()
+    })
+
+}

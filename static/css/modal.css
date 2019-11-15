@@ -94,10 +94,7 @@ span.psw {
     cursor: pointer;
 }
 
-input#myFile {
+input#uploadPayloadFile{
     height: auto;
     background-color: var(--navbar-background);
-}
-input#myFilename {
-    width: 80%;
 }
