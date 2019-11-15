@@ -78,10 +78,13 @@ a:hover {
   box-shadow: 0 0 0 0.2em rgb(28, 202, 0);
 }
 .timeline .timeout:after {
-  box-shadow: 0 0 0 0.2em mediumvioletred;
+  box-shadow: 0 0 0 0.2em cornflowerblue;
 }
 .timeline .collected:after {
-  box-shadow: 0 0 0 0.2em orange;
+  box-shadow: 0 0 0 0.2em darkgoldenrod;
+}
+.timeline .untrusted:after {
+  box-shadow: 0 0 0 0.2em white;
 }
 .timeline .discarded:after {}
 

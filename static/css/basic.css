@@ -396,10 +396,14 @@ table.dataTable input[type=text] {
     background-color: green;
 }
 .legend .timeout {
-    background-color: mediumvioletred;
+    background-color: cornflowerblue;
 }
 .legend .collected {
-    background-color: orange;
+    background-color: darkgoldenrod;
+}
+.legend .untrusted {
+    background-color: white;
+    color: black;
 }
 .legend .discarded {
     background-color: var(--primary-background);

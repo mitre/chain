@@ -407,6 +407,8 @@ function refreshUpdatableFields(chain, div){
         applyTimelineColor(div, 'timeout');
     } else if (chain.status === -3 && chain.collect) {
         applyTimelineColor(div, 'collected');
+    } else if (chain.status === -4) {
+        applyTimelineColor(div, 'untrusted');
     } else {
         applyTimelineColor(div, 'queued');
     }
