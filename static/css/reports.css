@@ -17,7 +17,7 @@
     color: var(--font-color);
 }
 .reports-dash-header {
-    background-color: var(--theme-color);
+    border-bottom: 2px solid var(--theme-color);
     padding: 2px;
     border-radius: 7px;
 }
