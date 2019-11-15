@@ -27,13 +27,15 @@ function alphabetize_dropdown(obj) {
 
 $(document).ready(function () {
     $(document).find("select").each(function () {
-        alphabetize_dropdown($(this));
-        var observer = new MutationObserver(function(mutations, obs) {
-            obs.disconnect();
-            alphabetize_dropdown($(mutations[0].target));
-            obs.observe(mutations[0].target, {childList:true});
-        });
-        observer.observe(this, {childList:true});
+        if(!$(this).hasClass('avoid-alphabetizing')) {
+            alphabetize_dropdown($(this));
+            let observer = new MutationObserver(function (mutations, obs) {
+                obs.disconnect();
+                alphabetize_dropdown($(mutations[0].target));
+                obs.observe(mutations[0].target, {childList: true});
+            });
+            observer.observe(this, {childList: true});
+        }
     });
 });
 
@@ -231,8 +233,9 @@ function handleStartAction(){
 
 function handleScheduleAction(){
     let op = buildOperationObject();
-    op['index'] = 'schedule';
-    restRequest('PUT', op, doNothing);
+    let hour = parseInt(document.getElementById("schedule-hour").value);
+    let minute = parseInt(document.getElementById("schedule-minute").value);
+    restRequest('PUT', {'index': 'schedule', 'operation': op, 'schedule': {'hour': hour, 'minute': minute}}, doNothing);
     flashy('operation-flash', 'Operation scheduled!');
 }
 
@@ -757,7 +760,7 @@ function addToPhase() {
 function checkOpformValid(){
     validateFormState(($('#queueName').val()) && ($('#queueFlow').prop('selectedIndex') !== 0) && ($('#queueGroup').prop('selectedIndex') !== 0),
         '#opBtn');
-    validateFormState(($('#queueName').val()) && ($('#queueFlow').prop('selectedIndex') !== 0) && ($('#queueGroup').prop('selectedIndex') !== 0),
+    validateFormState(($('#queueName').val()) && ($('#queueFlow').prop('selectedIndex') !== 0) && ($('#queueGroup').prop('selectedIndex') !== 0) && ($('#schedule-hour').prop('selectedIndex') !== 0) && ($('#schedule-minute').prop('selectedIndex') !== 0),
         '#scheduleBtn');
 }
 
@@ -786,7 +789,7 @@ function showReports(){
 
 function displayReport(data) {
     $('#report-name').html(data.name);
-    $('#report-name-duration').html("The operation lasted " + reportDuration(data.start, data.finish) + " with a random "+data.jitter + " second pause between steps");
+    $('#report-name-duration').html("The operation lasted " + reportDuration(data) + " with a random "+data.jitter + " second pause between steps");
     $('#report-adversary').html(data.adversary.name);
     $('#report-adversary-desc').html(data.adversary.description);
     $('#report-group').html(data.host_group[0]['group']);
@@ -800,12 +803,15 @@ function displayReport(data) {
     addSkippedAbilities(data.skipped_abilities);
 }
 
-function reportDuration(start, end) {
-    let operationInSeconds = Math.abs(new Date(end) - new Date(start)) / 1000;
-    let operationInMinutes = Math.floor(operationInSeconds / 60) % 60;
-    operationInSeconds -= operationInMinutes * 60;
-    let secondsRemainder = operationInSeconds % 60;
-    return operationInMinutes+'min '+secondsRemainder+'sec';
+function reportDuration(data) {
+    if(data.finish) {
+        let operationInSeconds = Math.abs(new Date(data.finish) - new Date(data.start)) / 1000;
+        let operationInMinutes = Math.floor(operationInSeconds / 60) % 60;
+        operationInSeconds -= operationInMinutes * 60;
+        let secondsRemainder = operationInSeconds % 60;
+        return operationInMinutes + 'min ' + secondsRemainder + 'sec';
+    }
+    return "(not finished yet))"
 }
 
 function reportStepLength(steps) {
@@ -916,6 +922,12 @@ function openDuk3(){
     $('#duk-text').text('Did you know... You can double-click on any row to show the details of the executed step. Click the ' +
         'star icon to view the standard output and error from the command that was executed. Highlighted text indicates ' +
         'facts which were learned from executing the step. Click the X to stop the ability from running.');
+}
+
+function openDuk4(){
+    document.getElementById("duk-modal").style.display="block";
+    $('#duk-text').text('Did you know... You can add your own fact sources by loading YML files into the ' +
+        'stockpile/data/facts directory.');
 }
 
 /** HUMAN-IN-LOOP */

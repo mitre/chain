@@ -83,13 +83,13 @@ class ChainService:
         return [operation.display]
 
     async def create_schedule(self, data):
-        operation = await self._build_operation_object(data)
+        operation = await self._build_operation_object(data['operation'])
         scheduled = await self.data_svc.store(
             Schedule(name=operation.name,
-                     schedule=time(0, 0, 0),
+                     schedule=time(data['schedule']['hour'], data['schedule']['minute'], 0),
                      task=operation)
         )
-        self.log.debug('Scheduled new operation for %s' % scheduled.schedule)
+        self.log.debug('Scheduled new operation (%s) for %s' % (operation.name, scheduled.schedule))
 
     """ PRIVATE """
 
