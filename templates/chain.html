@@ -185,9 +185,11 @@
                 <div>
                   <div id="addPayload" style="display: none">
                     <p class="section-description">Upload a new payload to the caldera server.</p>
-                    <input type="file" id="uploadPayloadFile">
-                    <button id="addPayloadBtn" type="button" class="button-success atomic-button"
-                            onclick="uploadPayload()">Upload Payload</button>
+                    <form id="uploadPayloadForm">
+                      <input type="file" id="uploadPayloadFile">
+                      <button id="addPayloadBtn" type="button" class="button-success atomic-button"
+                              onclick="uploadPayload()">Upload Payload</button>
+                    </form>
                 </div>
               </div>
             </div>

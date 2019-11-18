@@ -1034,7 +1034,8 @@ function uploadPayload() {
         processData: false,
         contentType: false
     }).done(function (){
-        payloadTableRefresh()
+        payloadTableRefresh();
+        document.getElementById('uploadPayloadForm').reset();
     })
 
 }
