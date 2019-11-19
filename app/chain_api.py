@@ -15,7 +15,6 @@ class ChainApi:
         self.reporting_svc = services.get('reporting_svc')
         self.auth_svc = services.get('auth_svc')
         self.plugin_svc = services.get('plugin_svc')
-        self.agent_svc = services.get('agent_svc')
         self.file_svc = services.get('file_svc')
         self.chain_svc = ChainService(services)
 
