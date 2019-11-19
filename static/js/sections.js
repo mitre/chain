@@ -1036,6 +1036,14 @@ function uploadPayload() {
     }).done(function (){
         payloadTableRefresh();
         document.getElementById('uploadPayloadForm').reset();
+        $('#uploadFileLabel').html('<br style="line-height: 10px"> Choose New Payload File')
     })
 
 }
+$('#uploadPayloadFile').on('change', function (event){
+    console.log(event);
+    let filename = event.currentTarget.files[0].name;
+    if(filename){
+        $('#uploadFileLabel').html('<br style="line-height: 10px">' +filename);
+    }
+});

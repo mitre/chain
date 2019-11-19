@@ -98,3 +98,12 @@ input#uploadPayloadFile{
     height: auto;
     background-color: var(--navbar-background);
 }
+.label-button{
+    display: inline-block;
+    height: 35px;
+    background-color: darkorange;
+    border-radius: 25px;
+    width: 75%;
+    font: 400 13.3333px Arial;
+    cursor: pointer;
+}
