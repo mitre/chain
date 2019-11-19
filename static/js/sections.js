@@ -974,3 +974,76 @@ function hilApproveAll(){
     refresh();
     return false;
 }
+
+/** Payloads */
+$(document).ready(function () {
+    $('#pTbl').DataTable({
+        ajax: {
+            url: '/plugin/chain/rest',
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: function ( d ) {
+                return JSON.stringify({'index':'payload'});
+            },
+            dataSrc: ''
+        },
+        deferRender: true,
+        stateSave: true,
+        columnDefs: [
+            {
+                targets: 0,
+                data: null,
+                render: function ( data, type, row, meta ) {
+                    return data.split('.xored')[0];
+                }
+            },
+            {
+                targets: 1,
+                data: null,
+                render: function (data, type, row, meta) {
+                    if (data.endsWith('.xored')) {
+                        return "True";
+                    }
+                    return "False";
+                }
+            }
+        ],
+        errMode: 'throw'
+    });
+});
+
+function payloadTableRefresh(){
+    $('#pTbl').DataTable().ajax.reload();
+}
+
+function togglePayloadView() {
+    $('#viewPayload').toggle();
+    $('#addPayload').toggle();
+}
+
+function uploadPayload() {
+    let file = document.getElementById('uploadPayloadFile').files[0];
+    let fd = new FormData();
+    fd.append('file', file);
+
+    $.ajax({
+        type: 'POST',
+        url: '/plugin/chain/payload',
+        data: fd,
+        processData: false,
+        contentType: false
+    }).done(function (){
+        payloadTableRefresh();
+        document.getElementById('uploadPayloadForm').reset();
+        $('#uploadFileLabel').html('<br style="line-height: 10px"> Choose New Payload File')
+    })
+
+}
+$('#uploadPayloadFile').on('change', function (event){
+    console.log(event);
+    let filename = event.currentTarget.files[0].name;
+    if(filename){
+        $('#uploadFileLabel').html('<br style="line-height: 10px">' +filename);
+    }
+});

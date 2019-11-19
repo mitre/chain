@@ -42,6 +42,24 @@
           <span class="caption">Agents</span>
         </button>
       </div>
+      <div class="row-toolbar-section" id="section-4">
+        <button class="row-toolbar-button" onclick="viewSection('facts')">
+          <span class="icon"><img src="/chain/img/facts.png"></span>
+          <span class="caption">Facts</span>
+        </button>
+      </div>
+      <div class="row-toolbar-section" id="section-7">
+        <button class="row-toolbar-button" onclick="viewSection('abilities')">
+          <span class="icon"><img src="/chain/img/ability.png"></span>
+          <span class="caption">Abilities</span>
+        </button>
+      </div>
+      <div class="row-toolbar-section" id="section-8">
+        <button class="row-toolbar-button" onclick="viewSection('payloads')">
+          <span class="icon"><img src="/chain/img/payload.png"></span>
+          <span class="caption">Payloads</span>
+        </button>
+      </div>
       <div class="row-toolbar-section" id="section-3">
         <button class="row-toolbar-button" onclick="viewSection('adversaries')">
           <span class="icon"><img src="/chain/img/hacker.png"></span>
@@ -142,6 +160,85 @@
                     {% endfor %}
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- payloads -->
+        <div id="payloads" class="section-profile" style="display: none">
+          <div class="row">
+            <div class="column section-border" style="flex:25%;">
+              <img src="/chain/img/payload.png">
+              <h4 style="margin-bottom:-5px">Payload</h4>
+              <br>
+              <div class="toggle">
+                <label class="switch"><input type="checkbox" id="togBtnPayload" onchange="togglePayloadView()">
+                  <div class="slider round"><span class="on">ADD</span><span class="off">VIEW</span></div>
+                </label>
+                <div id="viewPayload">
+                  <p class="section-description">
+                    Lists the available payload packages that can be used to augment techniques.
+                  </p>
+                <button type="button" class="button-embedded atomic-button" onclick="payloadTableRefresh()">Refresh
+                    payload table</button>
+                </div>
+                <div>
+                  <div id="addPayload" style="display: none">
+                    <p class="section-description">Upload a new payload to the caldera server.</p>
+                    <form id="uploadPayloadForm">
+                      <label id="uploadFileLabel" class="label-button" for="uploadPayloadFile"><br style="line-height: 10px">Choose New Payload File</label>
+                      <input type="file" id="uploadPayloadFile" style="display: none">
+                      <button id="addPayloadBtn" type="button" class="button-success atomic-button"
+                              onclick="uploadPayload()">Upload Payload</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="column" style="flex:75%">
+              <table id="pTbl" class="display" style="width:100%;" >
+                <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Armored <i style="font-size:11px">xor-encoded</i></th>
+                </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- abilities -->
+
+        <div id="abilities" class="section-profile" style="display: none">
+          <div class="row">
+            <div class="column section-border" style="flex:25%;">
+              <img src="/chain/img/ability.png">
+              <h4>Abilities</h4>
+              <p class="section-description">
+                  Abilities are technique implementations - or procedures - which can be executed on any host
+                  running an agent.
+              </p>
+              <div class="duk"><img onclick="openDuk2()" class="duk-icon" src="/gui/img/duk.png"></div>
+              <div id="viewAbility">
+                  <input id="ability-search" placeholder="Search for anything" onkeypress="searchAbilities('viewAbility', {{ exploits }})"/>
+                  <h4 style="margin-top:10px;text-align:center;font-size:14px;">OR FILTER:</h4>
+                  <select id="ability-tactic-filter" onchange="populateTechniques('viewAbility', {{ exploits }});">
+                        <option disabled selected>Choose a tactic</option>
+                        {% for tactic in tactics %}
+                            <option value={{ tactic }} data-tactic={{ tactic }}>{{ tactic }}</option>
+                        {% endfor %}}
+                  </select>
+                  <select id="ability-technique-filter" onchange="populateAbilities('viewAbility', {{ exploits }});">
+                      <option disabled selected>Choose a technique</option>
+                  </select>
+                  <select id="ability-ability-filter" onchange="showAbility('viewAbility');">
+                      <option disabled selected>0 abilities</option>
+                  </select>
+              </div>
+            </div>
+            <div id="displayAbility" class="column codearea" style="flex:75%;text-align: left">
+                <textarea id="ability-file" spellcheck="false" disabled></textarea>
             </div>
           </div>
         </div>

@@ -75,6 +75,7 @@ class ChainApi:
                     operation=lambda d: self.chain_svc.display_objects('operations', d),
                     operation_report=lambda d: self.chain_svc.display_operation_report(d),
                     result=lambda d: self.chain_svc.display_result(d),
+                    payload=lambda d: self.chain_svc.list_payloads(),
                 )
             )
             output = await options[request.method][index](data)
@@ -109,3 +110,6 @@ class ChainApi:
         operation = await self.data_svc.locate('operations', match=dict(id=body['name']))
         operation[0].state = body.get('state')
         return web.Response()
+
+    async def upload_payload(self, request):
+        return await self.file_svc.save_multipart_file_upload(request, 'data/payloads/')
