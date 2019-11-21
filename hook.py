@@ -6,7 +6,7 @@ address = '/plugin/chain/gui'
 enabled = True
 
 
-async def initialize(app, services):
+async def enable(app, services):
     chain_api = ChainApi(services)
     app.router.add_static('/chain', 'plugins/chain/static/', append_version=True)
     app.router.add_route('GET', '/plugin/chain/gui', chain_api.landing)
