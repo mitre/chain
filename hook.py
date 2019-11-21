@@ -3,6 +3,7 @@ from plugins.chain.app.chain_api import ChainApi
 name = 'Chain'
 description = 'Adds a REST API for chain mode, along with GUI configuration'
 address = '/plugin/chain/gui'
+enabled = True
 
 
 async def initialize(app, services):
