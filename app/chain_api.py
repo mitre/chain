@@ -30,9 +30,8 @@ class ChainApi:
             operations = [o.display for o in await self.data_svc.locate('operations')]
             sources = [s.display for s in await self.data_svc.locate('sources')]
             planners = [p.display for p in await self.data_svc.locate('planners')]
-            plugins = [p for p in await self.data_svc.locate('plugins', match=dict(enabled=True))]
             return dict(exploits=[a.display for a in abilities], groups=groups, adversaries=adversaries, agents=hosts,
-                        operations=operations, tactics=tactics, sources=sources, planners=planners, plugins=plugins)
+                        operations=operations, tactics=tactics, sources=sources, planners=planners)
         except Exception as e:
             logging.error('[!] landing: %s' % e)
 

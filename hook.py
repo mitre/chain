@@ -1,7 +1,7 @@
 from plugins.chain.app.chain_api import ChainApi
 
 name = 'Chain'
-description = 'Adds a REST API for chain mode, along with GUI configuration'
+description = 'A mode for launching and monitoring operations'
 address = '/plugin/chain/gui'
 
 
