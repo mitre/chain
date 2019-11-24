@@ -5,7 +5,8 @@ description = 'A mode for launching and monitoring operations'
 address = '/plugin/chain/gui'
 
 
-async def enable(app, services):
+async def enable(services):
+    app = services.get('app_svc').application
     chain_api = ChainApi(services)
     app.router.add_static('/chain', 'plugins/chain/static/', append_version=True)
     app.router.add_route('GET', '/plugin/chain/gui', chain_api.landing)
