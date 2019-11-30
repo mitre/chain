@@ -11,9 +11,7 @@
   <link rel="stylesheet" href="/chain/css/basic.css">
   <link rel="stylesheet" href="/chain/css/timeline.css">
   <link rel="stylesheet" href="/chain/css/reports.css">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
 </head>
 <body style="margin-bottom: 100px">
 <script>
@@ -526,8 +524,6 @@
                         <img src="/chain/img/ability.png">
                         <h4 style="text-align: center">Ability Finder</h4>
                         <br>
-                        <input id="ability-search" placeholder="Search for anything" onkeypress="searchAbilities('phase-modal', {{ exploits }})"/>
-                        <h4 style="margin-top:10px;text-align:center;font-size:14px;">OR FILTER:</h4>
                         <select id="ability-tactic-filter" onchange="populateTechniques('phase-modal', {{ exploits }});">
                             <option disabled selected>Choose a tactic</option>
                             {% for tactic in tactics %}
@@ -537,7 +533,6 @@
                         <select id="ability-technique-filter" onchange="populateAbilities('phase-modal', {{ exploits }});">
                             <option disabled selected>Choose a technique</option>
                         </select>
-                        <br><br><hr><br>
                         <select id="ability-ability-filter" onchange="showAbility('phase-modal')">
                             <option disabled selected>0 abilities</option>
                         </select>

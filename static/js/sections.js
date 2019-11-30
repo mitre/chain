@@ -667,7 +667,6 @@ function removeAbility(ability_id){
 function populateTechniques(parentId, exploits){
     exploits = addPlatforms(exploits);
     let parent = $('#'+parentId);
-    $(parent).find('#ability-ability-filter').empty();
     $(parent).find('#ability-technique-filter').empty().append("<option disabled='disabled' selected>Choose a technique</option>");
 
     let tactic = $(parent).find('#ability-tactic-filter').find(":selected").data('tactic');
@@ -677,32 +676,9 @@ function populateTechniques(parentId, exploits){
         if(ability.tactic.includes(tactic) && !found.includes(ability.technique_id)) {
             found.push(ability.technique_id);
             appendTechniqueToList(parentId, tactic, ability);
-            appendAbilityToList(parentId, ability);
             showing += 1;
         }
     });
-    $(parent).find('#ability-ability-filter').prepend("<option disabled='disabled' selected>"+showing.length+" abilities</option>");
-}
-
-function searchAbilities(parentId, exploits) {
-    let parent = $('#'+parentId);
-    $(parent).find('#ability-ability-filter').empty();
-    $(parent).find('#ability-technique-filter').empty().append("<option disabled='disabled' selected>Choose a technique</option>");
-    let showing = [];
-
-    let abilitySearch = $(parent).find('#ability-search');
-    if(abilitySearch.val()) {
-        exploits = addPlatforms(exploits);
-        exploits.forEach(function(ability) {
-            ability['cleanup'] = atob(ability.cleanup);
-            if(JSON.stringify(ability).toLowerCase().includes(abilitySearch.val().toLowerCase())) {
-                ability['cleanup'] = btoa(ability.cleanup);
-                appendAbilityToList(parentId, ability);
-                showing += 1;
-            }
-        });
-    }
-    $(parent).find('#ability-ability-filter').prepend("<option disabled='disabled' selected>"+showing.length+" abilities</option>");
 }
 
 function populateAbilities(parentId, exploits){
@@ -757,6 +733,7 @@ function addToPhase() {
     let ability = $('#phase-modal').find('#ability-ability-filter').find(":selected").data('ability');
     let abilityBox = buildAbility(ability, phase);
     $('#tempPhase' + phase).find('#profile-tests').append(abilityBox);
+    document.getElementById('phase-modal').style.display='none';
 }
 
 function checkOpformValid(){
