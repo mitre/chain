@@ -689,7 +689,7 @@ function populateAbilities(parentId, exploits){
     let showing = [];
     let attack_id = $(parent).find('#ability-technique-filter').find(":selected").data('technique');
     exploits.forEach(function(ability) {
-        if(attack_id == ability.technique_id) {
+        if(attack_id === ability.technique_id) {
             appendAbilityToList(parentId, ability);
             showing += 1;
         }
@@ -711,15 +711,26 @@ function appendAbilityToList(parentId, value) {
         .text(value['name']));
 }
 
-function showAbility(parentId) {
-    let ability = $('#'+parentId).find('#ability-ability-filter').find(":selected").data('ability');
-    restRequest('POST', {"ability_id": ability.ability_id}, showAbilityModal, endpoint='/stockpile/ability');
-}
+function showAbility(parentId, exploits) {
+    $('#ability-name').val('');
+    $('#ability-description').val('');
+    $('#ttp-tests').empty();
 
-function showAbilityModal(data) {
-    let phaseModal = $('#phase-modal');
-    phaseModal.data("ability", data);
-    $('textarea[id^="ability-file"]').html(data);
+    let aid = $('#'+parentId).find('#ability-ability-filter').find(":selected").data('ability');
+    $('#ability-name').val(aid.name);
+    $('#ability-description').val(aid.description);
+
+    exploits.forEach(function(ability) {
+        if(aid.ability_id === ability.ability_id) {
+            let template = $("#ttp-template").clone();
+            template.find('#ability-platform').html(ability.platform);
+            template.find('#ability-executor').html(ability.executor);
+            template.find('#ability-command').html(atob(ability.test));
+            template.find('#ability-cleanup').html(atob(ability.cleanup));
+            template.show();
+            $('#ttp-tests').append(template);
+        }
+    });
 }
 
 function showPhaseModal(phase) {

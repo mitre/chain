@@ -217,6 +217,21 @@
     text-align: left;
     text-transform: uppercase;
 }
+.ability-viewer select {
+    width: 30%;
+}
+.ability-viewer input {
+    height: 35px;
+    width: 50%;
+}
+.ttp-template pre {
+  width: 99%;
+  overflow: auto;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+}
 .topright {
     position: absolute;
     top: 0;
@@ -424,4 +439,9 @@ table.dataTable input[type=text] {
   text-align: center; /* To center it horizontally (if you want) */
   line-height: 30px; /* To center it vertically */
   color: white;
+}
+.dotted {
+    border: 3px solid var(--theme-color);
+    color: var(--theme-color);
+    background-color: var(--theme-color);
 }
