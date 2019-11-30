@@ -202,6 +202,28 @@
             </center>
         </li>
 
+        <li id="ttp-template" class="ttp-template" style="display: none">
+            <table frame=void rules=rows style="border-spacing:15px;">
+                <hr class="dotted">
+                <tr>
+                    <td><b>Platform:</b></td>
+                    <td><p id="ability-platform"></p></td>
+                </tr>
+                <tr>
+                    <td><b>Executor:</b></td>
+                    <td><p id="ability-executor"></p></td>
+                </tr>
+                <tr>
+                    <td><b>Command:</b></td>
+                    <td><code id="ability-command"></code></td>
+                </tr>
+                <tr>
+                    <td><b>Cleanup:</b></td>
+                    <td><code id="ability-cleanup"></code></td>
+                </tr>
+            </table>
+        </li>
+
         <!-- operation -->
 
         <div id="operations" class="section-profile" style="display: none">
@@ -520,10 +542,8 @@
         <div id="phase-modal" class="modal">
             <form class="modal-content">
                 <div class="container section-profile row ability-viewer">
-                    <div class="column" style="flex:25%;">
-                        <img src="/chain/img/ability.png">
-                        <h4 style="text-align: center">Ability Finder</h4>
-                        <br>
+                    <div class="column" style="flex:100%;">
+                        <h4>TTP LIBRARY</h4>
                         <select id="ability-tactic-filter" onchange="populateTechniques('phase-modal', {{ exploits }});">
                             <option disabled selected>Choose a tactic</option>
                             {% for tactic in tactics %}
@@ -533,13 +553,14 @@
                         <select id="ability-technique-filter" onchange="populateAbilities('phase-modal', {{ exploits }});">
                             <option disabled selected>Choose a technique</option>
                         </select>
-                        <select id="ability-ability-filter" onchange="showAbility('phase-modal')">
+                        <select id="ability-ability-filter" onchange="showAbility('phase-modal',  {{ exploits }})">
                             <option disabled selected>0 abilities</option>
                         </select>
                         <button id="phaseBtn" type="button" class="button-success atomic-button" onclick="addToPhase()">Add to phase</button>
-                    </div>
-                    <div class="column codearea" style="flex:75%;">
-                        <textarea id="ability-file" readonly spellcheck="false"></textarea>
+                        <br><br>
+                        <input type="text" id="ability-name" placeholder="TTP name">
+                        <input type="text" id="ability-description" placeholder="TTP description">
+                        <ul id="ttp-tests"></ul>
                     </div>
                     <div class="imgcontainer">
                         <span onclick="document.getElementById('phase-modal').style.display='none'" class="close" title="Close Modal">&times;</span>
