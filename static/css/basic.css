@@ -218,14 +218,19 @@
     text-transform: uppercase;
 }
 .ability-viewer select {
-    width: 23%;
-}
-.ability-viewer button {
-    width: 23%;
+    width: 30%;
 }
 .ability-viewer input {
     height: 35px;
     width: 50%;
+}
+.ttp-template pre {
+  width: 99%;
+  overflow: auto;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
 }
 .topright {
     position: absolute;
