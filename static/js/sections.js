@@ -506,7 +506,7 @@ function addPhase(number) {
     template.addClass("tempPhase");
     template.insertBefore('#dummy');
     template.show();
-    let phaseHeader = $('<h4 class="phase-headers">Phase ' + number +'&nbsp&nbsp&nbsp;<span onclick="showPhaseModal('+number+')">&#10010;</span><hr></h4>');
+    let phaseHeader = $('<h4 class="phase-headers">Phase ' + number +'&nbsp&nbsp&nbsp;<span style="float:right;font-size:13px;" onclick="showPhaseModal('+number+')">&#10010; add ttp</span><hr></h4>');
     phaseHeader.insertBefore("#tempPhase" + number);
     phaseHeader.show();
     return template;
