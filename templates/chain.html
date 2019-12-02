@@ -40,12 +40,6 @@
           <span class="caption">Adversaries</span>
         </button>
       </div>
-      <div class="row-toolbar-section" id="section-4">
-        <button class="row-toolbar-button" onclick="viewSection('facts')">
-          <span class="icon"><img src="/chain/img/facts.png"></span>
-          <span class="caption">Sources</span>
-        </button>
-      </div>
       <div class="row-toolbar-section" id="section-5">
         <button class="row-toolbar-button" onclick="viewSection('operations')">
           <span class="icon"><img src="/chain/img/operation.png"></span>
@@ -97,7 +91,7 @@
           </div>
         </div>
 
-        <!-- fact sources -->
+        <!-- fact sources
 
         <div id="facts" class="section-profile" style="display: none">
           <div class="row">
@@ -109,35 +103,28 @@
                   A source is a collection of facts. This table reflects the fact sources that are pre-seeded
                   into the data store.
               </p>
+              <br>
+              <div id="viewSources">
+                  <select id="profile-source-name" style="margin-top:-15px" onchange="loadSource({{ sources }});">
+                    <option value="" disabled selected>Select an existing source</option>
+                    {% for s in sources %}
+                        <option value="{{ s.name }}">{{ s.name }}</option>
+                    {% endfor %}}
+                  </select>
+              </div>
               <div class="duk"><img onclick="openDuk4()" class="duk-icon" src="/gui/img/duk.png"></div>
             </div>
             <div class="column" style="flex:75%;overflow:hidden;">
-              <table id="factTbl" class="display" style="width:100%;text-align:left">
-                <thead>
-                <tr>
-                  <th>Source</th>
-                  <th>Trait</th>
-                  <th>Score</th>
-                  <th>Value</th>
-                </tr>
-                </thead>
-                <tbody>
-                    {% for s in sources %}
-                        {% for f in s.facts %}
-                        <tr style="padding:5px">
-                            <td>{{ s.name }}</td>
-                            <td>{{ f.trait }}</td>
-                            <td>{{ f.score }}</td>
-                            <td>{{ f.value }}</td>
-                        </tr>
-                        {% endfor %}
-                    {% endfor %}
-                </tbody>
-              </table>
+                <div class="fact-area">
+                    <center>
+                        <ul id="fact-hosts" class="profile-tests"></ul>
+                    </center>
+                </div>
             </div>
           </div>
         </div>
-
+        -->
+      
         <!-- adversary -->
 
         <div id="adversaries" class="section-profile" style="display: none">
@@ -192,10 +179,10 @@
 
         <li id="ability-template" class="ability-box" style="display: none">
             <h4 id="name"></h4>
-            <p id="description" style="opacity:0.7;font-size:13px"></p>
             <b><p id="ability-attack" style="text-transform: uppercase;font-size:11px;opacity:0.7;"></p></b>
             <center>
-                <table class="topright">
+                <p class="topright" id="ability-rm"></p>
+                <table class="bottomright">
                     <tr id="ability-metadata"></tr>
                 </table>
                 <div id="icon-row" class="icon-row"></div>
@@ -206,22 +193,32 @@
             <div class="dotted">
                 <b><p style="color:white" onclick="removeBlock($(this))">remove</p></b>
             </div>
-            <table frame=void style="border-spacing:5px;width:100%">
+            <table frame=void rules=rows style="border-spacing:5px;width:100%">
                 <tr>
-                    <td style="width:20%"><b>Platform:</b></td>
-                    <td><input id="ability-platform" contenteditable="true" spellcheck="false" style="border: 1px dotted var(--theme-color)"></td>
+                    <td style="width:10%"><b>platform:</b></td>
+                    <td><input id="ability-platform" contenteditable="true" spellcheck="false"></td>
                 </tr>
                 <tr>
-                    <td style="width:20%"><b>Executor:</b></td>
-                    <td><input id="ability-executor" contenteditable="true" spellcheck="false" style="border: 1px dotted var(--theme-color)"></td>
+                    <td style="width:10%"><b>executor:</b></td>
+                    <td><input id="ability-executor" contenteditable="true" spellcheck="false"></td>
                 </tr>
                 <tr>
-                    <td style="width:20%"><b>Command:</b></td>
-                    <td><textarea id="ability-command" spellcheck="false" contenteditable="true" style="border: 1px dotted var(--theme-color)"></textarea></td>
+                    <td style="width:10%"><b>payload:</b></td>
+                    <td><input id="ability-payload" contenteditable="true" spellcheck="false"></td>
+                </tr>
+                <tr>
+                    <td style="width:10%"><b>command:</b></td>
+                    <td><textarea id="ability-command" spellcheck="false" contenteditable="true"></textarea></td>
                 </tr>
             </table>
             <br>
         </li>
+
+        <div id="fact-template" style="display: none;">
+            <div class="fact-box">
+                <p id="trait"></p>
+            </div>
+        </div>
 
         <!-- operation -->
 
@@ -279,10 +276,9 @@
                         {% endfor %}
                       </select>
                       <select name="source" id="queueSource" class="queueOption" style="opacity:0.5" disabled="true">
-                        <option value="" selected>No fact source</option>
-                            {% for s in sources %}
-                                <option value="{{ s.name }}">{{ s.name }}</option>
-                            {% endfor %}
+                        {% for s in sources %}
+                            <option value="{{ s.name }}">Use {{ s.name }} facts</option>
+                        {% endfor %}
                       </select>
                       <select name="untrusted" id="queueUntrusted" class="queueOption" style="opacity:0.5" disabled="true">
                         <option value="0" selected>Block untrusted agents</option>
@@ -556,18 +552,18 @@
                         </select>
                         <br><br>
                         <div class="ability-attack">
-                            <span>Ability ID = </span><span id="ability-identifier" style="color:var(--theme-color)"></span><span onclick="freshId()">&nbsp;&nbsp;&#9842;</span>
                             <br>
-                            <input type="text" id="ability-name" placeholder="TTP name">
-                            <input type="text" id="ability-description" placeholder="TTP description">
+                            <span>Ability ID = </span><span id="ability-identifier"></span><span onclick="freshId()">&nbsp;&nbsp;&#8634;</span>
+                            <br><br>
+                            <input type="text" id="ability-name" placeholder="Name">
+                            <input type="text" id="ability-description" placeholder="Description">
                             <input type="text" id="ability-tactic-name" placeholder="ATT&CK tactic">
                             <input type="text" id="ability-tech-id" placeholder="ATT&CK technique ID">
                             <input type="text" id="ability-tech-name" placeholder="ATT&CK technique name">
                         </div>
                         <ul id="ttp-tests"></ul>
-                        <hr>
                         <div style="float:right;">
-                            <p style="color:var(--theme-color);text-align: center;" onclick="addExecutorBlock()">&#10010; add executor</p>
+                            <p style="color:white;text-align: center;" onclick="addExecutorBlock()">&#10010; add executor</p>
                             <button type="button" class="button-success atomic-button" onclick="saveAbility()">Save</button>
                             <button type="button" class="button-success atomic-button" onclick="addToPhase()">Add to phase</button>
                             <div id="ability-flashy-holder">

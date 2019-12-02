@@ -162,12 +162,12 @@
     width: 100%;
 }
 .profile-tests li {
-   font-size: 18px;
+   font-size: 16px;
    color: var(--font-color);
    display: block;
    float: left;
-   width:45%;
-   margin: 5px;
+   width:30%;
+   margin: 2px;
 }
 .ability-box {
     background-color: var(--primary-background);
@@ -185,7 +185,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     margin-top: -10px;
-    font-size: 13px;
     margin-left: 2%;
 }
 .ability-box img {
@@ -218,22 +217,17 @@
 }
 .ability-attack span {
     color: white;
-    font-size: 14px;
     text-align: center;
+    opacity:0.7;
 }
 .ability-attack input {
-    margin: 3px;
-    height: 15px;
+    margin: 2px;
+    height: 12px;
     background-color: var(--primary-background);
     border-bottom: 1px dotted var(--theme-color);
     color:white;
     text-align:left;
     border-radius: 0;
-}
-.ability-viewer h4 {
-    color: var(--theme-color);
-    text-align: left;
-    text-transform: uppercase;
 }
 .ability-viewer select {
     width: 30%;
@@ -241,26 +235,34 @@
 .ability-viewer input {
     height: 20px;
     width: 50%;
+    border-bottom: 1px dotted var(--theme-color);
 }
 .ttp-template textarea {
   width: 99%;
   min-height: 75px;
   overflow: auto;
   border: none;
-  padding: 0;
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   background-color: var(--primary-background);
   color: white;
+  padding: 5px;
 }
 .ttp-template input {
     text-align: left;
     background-color: var(--primary-background);
     color: white;
+    border: None;
 }
 .topright {
     position: absolute;
-    top: 0;
+    top: 2px;
+    right: 0;
+    padding: 10px;
+}
+.bottomright {
+    position: absolute;
+    bottom: 0;
     right: 0;
     padding: 10px;
 }
@@ -467,10 +469,29 @@ table.dataTable input[type=text] {
   color: white;
 }
 .dotted {
-    border: 1px solid var(--theme-color);
+    border: 1px solid white;
 }
 .dotted p {
     font-size: 11px;
     float: right;
     color: black;
+}
+.fact-area {
+    padding: 5px;
+}
+.fact-area h4 {
+    text-align: left;
+    padding-left: 15px;
+    margin-bottom: -5px;
+}
+.fact-area p {
+    text-align: left;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.fact-box {
+    border-radius: 5px;
+    background-color: var(--theme-color);
+    margin: 5px;
+    display: inline-block;
 }
