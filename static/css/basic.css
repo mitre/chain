@@ -199,27 +199,34 @@
     margin-bottom: -3px;
 }
 .ability-viewer {
-    background-color: white;
+    background-color: var(--primary-background);
+    border: 1px solid black;
     border-radius: 10px;
 }
 .ability-viewer h3 {
     text-align: left;
-    color: black;
+    color: white;
     text-transform: none;
 }
 .ability-viewer p {
     text-align: left;
-    color: black;
+    color: white;
     font-size: 16px;
 }
+.ability-viewer td {
+    color: white;
+}
 .ability-attack span {
-    color: black;
+    color: white;
     font-size: 14px;
     text-align: center;
 }
 .ability-attack input {
     margin: 3px;
     height: 15px;
+    background-color: var(--primary-background);
+    border-bottom: 1px dotted var(--theme-color);
+    color:white;
 }
 .ability-viewer h4 {
     color: var(--theme-color);
@@ -241,9 +248,13 @@
   padding: 0;
   margin: 0;
   font-size: 14px;
+  background-color: var(--primary-background);
+  color: white;
 }
 .ttp-template input {
     text-align: left;
+    background-color: var(--primary-background);
+    color: white;
 }
 .topright {
     position: absolute;
@@ -454,7 +465,7 @@ table.dataTable input[type=text] {
   color: white;
 }
 .dotted {
-    border-bottom: 2px solid var(--theme-color);
+    border: 1px solid var(--theme-color);
 }
 .dotted p {
     font-size: 11px;

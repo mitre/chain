@@ -204,22 +204,23 @@
 
         <li id="ttp-template" class="ttp-template" style="display: none">
             <div class="dotted">
-                <b><p onclick="removeBlock($(this))">remove</p></b>
+                <b><p style="color:white" onclick="removeBlock($(this))">remove</p></b>
             </div>
-            <table frame=void rules=rows style="border-spacing:5px;width:100%">
+            <table frame=void style="border-spacing:5px;width:100%">
                 <tr>
-                    <td><b>Platform:</b></td>
-                    <td><input id="ability-platform" contenteditable="true" spellcheck="false"></td>
+                    <td style="width:20%"><b>Platform:</b></td>
+                    <td><input id="ability-platform" contenteditable="true" spellcheck="false" style="border: 1px dotted var(--theme-color)"></td>
                 </tr>
                 <tr>
-                    <td><b>Executor:</b></td>
-                    <td><input id="ability-executor" contenteditable="true" spellcheck="false"></td>
+                    <td style="width:20%"><b>Executor:</b></td>
+                    <td><input id="ability-executor" contenteditable="true" spellcheck="false" style="border: 1px dotted var(--theme-color)"></td>
                 </tr>
                 <tr>
-                    <td><b>Command:</b></td>
-                    <td><textarea id="ability-command" spellcheck="false" contenteditable="true"></textarea></td>
+                    <td style="width:20%"><b>Command:</b></td>
+                    <td><textarea id="ability-command" spellcheck="false" contenteditable="true" style="border: 1px dotted var(--theme-color)"></textarea></td>
                 </tr>
             </table>
+            <br>
         </li>
 
         <!-- operation -->
