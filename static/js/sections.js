@@ -526,13 +526,49 @@ function saveAdversary() {
     $('#profile-tests li').each(function() {
         abilities.push({"id": $(this).attr('id'),"phase":$(this).data('phase')})
     });
-
     restRequest('PUT', {"name":name,"description":description,"phases":abilities,"index":"adversary", 'i': identifier}, saveAdversaryCallback);
 }
 
 function saveAdversaryCallback(data) {
     flashy('adv-flashy-holder', 'Adversary saved!');
     restRequest('POST', {"index":"adversary"}, reloadAdversaryElements);
+}
+
+function saveAbility() {
+    let name = $('#ability-name').val();
+    if(!name){ alert('Please enter an ability name!'); return; }
+    let description = $('#ability-description').val();
+    if(!description){ alert('Please enter a description!'); return; }
+
+    let data = {};
+    let platforms = {};
+    $('#ttp-tests li').each(function() {
+        let platform = $(this).find('#ability-platform').val();
+        let executor = $(this).find('#ability-executor').val();
+        let command = $(this).find('#ability-command').val();
+        if(!name || !description || !command) {
+            return;
+        }
+        let executors = {};
+        executors[executor] = {'command': command};
+        platforms[platform] = executors;
+    });
+    data['index'] = 'ability';
+    data['id'] = $('#ability-identifier').text();
+    data['name'] = name;
+    data['description'] = description;
+    data['tactic'] = $('#ability-tactic-name').val();
+    data['technique'] = {'attack_id': $('#ability-tech-id').val(), 'name': $('#ability-tech-name').val()};
+    data['platforms'] = platforms;
+    restRequest('PUT', data, saveAbilityCallback);
+}
+
+function saveAbilityCallback(data) {
+    flashy('ability-flashy-holder', 'Ability saved!');
+}
+
+function removeBlock(element){
+    element.parent().parent().parent().remove();
 }
 
 function reloadAdversaryElements(data) {
@@ -717,25 +753,39 @@ function showAbility(parentId, exploits) {
     $('#ttp-tests').empty();
 
     let aid = $('#'+parentId).find('#ability-ability-filter').find(":selected").data('ability');
+    $('#ability-identifier').text(aid.ability_id);
     $('#ability-name').val(aid.name);
     $('#ability-description').val(aid.description);
+    $('#ability-tactic-name').val(aid.tactic);
+    $('#ability-tech-id').val(aid.technique_id);
+    $('#ability-tech-name').val(aid.technique_name);
 
     exploits.forEach(function(ability) {
         if(aid.ability_id === ability.ability_id) {
             let template = $("#ttp-template").clone();
-            template.find('#ability-platform').html(ability.platform);
-            template.find('#ability-executor').html(ability.executor);
-            template.find('#ability-command').html(atob(ability.test));
-            template.find('#ability-cleanup').html(atob(ability.cleanup));
+            template.find('#ability-platform').val(ability.platform);
+            template.find('#ability-executor').val(ability.executor);
+            template.find('#ability-command').val(atob(ability.test));
             template.show();
             $('#ttp-tests').append(template);
         }
     });
 }
 
+function addExecutorBlock(){
+    let template = $("#ttp-template").clone();
+    template.show();
+    $('#ttp-tests').append(template);
+}
+
 function showPhaseModal(phase) {
     $('#phase-modal').data("phase", phase);
+    $('#ability-identifier').text(uuidv4());
     document.getElementById("phase-modal").style.display="block";
+}
+
+function freshId(){
+    $('#ability-identifier').text(uuidv4());
 }
 
 function addToPhase() {
