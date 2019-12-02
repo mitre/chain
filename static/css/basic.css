@@ -212,6 +212,15 @@
     color: black;
     font-size: 16px;
 }
+.ability-attack span {
+    color: black;
+    font-size: 14px;
+    text-align: center;
+}
+.ability-attack input {
+    margin: 3px;
+    height: 15px;
+}
 .ability-viewer h4 {
     color: var(--theme-color);
     text-align: left;
@@ -221,16 +230,20 @@
     width: 30%;
 }
 .ability-viewer input {
-    height: 35px;
+    height: 20px;
     width: 50%;
 }
-.ttp-template pre {
+.ttp-template textarea {
   width: 99%;
+  min-height: 75px;
   overflow: auto;
   border: none;
   padding: 0;
   margin: 0;
   font-size: 14px;
+}
+.ttp-template input {
+    text-align: left;
 }
 .topright {
     position: absolute;
@@ -441,7 +454,10 @@ table.dataTable input[type=text] {
   color: white;
 }
 .dotted {
-    border: 3px solid var(--theme-color);
-    color: var(--theme-color);
-    background-color: var(--theme-color);
+    border-bottom: 2px solid var(--theme-color);
+}
+.dotted p {
+    font-size: 11px;
+    float: right;
+    color: black;
 }

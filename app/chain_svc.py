@@ -36,7 +36,18 @@ class ChainService:
                 p[ability['phase']].append(ability['id'])
             f.write(yaml.dump(dict(id=i, name=data.pop('name'), description=data.pop('description'), phases=dict(p))))
             f.truncate()
-        await self.data_svc.load_data('data')
+        for d in self.data_svc.data_dirs:
+            await self.data_svc.load_data(d)
+
+    async def persist_ability(self, data):
+        _, file_path = await self.services.get('file_svc').find_file_path('%s.yml' % data.get('id'), location='data')
+        if not file_path:
+            file_path = 'data/abilities/attack/%s.yml' % data.get('id')
+        with open(file_path, 'w+') as f:
+            f.seek(0)
+            f.write(yaml.dump([data]))
+        for d in self.data_svc.data_dirs:
+            await self.data_svc.load_data(d)
 
     async def delete_agent(self, data):
         await self.data_svc.remove('agents', data)

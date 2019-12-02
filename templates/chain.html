@@ -203,23 +203,21 @@
         </li>
 
         <li id="ttp-template" class="ttp-template" style="display: none">
+            <div class="dotted">
+                <b><p onclick="removeBlock($(this))">remove</p></b>
+            </div>
             <table frame=void rules=rows style="border-spacing:5px;width:100%">
-                <hr class="dotted">
                 <tr>
                     <td><b>Platform:</b></td>
-                    <td><p id="ability-platform" contenteditable="true" spellcheck="false"></p></td>
+                    <td><input id="ability-platform" contenteditable="true" spellcheck="false"></td>
                 </tr>
                 <tr>
                     <td><b>Executor:</b></td>
-                    <td><p id="ability-executor" contenteditable="true" spellcheck="false"></p></td>
+                    <td><input id="ability-executor" contenteditable="true" spellcheck="false"></td>
                 </tr>
                 <tr>
                     <td><b>Command:</b></td>
-                    <td><pre id="ability-command" spellcheck="false" contenteditable="true"></pre></td>
-                </tr>
-                <tr>
-                    <td><b>Cleanup:</b></td>
-                    <td><pre id="ability-cleanup" spellcheck="false" contenteditable="true"></pre></td>
+                    <td><textarea id="ability-command" spellcheck="false" contenteditable="true"></textarea></td>
                 </tr>
             </table>
         </li>
@@ -543,7 +541,6 @@
             <form class="modal-content">
                 <div class="container section-profile row ability-viewer">
                     <div class="column" style="flex:100%;">
-                        <h4>TTP LIBRARY</h4>
                         <select id="ability-tactic-filter" onchange="populateTechniques('phase-modal', {{ exploits }});">
                             <option disabled selected>Choose a tactic</option>
                             {% for tactic in tactics %}
@@ -557,11 +554,24 @@
                             <option disabled selected>0 abilities</option>
                         </select>
                         <br><br>
-                        <input type="text" id="ability-name" placeholder="TTP name">
-                        <input type="text" id="ability-description" placeholder="TTP description">
+                        <div class="ability-attack">
+                            <span>Ability ID = </span><span id="ability-identifier" style="color:var(--theme-color)"></span><span onclick="freshId()">&nbsp;&nbsp;&#9842;</span>
+                            <br>
+                            <input type="text" id="ability-name" placeholder="TTP name">
+                            <input type="text" id="ability-description" placeholder="TTP description">
+                            <input type="text" id="ability-tactic-name" placeholder="ATT&CK tactic">
+                            <input type="text" id="ability-tech-id" placeholder="ATT&CK technique ID">
+                            <input type="text" id="ability-tech-name" placeholder="ATT&CK technique name">
+                        </div>
                         <ul id="ttp-tests"></ul>
+                        <hr>
                         <div style="float:right;">
-                            <button id="phaseBtn" type="button" class="button-success atomic-button" onclick="addToPhase()">Add</button>
+                            <p style="color:var(--theme-color);text-align: center;" onclick="addExecutorBlock()">&#10010; add executor</p>
+                            <button type="button" class="button-success atomic-button" onclick="saveAbility()">Save</button>
+                            <button type="button" class="button-success atomic-button" onclick="addToPhase()">Add to phase</button>
+                            <div id="ability-flashy-holder" style="color:black">
+                                <span id="message"></span>
+                            </div>
                         </div>
                     </div>
                     <div class="imgcontainer">
