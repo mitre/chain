@@ -206,9 +206,41 @@ function doNothing() {}
 /** FACTS **/
 
 $(document).ready(function () {
-    $('#factTbl').DataTable({
-    });
+    $('#factTbl').DataTable({});
 });
+
+class DefaultDict {
+  constructor(defaultInit) {
+    return new Proxy({}, {
+      get: (target, name) => name in target ?
+        target[name] :
+        (target[name] = typeof defaultInit === 'function' ?
+          new defaultInit().valueOf() :
+          defaultInit)
+    })
+  }
+}
+
+function loadSource(sources) {
+    let sourceName = $('#profile-source-name').val();
+    sources.forEach(s => {
+        if(s.name === sourceName) {
+            const grouped = new DefaultDict(Array);
+            s.facts.forEach(f => {
+                grouped[f.trait].push(f.value);
+            });
+            $.each(grouped, function(trait, values) {
+                let template = $("#fact-template").clone();
+                template.find('#trait').text(trait);
+                values.forEach(v => {
+                    console.log(trait, v);
+                });
+                $('#fact-hosts').append(template);
+                template.show();
+            });
+        }
+    });
+}
 
 /** OPERATIONS **/
 
@@ -546,11 +578,15 @@ function saveAbility() {
         let platform = $(this).find('#ability-platform').val();
         let executor = $(this).find('#ability-executor').val();
         let command = $(this).find('#ability-command').val();
+        let payload = $(this).find('#ability-payload').val();
         if(!name || !description || !command) {
             return;
         }
         let executors = {};
         executors[executor] = {'command': command};
+        if(payload) {
+            executors[executor]['payload'] = payload;
+        }
         platforms[platform] = executors;
     });
     data['index'] = 'ability';
@@ -641,8 +677,7 @@ function buildAbility(ability, phase){
         .data('requirements', requirements);
 
     template.find('#name').html(ability.name);
-    template.find('#description').html(ability.description);
-    template.find('#ability-attack').html(ability.tactic + ' | '+ ability.technique_id + ' | '+ ability.technique_name);
+    template.find('#ability-attack').html(ability.tactic + ' | '+ ability.technique_name);
 
     if(requirements.length > 0) {
         template.find('#ability-metadata').append('<td><div id="ability-padlock"><div class="tooltip"><span class="tooltiptext">This ability has requirements</span>&#128274;</div></div></td>');
@@ -656,7 +691,7 @@ function buildAbility(ability, phase){
     if(ability.payload.length > 0) {
        template.find('#ability-metadata').append('<td><div id="ability-payload"><div class="tooltip"><span class="tooltiptext">This ability uses a payload</span>&#128176;</div></div></td>');
     }
-    template.find('#ability-metadata').append('<td><div id="ability-remove"><div class="tooltip"><span class="tooltiptext">Remove this ability</span>&#x274C;</div></div></td>');
+    template.find('#ability-rm').html('<div id="ability-remove"><div style="font-size:8px;">&#x274C;</div></div>');
     template.find('#ability-remove').click(function() {
         removeAbility(ability.ability_id);
     });
@@ -766,6 +801,7 @@ function showAbility(parentId, exploits) {
             template.find('#ability-platform').val(ability.platform);
             template.find('#ability-executor').val(ability.executor);
             template.find('#ability-command').val(atob(ability.test));
+            template.find('#ability-payload').val(ability.payload);
             template.show();
             $('#ttp-tests').append(template);
         }
@@ -967,7 +1003,7 @@ function openDuk3(){
 function openDuk4(){
     document.getElementById("duk-modal").style.display="block";
     $('#duk-text').text('Did you know... You can add your own fact sources by loading YML files into the ' +
-        'stockpile/data/facts directory.');
+        'data/facts directory. Facts get used when their trait is referenced inside a command, using the variable syntax #{trait}.');
 }
 
 /** HUMAN-IN-LOOP */
