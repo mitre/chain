@@ -254,6 +254,12 @@
     color: white;
     border: None;
 }
+.ttp-template select {
+    background: var(--primary-background);
+    border: None;
+    color: white;
+    width: 50%;
+}
 .topright {
     position: absolute;
     top: 2px;
