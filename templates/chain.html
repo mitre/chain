@@ -204,7 +204,14 @@
                 </tr>
                 <tr>
                     <td style="width:10%"><b>payload:</b></td>
-                    <td><input id="ability-payload" contenteditable="true" spellcheck="false"></td>
+                    <td>
+                      <select id="ability-payload">
+                        <option value="" disabled selected>Select a payload</option>
+                        {% for p in payloads %}
+                            <option value="{{ p }}">{{ p }}</option>
+                        {% endfor %}}
+                      </select>
+                    </td>
                 </tr>
                 <tr>
                     <td style="width:10%"><b>command:</b></td>
